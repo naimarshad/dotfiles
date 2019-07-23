@@ -1,0 +1,13 @@
+/etc/init.d/xxxx
+We have the startup scripts located in this very folder.
+
+Very much like its ubuntu counter-part, CentOS has also begun migration to upstart for starting/stoping the services. But it is still backword compatible.
+
+If we look at the "/etc/init.d/" folder we will see bunch of execuatable scripts for starting & stop of various sevices.
+
+How these scripts are to be controlled by runlevel (that on which runlevel the particular script to be executed). It is that we have to see those files with in "/etc/rcX.d" folders for example if we have to stop one service in runlevel 5. We have to explore particular "/etc/rc5.d/" folder & if it is stopped in runlevel 3 then have to explore "/etc/rc3.d/" folder.
+
+In those folders actually we will find the symlinks to these scripts which are in "/etc/init.d/". But something to notice in "/etc/rcX.d/" folders is 
+
+service xxxx start/stop
+

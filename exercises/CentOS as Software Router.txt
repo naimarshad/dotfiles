@@ -1,0 +1,66 @@
+Running CentOS as Software Router.
+
+Linux can be easily configured to share an internet connection using iptables. All you need to have is, two network interface cards as follows:
+
+a) Your internal (LAN) network connected via eth0 with static ip address 192.168.50.1
+
+b) Your external WAN) network is connected via eth1 with static ip address 10.10.10.1  ( public IP provided by ISP )
+Please note that interface eth1 may have public IP address or IP assigned by ISP. eth1 may be connected to a dedicated DSL / ADSL / WAN / Cable router:
+
+Step # 1: Enable Packet Forwarding Login as the root user. Open /etc/sysctl.conf file 
+# vi /etc/sysctl.conf
+
+Add the following line to enable packet forwarding for IPv4: 
+net.ipv4.conf.default.forwarding=1 
+
+Save and close the file. Restart networking: 
+# service network restart 
+
+Step # 2: Enable IP masquerading
+
+In Linux networking, Network Address Translation (NAT) or Network Masquerading (IP Masquerading) is a technique of transceiving network traffic through a router that involves re-writing the source and/or destination IP addresses and usually also the TCP/UDP port numbers of IP packets as they pass through. In short, IP masquerading is used to share the internet connection.
+
+Share internet connection
+To share network connection via eth1, enter the following rule at command prompt (following useful for ppp0 or dial up connection):
+
+# service iptables stop 
+# iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE 
+# service iptables save 
+# service iptables restart
+Make sure Iptables runs on boot 
+# chkconfig iptables on
+
+Open your Windows / Mac / Linux computer networking GUI tool and point router IP to 192.168.50.1 (eth0 Linux IP). You also need to setup DNS IP such as 8.8.8.8 or to your local DNS server IP. You should now able to ping or browse the internet:
+
+iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+iptable -A FORWARD -i wlan0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i wlan0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth0 -o wlan0 -j ACCEPT
+iptables -L
+sudo iptables -L --line-numbers
+sudo iptables -L --line-numbers
+vi /etc/sysconfig/iptables-config
+service iptables save
+service iptables restart
+sudo iptables -L --line-numbers
+
+------------
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    ACCEPT     all  --  anywhere             anywhere            state RELATED,ESTABLISHED 
+2    ACCEPT     icmp --  anywhere             anywhere            
+3    ACCEPT     tcp  --  anywhere             anywhere            state NEW tcp dpt:ssh 
+
+Chain FORWARD (policy ACCEPT)
+num  target     prot opt source               destination         
+1    ACCEPT     icmp --  anywhere             anywhere            state NEW 
+2    ACCEPT     tcp  --  anywhere             anywhere            state RELATED,ESTABLISHED 
+3    ACCEPT     all  --  anywhere             anywhere            state RELATED,ESTABLISHED 
+4    ACCEPT     all  --  anywhere             anywhere            
+
+Chain OUTPUT (policy ACCEPT)
+num  target     prot opt source               destination    
+
+------------
+
+

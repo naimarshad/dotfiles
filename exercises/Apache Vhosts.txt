@@ -1,0 +1,35 @@
+</VirtualHost>
+
+NameVirtualHost *:80
+
+# Configuration for WebMail.
+<VirtualHost *:80>
+ServerAdmin admin@alamal-sa.com
+DocumentRoot "/etc/zpanel/panel/etc/apps/webmail/"
+ServerName webmail.alamal-sa.com
+AddType application/x-httpd-php .php3 .php
+<Directory />
+Options FollowSymLinks Indexes
+AllowOverride All
+Order Allow,Deny
+Allow from all
+</Directory>
+
+
+
+</VirtualHost>
+
+NameVirtualHost *:80
+
+# Configuration for WebMail.
+<VirtualHost *:80>
+ServerAdmin naimarshad@asknaeem.com
+DocumentRoot "/etc/zpanel/panel/etc/apps/webmail"
+ServerName webmail.asknaeem.com
+AddType application/x-httpd-php .php3 .php
+<Directory />
+Options FollowSymLinks Indexes
+AllowOverride All
+Order Allow,Deny
+Allow from all
+</Directory>

@@ -1,0 +1,49 @@
+NameVirtualHost *:80
+
+# Configuration for the ControLPanel.
+<virtualHost *:80>
+ServerAdmin naimarshad@alamal-sal.com
+DocumentRoot "/etc/zpanel/panel"
+ServerName zpanel.alamal-sa.com
+AddType application/x-httpd-php .php3 .php
+<Directory />
+Options FollowSymLinks Indexes
+AllowOverride All
+Order Allow,Deny
+Allow from all
+</Directory>
+</virtualHost>
+
+
+NameVirtualHost *:80
+
+# Configuration for phpMyAdmin.
+<virtualHost *:80>
+ServerAdmin naimarshad@alamal-sa.com
+DocumentRoot "/etc/zpanel/panel/etc/apps/phpmyadmin/"
+ServerName mysql.alamal-sa.com
+AddType application/x-httpd-php .php3 .php
+<Directory />
+Options FollowSymLinks Indexes
+AllowOverride All
+Order Allow,Deny
+Allow from all
+</Directory>
+</virtualHost>
+
+NameVirtualHost *:80
+
+# Configuration for WebMail.
+<virtualHost *:80>
+ServerAdmin naimarshad@gmail.com
+DocumentRoot "/etc/zpanel/panel/etc/apps/webmail/"
+ServerName webmail.alamal-sa.com
+AddType application/x-httpd-php .php3 .php
+<Directory />
+Options FollowSymLinks Indexes
+AllowOverride All
+Order Allow,Deny
+Allow from all
+</Directory>
+</virtualhost>
+

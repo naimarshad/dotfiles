@@ -1,0 +1,69 @@
+
+1- curl -O http://mirror.umd.edu/archlinux/iso/2015.01.01/archlinux-bootstrap-***.tar.gz
+2- tar xzf archlinux-bootstrap-***.tar.gz
+3- nano /tmp/root.x86_64/etc/pacman.d/mirrorlist
+4- /tmp/root.x86_64/bin/arch-chroot /tmp/root.x86_64/
+5- pacman-key --init
+6- pacman-key --populate archlinux
+
+mkdir -p /mnt/home
+mkdir -p /mnt/boot/efi
+
+Then mount the actual partitions where the Arch installation will be placed to these mount points inside the bootstrap image. In the following commands the actual block names on my system are shown; be sure to substitute your own device names. Mount the partition to be used for Arch's / partition with:
+mount /dev/sda25 /mnt
+
+Mount the partition to be Arch's /home partition with:
+mount /dev/sda26 /mnt/home
+
+Mount the EFI System partition with:
+mount /dev/sda2 /mnt/boot/efi
+
+Activate the swap partition so that it is recognized by Arch's fstab generation script with:
+swapon -s
+
+Now it's time to get excited. The actual installation of the base Arch system happens with the following command:
+pacstrap /mnt base base-devel
+
+The next step will be to generate the /etc/fstab file for the new Arch system, which is done with: 
+genfstab -p /mnt >> /mnt/etc/fstab
+
+hwclock --systohc --utc
+
+set the system locale by editing the /etc/locale.gen file to uncomment the appropriate locale. For me this meant uncommenting en_US.UTF-8 UTF-8. An ISO locale encoding is also available in the file, but Arch recommends using the UTF encoding. 
+
+nano /etc/locale.gen
+locale-gen
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+export LANG=en_US.UTF-8
+mkinitcpio -p linux
+
+Create the root password with the following command, entering the desired password at the prompts.
+passwd
+
+Install the Graphics Driver and the X Window System
+The rest of the installation begins with installing the graphics driver which will install many components as dependencies. Since my system uses an integrated Intel graphics chip, I installed the intel driver.
+
+pacman -S xf86-video-intel
+
+Install the other packages related to the video driver.
+pacman -S mesa-libgl
+pacman -S libva-intel-driver libva
+
+Install the Desktop Environment
+pacman -S gnome gnome-extra
+pacman -S gnome-tweak-tool
+
+
+pacman -S alsa-utils alsa-plugins
+pacman -S libpulse
+
+useradd -m -G wheel -s /bin/bash naimarshad
+pacman -S gdm
+systemctl enable gdm.services
+
+pacman -S grub
+pacman -S efibootmgr
+Install the bootloader into the EFI partition.
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch --recheck
+
+grub-mkconfig -o /boot/grub/grub.cfg

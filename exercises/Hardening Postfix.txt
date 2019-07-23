@@ -1,0 +1,173 @@
+In this guide you will learn how to tweak the default Falko mail guide for  Postfix (+Auth SMTP + Quota), http://www.howtoforge.com/virtual_postfix_mysql_quota_courier, setup to better combat SPAM and allow a little bit of backward compatibilty of the older Qmail systems.
+
+
+So lets get started...
+
+The HowtoForge guide is great for everything however if you have a very busy mail server running Spam Assasin on 1000s of message per minute is a CPU killer.  The best answer is to stop the mail before it hits Spam Assasin with a range of RBL (Realtime Blacklists) and RHBL (Same but different), Greylistings and Helo Checks.
+
+ First of all we want to change the existing smtpd restrictions and add a whole host of new checks to help reduce the amount of mail the system accepts in /etc/postfix/main.cf
+
+### Checks to remove badly formed email
+smtpd_helo_required     = yes
+strict_rfc821_envelopes = yes
+disable_vrfy_command = yes
+
+unknown_address_reject_code  = 554
+unknown_hostname_reject_code = 554
+unknown_client_reject_code   = 554
+smtpd_helo_restrictions = permit_mynetworks, reject_invalid_hostname, regexp:/etc/postfix/helo.regexp, permit
+
+### When changing sender_checks, this file must be regenerated using postmap <file>, to generate a Berkeley DB
+
+
+   smtpd_recipient_restrictions = 
+   check_client_access hash:/etc/postfix/helo_client_exceptions
+   check_sender_access    hash:/etc/postfix/sender_checks,
+   reject_invalid_hostname,
+### Can cause issues with Auth SMTP, so be weary!
+   reject_non_fqdn_hostname,
+##################################
+   reject_non_fqdn_sender,
+   reject_non_fqdn_recipient,
+   reject_unknown_sender_domain,
+   reject_unknown_recipient_domain,
+   permit_mynetworks,
+   reject_unauth_destination,
+
+
+
+# Add RBL exceptions here, when changing rbl_client_exceptions, this
+file must be regenerated using postmap <file>, to generate a
+Berkeley DB
+
+          check_client_access hash:/etc/postfix/rbl_client_exceptions,
+          reject_rbl_client cbl.abuseat.org,
+          reject_rbl_client sbl-xbl.spamhaus.org,
+          reject_rbl_client bl.spamcop.net, 
+          reject_rhsbl_sender    dsn.rfc-ignorant.org,
+          check_policy_service inet:127.0.0.1:60000
+
+         permit 
+
+
+Now to explain but first we need to create a few files:
+
+The first file we want to create is /etc/postfix/helo.regexp and this will contain:
+
+/^subdomain\.host\.com$/           550 Don't use my own hostname
+/^xxx\.yyy\.zzz\.xxx$/             550 Don't use my own IP address
+/^\[xxx\.yyy\.zzz\.xxx\]$/         550 Don't use my own IP address
+/^[0-9.]+$/                        550 Your software is not RFC 2821 compliant
+/^[0-9]+(\.[0-9]+){3}$/            550 Your software is not RFC 2821 compliant
+
+ This alone will turn away spammers trying to send the helo command and impersonating either the server receiving the mail by IP or by hostname as well as turning away some of the mail that doesn't meet RFC 2821 compliance.
+
+ 
+
+Next up, we need to create /etc/postfix/helo_client_exceptions:
+
+#These client IP addresses are allowed to bypass fqdn checks
+# Some Comment to identify IP address below
+www.xxx.yyy.zzz OK  
+
+ 
+
+This file is needed incase a badly behaved mail server can't send the correct helo and you need to allow mail to be accepted from that source.  In my experience, things like standalone devices, CCTV camera are poor at complying to standards so you might need to make an exception for this.
+
+ Before any changes in this file become usable you need to run
+
+postmap /etc/postfix/helo_client_exceptions
+
+This will create a file called  /etc/postfix/helo_client_exceptions.db
+
+
+Moving down, we have /etc/postfix/sender_checks which allows you to bypass the various FQDN checks and allow a particular sender through.  This is particular useful if a company runs an internal mail network such as domain.com but email runs on int.domain.com and there is no DNS setup int.domain.com, this is great for security but not great becuase external DNS doesn't know about the internal structure and therefore postfix will reject the int.domain.com.
+
+user@domain.com      REJECT 
+user@int.domian.com   OK 
+
+Once again this file once modified must have a Berkely DB file created and thus we create it using:
+
+postmap /etc/postfix/sender_checks
+
+ Next we have our RBL checks.  There are many websites dedicated to RBLs but to cut down the article length, simply put these lists are updated constantly and provide IPs and hostnames which spammers are using to relay mail.  Each IP that tries to send mail to your mail server will be checked against these lists (4 used above) and if the IP isn't listed in the RBLs, the mail server will accept the mail.  Ofcourse servers find themselves on these lists all the time inadvertingly or the lists take 24 hours to remove the blacklisted IP after a spam outbreak so it is always best to once again have a way of bypassing these checks.
+
+
+To do so we create a file called /etc/postfix/rbl_client_exceptions:
+
+## Some Random comment
+www.xxx.yyy.zzz OK 
+
+Once again you must run postmap to generate the Berkeley DB file
+
+postmap /etc/postfix/rbl_client_exceptions
+
+ 
+
+The final line of the smtpd restrictions is the greylisting filter.  I won't go into any detail on this as a guide already exists on howtoforge, http://www.howtoforge.com/greylisting_postfix_postgrey but if you do not wish to use Greylisting, simply omit the line
+
+check_policy_service inet:127.0.0.1:60000
+
+ 
+
+The smtpd restrictions is very easy to follow, until one of the checks gives the green flag for the message to pass into the Postfix queue, most answering not sure move on unless an explicit NO is given the message will move down the list of checks.
+
+ 
+
+QMAIL LEGACY
+
+DJB (Dan Bernstein) developed an alternative to SMTP called QMQP.  It is said to be faster with less overheads.  So if you are replacing your old Qmail MTAs with Postfix you may need to enable support for QMQP.
+
+We do this adding the following into /etc/postfix/main.cf
+
+qmqpd_authorized_clients = $mynetworks 
+qmqpd_error_delay = 5s
+qmqpd_timeout = 300s 
+
+Realistically you can authenicate against anything but I decided to authenticate against mynetworks.  After you have added the above into main.cf you need to further modify /etc/postfix/master.cf and make sure it contains the following:
+
+628      inet  n       -       -       -       100       qmqpd  
+
+Now all you need to go is restart Postfix
+
+/etc/init.d/postfix restart
+
+ You can check your new QMQP aware Postfix by typing:
+
+telnet localhost 628
+
+Authentication Via IP (Ideal for Smarthost relaying in MS Exchange Servers )
+
+Next we are going to mod the guide a little to make the setting of mynetworks a little easier than through flatfiles namely /etc/postfix/main.cf
+
+Create the following /etc/postfix/mysql-mynetworks.cf
+
+user = mail_admin
+password = password
+dbname = mail
+table = allowed_hosts
+select_field = 'IP'
+where_field = IP
+hosts = 127.0.0.1
+additional_conditions = and active='yes' 
+
+You will need the following SQL at this point
+CREATE TABLE `allowed_hosts` (
+  `active` enum('yes','no') NOT NULL default '1',
+  `IP` varchar(15) NOT NULL default '',
+  `Client` varchar(128) NOT NULL default '',
+  `Comments` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+ 
+Finally lets activate this by changing our mynetworks line the main.cf of Postfix to:
+
+mynetworks = 127.0.0.0/8, proxy:mysql:/etc/postfix/mysql-mynetworks.cf  
+
+Finally restart Postfix for changes to take effect:
+
+chmod o= /etc/postfix/mysql-mynetworks.cf
+chgrp postfix /etc/postfix/mysql-mynetworks.cf
+
+/etc/init.d/postfix restart

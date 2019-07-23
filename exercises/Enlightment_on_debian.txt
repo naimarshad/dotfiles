@@ -1,0 +1,97 @@
+Debian
+
+Enlightenment and EFL Debian official packages are outdated. In this part, the installation for Debian is done from sources like in the Get EFL installed tutorial.
+
+The following part provides a script and shows how to install Enlightenment and Terminology with their dependencies on Debian. The script below can be easily adapted for Elementary.
+
+Start by creating a new directory to work in:
+
+#create a directory
+mkdir enlight
+cd enlight
+
+Dependencies
+
+Make sure all the dependencies are installed:
+
+sudo aptitude install \
+        make gcc bison flex gawk subversion automake autoconf doxygen\
+        check autotools-dev autoconf-archive autopoint libtool gettext \
+        libpam0g-dev libfreetype6-dev libpng12-dev zlib1g-dev  libjpeg-dev\
+        libdbus-1-dev luajit libluajit-5.1-dev libx11-dev libxcursor-dev\
+        libxrender-dev libxrandr-dev libxfixes-dev libxdamage-dev\
+        libxcomposite-dev libxss-dev libxp-dev libxext-dev libxinerama-dev
+sudo aptitude install \
+        libxkbfile-dev libxtst-dev libxcb1-dev libxcb-shape0-dev\
+        libxcb-keysyms1-dev libpulse-dev libsndfile1-dev  libudev-dev\
+        libblkid-dev libmount-dev libgstreamer1.0-dev libtiff5-dev libgif-dev\
+        curl libssl-dev libspectre-dev libpoppler-dev librsvg2-dev\
+        libraw-dev libxinerama-dev git libfribidi-dev libcogl-gles2-dev\
+        libbullet-dev libgstreamer-plugins-base1.0-dev libvlc-dev
+
+Enlightenment and EFL build script
+
+Copy the source code of the shell script below in a file called build_enlight.sh.
+
+#!/bin/bash
+ 
+set -e
+# Target directory
+PREFIX="/usr/local"
+ 
+# List of the needed packages
+# To adapt to your needs
+PROJECTS="efl emotion_generic_players evas_generic_loaders elementary enlightenment"
+ 
+# Download url
+SITE=" http://git.enlightenment.org/core/"
+OPT="--prefix=$PREFIX"
+ 
+PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+PATH="$PREFIX/bin:$PATH"
+LD_LIBRARY_PATH="$PREFIX/lib:$LD_LIBRARY_PATH"
+LOG="installe.log"
+rm -f $LOG      # Delete precedent log file
+touch $LOG      # Create a log file
+date >> $LOG    # Add current date
+ 
+# Download and compile each module
+for PROJ in $PROJECTS; do
+    # Cloning
+    if [ ! -d $PROJ ]; then
+        git clone $SITE$PROJ.git $PROJ
+    fi
+    # Go building and installing
+    cd $PROJ*
+    make clean distclean || true
+    ./autogen.sh $OPT
+    make
+    sudo make install
+    cd ..
+    sudo ldconfig
+    echo $PROJ" is installed" >> $LOG
+done
+ 
+#Optionnal Terminology
+git clone http://git.enlightenment.org/apps/terminology.git
+cd terminology
+./autogen.sh $OPT
+make
+sudo make all install
+cd ..
+sudo ldconfig
+ 
+# Delete all downloaded files and compile traces
+rm -rf e*
+ 
+# Create the menu entry of Enlightenment for gdm, kdm or liqhtdm
+sudo ln -s /usr/local/share/xsessions/enlightenment.desktop /usr/share/xsessions/
+
+This script clones the repositories, builds and installs the EFL libraries, then builds and installs Terminology. Finally, it creates the link to launch enlightenment in the display manager.
+
+Set the script executable:
+
+chmod ug+x build_enlight.sh
+
+Then, execute the script. Once done, you can reboot and choose Enlightenment as a window manager.
+

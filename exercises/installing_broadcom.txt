@@ -1,0 +1,10 @@
+# /sbin/lspci -vnn | grep 14e4
+0c:00.0 Network controller [0280]: Broadcom Corporation BCM4312 802.11b/g [14e4:4315] (rev 01)
+
+After a bit of googling, I found the workaround to make it working.
+yum install b43-fwcutter b43-openfwwf
+mkdir ~/b43-driver; cd ~/b43-driver
+wget http://downloads.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2
+tar jxf broadcom-wl-4.150.10.5.tar.bz2
+cd broadcom-wl-4.150.10.5/driver
+b43-fwcutter -w /lib/firmware/ wl_apsta_mimo.o

@@ -1,0 +1,34 @@
+[HOW-TO] Upgrade to latest version of RoundCube
+CentOS 6.3 (and I imagine any version of Linux version)
+
+update roundcube
+----------------
+cd /etc/zpanel/panel/etc/apps
+mv webmail webmail_old
+wget http://sourceforge.net/projects/roundcub...utoselect#
+tar -zxvf roundcubemail-*.tar.gz
+mv roundcubemail-0.8.4 webmail
+chmod 777 -R webmail/
+chown root:root -R webmail/
+cp webmail_old/config/*.php webmail/config/
+rm -IR webmail/installer/
+ln -s /etc/zpanel/configs/roundcube/config.inc.php /etc/zpanel/panel/etc/apps/webmail/plugins/managesieve/config.inc.php
+rm roundcubemail-*.tar.gz
+rm -IR webmail_old
+
+** Nb the wget line wraps but should be one long line
+
+Coincidentally, to update phpmyadmin is similar
+
+update phpmyadmin
+-----------------
+cd /etc/zpanel/panel/etc/apps
+mv phpmyadmin phpmyadmin_old
+wget http://sourceforge.net/projects/phpmyadm.../download#
+tar -zxvf phpMyAdmin-*.tar.gz
+mv phpMyAdmin-3.5.4-all-languages phpmyadmin
+chmod 777 -R phpmyadmin/
+chown root:root -R phpmyadmin/
+cp phpmyadmin_old/config.inc.php phpmyadmin/config.inc.php
+rm phpMyAdmin-*.tar.gz
+rm -IR phpmyadmin_old 

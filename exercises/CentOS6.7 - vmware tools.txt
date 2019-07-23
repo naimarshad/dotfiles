@@ -1,0 +1,41 @@
+Installing VMware Tools the right way on CentOS 6.7!
+Posted on September 16, 2015 by chris
+For CentOS, I recommend following the VMware Tools Installation Guide for Operating System Specific Packages to get your VMware Tools instead of just running it from vSphere Client. Why you ask? Well, because in following this setup routine, you can template your VM, and not have to manually install the vmware client everytime you create a new machine, and it updates easily with yum package manager. How’s that for an answer?
+
+So the first thing we need to do, is grab a few prerequisites.
+
+yum install wget sudo vim system-config-network-tui kernel-headers ntp perl gcc make unzip -y
+1
+yum install wget sudo vim system-config-network-tui kernel-headers ntp perl gcc make unzip -y
+Second we need to grab the public keys from VMware, here’s a link to their keys. http://packages.vmware.com/tools/keys
+Import the keys (I put mine in a folder in tmp, /tmp/vmware):
+
+rpm --import /key_path/key_name
+1
+rpm --import /key_path/key_name
+Now, we’ll create a repository file. Navigate or create the file at: /etc/yum.repos.d/vmware-tools.repo – You can name it whatever you want, as long as its meaningful to you.
+Add the following content to the file:
+
+[vmware-tools]
+name=VMware Tools
+baseurl=http://packages.vmware.com/tools/esx/5.5u2/rhel6/x86_64
+enabled=1
+gpgcheck=1
+1
+2
+3
+4
+5
+[vmware-tools]
+name=VMware Tools
+baseurl=http://packages.vmware.com/tools/esx/5.5u2/rhel6/x86_64
+enabled=1
+gpgcheck=1
+
+NOTE – Keep in mind, I am doing this on a CentOS 6.7 VM, on ESX 5.5 U2, 64bit. If you are using a different flavor, you’ll need to adjust for your version. Refer to the VMware Tools Installation Guide for Operating System Specific Packages for more information.
+Now, its just a matter of running the following command:
+
+yum install vmware-tools-esx-kmods vmware-tools-esx
+1
+yum install vmware-tools-esx-kmods vmware-tools-esx
+After the installation completes, reboot.

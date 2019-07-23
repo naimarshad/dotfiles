@@ -1,0 +1,25 @@
+How-To Resize mailbox size in Zpanel
+
+Running a Zpanel on a Linux server and you want to resize the users mailboxes? This is how to do that.
+
+The standard size of mailboxes in Zpanel is 200Mb
+
+You can change the size of new mailboxes in:
+Admin -> module admin -> Mail Config -> Max Mailbox Size
+Remember that only new created mailboxes will have this size!
+
+To change the size of existing mailbox you have to make the changes in the database zpanel_postfix.
+
+Login in as root in MySql. The root password is in /root/passwords.txt
+cat /root/passwords.txt
+
+
+Logging into mysql.
+
+1- mysql -u root -p
+	1a - Enter the mysql root password
+2- show databases;
+3- USE zpanel_postfix;
+4- UPDATE mailbox SET quota=2048 WHERE quota=200;
+
+

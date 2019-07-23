@@ -1,0 +1,183 @@
+###Install Ubuntu 10.04 & RT related packages###
+
+ 1- Boot from the Ubuntu 10.04 CD & follow the installation steps. When presented with the Software Selection screen, select the following: 
+
+   i- Lamp Server
+  ii- Mail Server
+ iii- OpenSSH Server
+
+ 2- Set the MYSQL root password when prompted (twice)
+
+ 3- Set postfix to "Internet site With Smarthost" when prompted
+
+ 4- Set Email to your smtp server prompted when
+
+ 5- Reboot when install finished & login as the username you created
+
+ 6- Better to log in remotely via ssh or Putty from now on to make it easy for you to copy & paste in the following commands
+
+ 7- Run the following command to gain root access
+
+ *** sudo su -
+ *** apt-get update; apt-get install rt4-apache2 rt4-clients rt4-db-mysql request-tracker4 fetchmail
+
+ 8- Change "rt.tickets" to "tickets" when prompted (Well! this will be the host name not sure exactly)
+
+ 9- Change "rt.tickets" to "tickets" when prompted
+
+ 10- Respond "Yes" to Configure RT with dbconfig-common when prompted
+
+ 11- Enter the MYSQL root password you used earlier in order to set up the new RT database when prompted
+
+12- Set the RT database access password (this password is for RT to connect to MYSQL & is stored in RT_SiteConfig.pm)
+
+###Request Tracker config file settings###
+
+13- Run the following command to backup the RT config file:
+
+ *** cp /etc/request-tracker4/RT_SiteConfig.pm /etc/request-tracker4/RT_SiteConfig.pm.old
+
+14- Run the following command to edit the RT config: 
+
+ *** vi /etc/request-tracker4/RT_SiteConfig.pm
+
+15- Comment out the following two lines with a # as shown below 
+
+ *** Set($CorrespondAddress , 'rt@tickets');
+
+ *** Set($CommentAddress , 'rt-comment@tickets');
+
+16- Paste in the following two lines 
+
+ *** Set($MaxAttachmentSize , 10000000);
+
+ *** Set($FriendlyFromLineFormat, "\"%s\" <%s>");
+
+17- Save the file
+
+###Outbound Email config###
+
+18- Run the command
+
+ *** vi /etc/postfix/main.cf
+
+19- Find the line containing "relayhost" & add your smtp mail server 
+
+20- Save the file
+
+21- Run the command
+
+ *** service postfix restart
+
+22- Test Outbound mail (Postfix) by emailing a file – (This example sends /etc/fstab). 
+
+ *** mailx -s "Postfix Test" YourOwnMailbox@domain < /etc/fstab
+
+Note: Use your own email address in the above command 
+
+23- Check your e-mail client to see if this is working. 
+
+###Apache2 config###
+
+24- Run the command to backup existing Apache configuration
+
+ *** cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.old
+
+25- Run the command to modify apache2
+
+ *** vi /etc/apache2/apache2.conf
+
+26- Append the following at the bottom of the file on a new line: 
+
+ *** ServerName tickets
+
+27- Save the file & run the command below to creat backup of site-available file.
+
+ *** cp /etc/apache2/sites-available/default /etc/apache2/sites-available/default.old
+
+28- run the command below now to edit the file
+
+ *** vi /etc/apache2/sites-available/default
+
+29- Find the last line "</VirtualHost>" and paste in the following two lines just above it: 
+
+ *** Include /etc/request-tracker4/apache2-modperl2.conf
+ *** RedirectMatch ^/$ /rt
+
+30- save the file
+
+Apache fails to start once configured tor request-tracker, the error in the Apache logs is:
+
+Can't locate Apache/DBI.pm 
+
+Cause: This error occurs because of the missing Apache::DBI Perl module.Workaround: Installing libapache-dbi-perl solves the problem.
+
+31- Type
+
+ *** sudo apt-get install libapache-dbi-perl
+
+now continue...
+
+32- Now run the command: 
+
+ *** a2enmod rewrite; service apache2 restart
+
+###Configure RT from your web browser login###
+
+33- Log in to RT - Open your web browser, enter your RT IP address use default root login: 
+
+ *** root:password
+
+34- Navigate to: Configuration > Global > Group Rights 
+
+a- Find "Everyone" in "System Groups" and grant the following rights: 
+b- CommentOnTicket CreateTicket ReplyToTicket
+
+35- Navigate to: Configuration > Queues > General 
+a- Set the "Reply Address" & "Comment Address" to IT-Support@yourdomain
+b- Change “Description” to “IT-Support” 
+
+Note: Use a valid email address for your domain. 
+
+###Inbound e-mail config###
+
+36- Run the command: 
+ *** nano /etc/default/fetchmail
+
+37- Modify the last line to read: 
+ *** START_DAEMON=yes
+
+38- Run the command to open the editor & create a new blank file: 
+ *** nano /etc/fetchmailrc
+
+39- Paste in the following six lines: 
+ *** set daemon 60
+ *** set invisible
+ *** set no bouncemail
+ *** set no syslog
+ *** set logfile /var/log/fetchmail.log
+ *** poll YOURMAILSERVER protocol pop3 username "IT-Support" password "secret" mda "/usr/bin/rt-mailgate --queue general --action correspond --url http://localhost/rt/" no keep
+
+Note: the last line is long & may have wrapped in your display. 
+
+40- Run the command: 
+ *** touch /var/log/fetchmail.log; chown fetchmail /var/log/fetchmail.log
+
+41- Reboot
+
+42- To watch inbound email status, run the following command: 
+
+ *** tail –f /var/log/fetchmail.log
+
+43- Send an email to the account: IT-Support@yourdomain 
+
+Fetchmail should pick up this email within 60 seconds & forward it into RT. RT will then reply to you. You should see the ticket in the web console.
+
+Note: Once you are happy that inbound email is working, comment out the set logfile line in /etc/fetchmailrc with a # & reboot. 
+
+
+
+ 
+
+
+

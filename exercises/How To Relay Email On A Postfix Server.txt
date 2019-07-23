@@ -1,0 +1,66 @@
+#### How To Relay Email On A Postfix Server ###
+
+Introduction
+
+For two small businesses I set up a debian lenny installation on their "home" dsl connection. The problem is that they have dynamic ip addresses and most mailservers will not accept incoming mail from a server on a dynamic ip address. The solution is rather simple. Set up postfix in a way that it will relay the outgoing email through the actual ISP. In this short howto I'll show you how to do that.
+
+ 
+1. Prerequisites
+
+I assume that you already have set up a working postfix server and that you have an email account at your ISP which you can access. So you will need to have a login for your IPS's email account.
+
+2. Edit the postfix config
+
+First you need to edit your postfix config...
+
+ *** vi /etc/postfix/main.cf
+
+ ... and add the following code at the end of your config:
+
+ *** smtp_sasl_auth_enable = yes
+ *** smtp_sasl_security_options = noanonymous
+ *** smtp_sasl_password_maps = hash:/etc/postfix/saslpasswd
+ *** smtp_always_send_ehlo = yes
+ *** relayhost = smtp.yourisp.com 
+
+Of course replace smtp.yourisp.com with the actual smtp server of your ISP. Also SASL must be working. If you followed the perfect howtos for setting up a server as provided by Falko then you don't have to worry about it. Then save and close the file.
+
+If your ISP requires you to use a special port for sending email, then use a line like this instead:
+
+relayhost = [smtp.yourisp.com]:PORT
+
+In one of the cases that I have used this, I had to enter this:
+
+relayhost = [smtpauth.bluewin.ch]:587
+(just15.justhost.com:465) or (mymail.brinkster.com:25 or mymail.brinkster.com:2525)
+ 
+3. Edit /etc/postfix/saslpasswd
+
+After having extended the postfix config you'll still need to add the credentials to the /etc/postfix/saslpasswd file, so that you can authorize yourself at your ISP.
+
+nano /etc/postfix/saslpasswd
+
+and then add this:
+
+smtp.yourisp.com     yourlogin:yourpassword
+
+Of course replace yourlogin / yourpassword with the actual username and password provided by your ISP. You don't need to add the port there.
+
+ 
+4. Hash /etc/postfix/saslpasswd
+
+Before postfix can use that file, it needs to be hashed by postmap:
+
+postmap /etc/postfix/saslpasswd
+
+ 
+5. Restart postfix
+
+Finally you need to restart postfix to use the new config:
+
+/etc/init.d/postfix restart
+
+ 
+6. Test it
+
+When you send now an email using your email server to yourself (for example to a gmail account) and if you then check the full headers of that email, you will see, that the email was relayed through your ISP. That means it works now. As long as your ISP now isn't blacklisted, your dynamic IP won't hinder you to send email.

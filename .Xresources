@@ -1,0 +1,122 @@
+## Rofi Theming
+rofi.color-enabled: true
+## rofi.color-window: #273238, #273238, #1e2529
+rofi.color-window: #273238, #27A2E5, #1e2529
+rofi.color-normal: #273238, #c1c1c1, #273238, #394249, #ffffff
+rofi.color-active: #273238, #80cbc4, #273238, #394249, #80cbc4
+rofi.color-urgent: #273238, #ff1844, #273238, #394249, #ff1844
+
+
+## UXTerm Settings
+
+UXTerm*allowBoldFonts: true
+UXTerm*termName: xterm-256color
+XTerm.termName: xterm-256color
+XTerm*renderFont: true
+XTerm*faceName: SauceCodePro Nerd Font Mono
+XTerm*faceSize: 13
+
+UXTerm*renderFont: true
+UXTerm*faceName: SauceCodePro Nerd Font Mono
+UXTerm*faceSize: 13
+
+! special
+*.foreground:   #eceff1
+*.background:   #263238
+*.cursorColor:  #eceff1
+
+! black
+*.color0:       #263238
+*.color8:       #37474f
+
+! red
+*.color1:       #ff9800
+*.color9:       #ffa74d
+
+! green
+*.color2:       #8bc34a
+*.color10:      #9ccc65
+
+! yellow
+*.color3:       #ffc107
+*.color11:      #ffa000
+
+! blue
+*.color4:       #03a9f4
+*.color12:      #81d4fa
+
+! magenta
+*.color5:       #e91e63
+*.color13:      #ad1457
+
+! cyan
+*.color6:       #009688
+*.color14:      #26a69a
+
+! white
+*.color7:       #cfd8dc
+*.color15:      #eceff1
+
+
+
+Xft.dpi: 192
+Xft.autohint: 0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintslight
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+
+
+
+!!!!! URXVT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!URxvt*termName:rxvt-unicode-256color
+
+URxvt.urgentOnBell: false
+URxvt.mapAlert:: false
+URxvt.visualBell:	false
+URxvt.cursorBlink:          true
+urxvt*depth: 32
+URxvt*scrollBar: false
+
+! Perl extensions
+URxvt.perl-ext-common: font-size
+URxvt.perl-ext: default,url-select
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.underline: true
+
+! Key Maps
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+URxvt.keysym.C-equal:  font-size:reset
+URxvt.keysym.C-slash:  font-size:show
+
+! FONT
+!
+URxvt*font: xft:SauceCodePro Nerd Font Mono:style=Regular:size=13,xft:awesome-terminal-fonts:style=Regular:antialias=true:pixelsize=13
+URxvt*italicFont: xft:SauceCodePro Nerd Font Mono:Italic:size=13
+URxvt*boldFont: xft:SauceCodePro Nerd Font Mono:Bold:size=13
+!URxvt.letterSpace: -5
+!URxvt.lineSpace: -5
+
+! BORDER
+URxvt*borderWidth: 0
+URxvt.internalBorder: 2
+URxvt*borderLess: false
+URxvt.inheritPixmap: true
+
+!Transparency
+URxvt*background: rgba:0000/0000/0200/c800
+URxvt.transparent: true
+!URxvt.tintColor: #000
+URxvt.shading: 30
+
+
+
+! Geometry
+! URxvt*geometry: 80x40
+URxvt*geometry: 90x25+180+200

@@ -1,0 +1,13 @@
+1- enable
+
+2- conf t
+
+3- interface vlan 200
+
+4- ip helper address (172.16.200.100)
+
+5- write mem
+
+
+
+

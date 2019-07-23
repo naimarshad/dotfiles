@@ -1,0 +1,52 @@
+Install DHCP Server in CentOS 6.
+
+1- Assign a static ip to ethernet on which you want to run DHCP i.e. eth1.
+
+a- vi /etc/sysconfig/network-scripts/ifcfg-eth1
+DEVICE=eth1
+HWADDR=08:00:27:1F:AE:0F
+TYPE=Ethernet
+UUID=f5b899b0-57ab-4db6-af5e-f93ad87d6b11
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=none
+IPADDR=192.168.50.1
+NETMASK=255.255.255.0
+BROADCAST=192.168.50.255
+
+b- service network restart
+
+2- Install dhcp server if you are connected tot the internet then run the command below
+   yum install dhcp
+
+3- copy the sample configuration file to /etc/dhcpd/
+cp /usr/share/doc/dhcp-4.1.1/dhcpd.conf.sample /etc/dhcp/dhcpd.conf
+
+configure the basic parameters & subnet accordingly.
+
+#Sample /etc/dhcpd.conf
+
+default-lease-time 600;
+max-lease-time 7200;
+option subnet-mask 255.255.255.0;
+option broadcast-address 192.168.50.255;
+option routers 192.168.50.1;
+option domain-name-servers 8.8.8.8, 8.8.4.4;
+option domain-name "mydomain.org";
+
+subnet 192.168.50.0 netmask 255.255.255.0 {
+   range 192.168.50.10 192.168.50.20;
+}
+
+4- bind the network card on which you want to run the dhcpd service to the dhcp daemon
+
+vi /etc/sysconfig/dhcpd      //Edit the parameters to as below
+# Command line options here
+DHCPDARGS=eth1 		//In our case it is eth1 on which we are running the dhcp service.
+
+5- Finally start the service 
+service dhcpd start
+
+
+
+

@@ -1,0 +1,54 @@
+Installing Poptop (pptpd) VPN Server on CentOS 6
+Posted on June 14, 2012	
+
+For roaming mobile clients PPTP (Point-to-Point Tunneling Protocol) is still the quickest way to get VPN connections to tunnel traffic over a secure link.
+Installation
+
+I always prefer installation via a yum repository as this will ensure patches are applied during regular system updates
+
+sudo rpm --import http://poptop.sourceforge.net/yum/RPM-GPG-KEY-PPTP
+sudo rpm -Uvh http://poptop.sourceforge.net/yum/stable/rhel6/pptp-release-current.noarch.rpm
+sudo yum install ppp pptpd -y
+Configuration
+
+
+IP configuration
+echo "localip 54.187.249.105" >> /etc/pptpd.conf
+echo "remoteip 192.168.0.100-199" >> /etc/pptpd.conf
+
+DNS configuration
+echo "ms-dns 8.8.8.8" >> /etc/ppp/options.pptpd
+echo "ms-dns 4.2.2.1" >> /etc/ppp/options.pptpd
+
+Authentication configuration
+Note: replace $USERNAME and $PASSWORD with actual values
+
+echo "$USERNAME pptpd $PASSWORD *" >> /etc/ppp/chap-secrets
+
+Firewall config
+service iptables start
+echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+sysctl -p
+
+""
+iptables -A INPUT -i eth0 -p tcp --dport 1723 -j ACCEPT
+iptables -A INPUT -i eth0 -p gre -j ACCEPT
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+iptables -A FORWARD -i ppp+ -o eth0 -j ACCEPT
+iptables -A FORWARD -i eth0 -o ppp+ -j ACCEPT
+service iptables save
+service iptables restart 
+
+""
+
+echo "iptables -t nat -A POSTROUTING -s 192.168.250.0/24 -o eth0 -j MASQUERADE" >> /etc/rc.local
+iptables -t nat -A POSTROUTING -s 192.168.250.0/24 -o eth0 -j MASQUERADE
+iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -s 192.168.250.0/24 -j ACCEPT
+service iptables save
+service iptables restart
+chkconfig iptables on
+
+Start ppptd
+chkconfig pptpd on
+service pptpd start

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Microsoft Excel 2010
+Comment=PlayOnLinux
+Type=Application
+Exec=/home/naimarshad/Downloads/Popcorn-Time/Popcorn-Time
+Icon=/home/naimarshad/Downloads/Popcorn-Time/src/app/images/icon.png
+StartupWMClass=EXCEL.EXE
+Categories=Office;Spreadsheet;
+Name[en_US]=Popcorn Time

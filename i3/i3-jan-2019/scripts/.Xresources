@@ -1,0 +1,105 @@
+## Rofi Theming
+rofi.color-enabled: true
+rofi.color-window: #273238, #273238, #1e2529
+rofi.color-normal: #273238, #c1c1c1, #273238, #394249, #ffffff
+rofi.color-active: #273238, #80cbc4, #273238, #394249, #80cbc4
+rofi.color-urgent: #273238, #ff1844, #273238, #394249, #ff1844
+
+## UXTerm Settings
+
+UXTerm*allowBoldFonts: false
+UXTerm*termName: xterm-256color
+XTerm.termName: xterm-256color
+
+
+*.foreground:  #bdbaae
+*.background:  #222222
+*.cursorColor: #bbbbbb
+!
+! Black
+*.color0:      #15171c
+*.color8:      #555555
+!
+! Red
+*.color1:      #ec5f67
+*.color9:      #ff6973
+!
+! Green
+*.color2:      #81a764
+*.color10:     #93d493
+!
+! Yellow
+*.color3:      #fec254
+*.color11:     #ffd256
+!
+! Blue
+*.color4:      #5486c0
+*.color12:     #4d84d1
+!
+! Magenta
+*.color5:      #bf83c1
+*.color13:     #ff55ff
+!
+! Cyan
+*.color6:      #57c2c1
+*.color14:     #83e9e4
+!
+! White
+*.color7:      #efece7
+*.color15:     #ffffff
+!
+! Bold, Italic, Underline
+*.colorBD:     #ffffff
+!*.colorIT:
+!*.colorUL:
+!
+
+Xft.dpi: 210
+Xft.autohint: 0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintslight
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+
+
+
+!!!!! URXVT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+URxvt*termName:rxvt-unicode-256color
+
+URxvt.urgentOnBell: false
+URxvt.mapAlert:: false
+URxvt.visualBell:	false
+URxvt.cursorBlink:          true
+urxvt*depth: 32
+URxvt*scrollBar: false
+
+! Perl extensions
+URxvt.perl-ext-common: font-size
+URxvt.perl-ext: default,url-select
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.underline: true
+
+! Key Maps
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+URxvt.keysym.C-equal:  font-size:reset
+URxvt.keysym.C-slash:  font-size:show
+
+! FONT
+URxvt*font:             xft:Bitstream Vera Sans Mono Oblique Nerd Font Complete Mono:style=Regular:size=9,xft:Font\ Awesome\ 8\ Free\ Solid:style=Solid:antialias=true:pixelsize=11,xft:Wuncon\ Siji:style=Regular:pixelsize:11
+URxvt*italicFont:       xft:iBitstream Vera Sans Mono Oblique Nerd Font Complete Mono:regular:size=11
+!URxvt.letterSpace: -5
+!URxvt.lineSpace: -5
+
+! BORDER
+URxvt*borderWidth: 0
+URxvt.internalBorder: 12
+URxvt*borderLess: false
+URxvt.transparent: false
+
+! Geometry
+URxvt*geometry: 80x40

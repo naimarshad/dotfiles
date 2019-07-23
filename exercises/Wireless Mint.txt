@@ -1,0 +1,33 @@
+sudo cp -r ~/wireless/* /lib/firmware/
+Now let's double check to make sure the download made it to the firmware directory. To do this type this into the terminal:
+
+ls /lib/firmware
+Ok so now that the download is in the firmware directory we need to go to that directory. To go there open your terminal and type in: 
+
+cd /lib/firmware
+Now that you have changed directories let's double check to make sure you are in the right directory, this next code tells us where we are in the computer file directory. This next code stands for "print working directory".
+
+pwd
+Are you at /lib/firmware if so good if not go back one step. 
+
+Now that we are in the firmware directory. We have to extract the download, to do this type in:
+
+sudo -s
+Then enter your password then:
+
+tar xvf b43-all-fw.tar_.gz
+Now is the firmware extracted properly? check by typing:
+
+ls /lib/firmware/b43
+or: 
+
+ls /lib/firmware/b43legacy
+Do you see the ucode files? if so then delete the gz file:
+
+sudo rm *.gz
+Then:
+
+exit
+Reboot.
+
+

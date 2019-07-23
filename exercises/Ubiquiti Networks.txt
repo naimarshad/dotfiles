@@ -1,0 +1,13 @@
+Follow this check list:
+
+> upgrade all radios to the latest firmware
+> set each of the three radios to a different
+   IP address
+> set the Rocket network mode to bridge
+> set the Rocket wireless to AP-WDS mode; choose a
+   channel in the 5800MHz range; set its SSID [wireless 'name']
+> set each NanoStation to bridge mode,
+> set each NanoStaton to station-WDS mode; with the same
+   channel and the same SSID of the rocket
+Let us know if the radios now associate.  Dave
+

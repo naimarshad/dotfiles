@@ -1,0 +1,135 @@
+Network Configuration:
+1- Ethernet Card configuration
+ a- How to configure network On Ubuntu 
+ b- How to configure network On CentOS
+2- Bonding configuration
+
+1- Ethernet configuration 
+ a- How to configure network On Ubuntu
+
+ i- Edit the related Ethernet card configuration for example for eth0 by opening it through "vi /etc/network/interface
+
+ auto eth0				//this means on boot it will activate the eth0 card
+ iface eth0 inet static 		//will tell the card to load the static configuration
+ address 192.168.50.1			//will assign the ip to the machine statically
+ netmask 255.255.255.0			//will determine the netmask of the network
+ gateway 192.168.50.1 			//will determine the gateway to the ineternet
+ 
+ ii- For adding the nameservers we must have to edit the configurations in file /etc/resolv.conf for open it with vi /etc/resolv.conf
+
+ nameserver=208.67.222.222
+ nameserver=208.67.220.220
+
+each nameserver will be separated by one on separate line, save the file & exit.
+
+  iii-- Now if everything goes well you can restart the network service & can monitor the effects accordingly.
+
+  "service network restart" or simply reboot the machine
+
+ b- How to configure network On CentOS
+Every Ethernet card has a related configuration files in /etc/sysconfig/networ-scripts/ifcfg-"NIC"
+
+For example if you have only one network card in your machine its ip configuration should be stored with in /etc/sysconfig/network-scripts/ifcfg-eth0 & if you have multiple network cards then the "0" at the end of eth will be increased to higher number such as eth1, eth2 etc..
+
+  i- For IP configuration changes you must edit the related files of that particular network card for example for eth0 to do it vi /etc/sysconfig/network-scripts/eth0
+
+ DEVICE=Eth0
+ ONBOOT=yes or no
+ BOOTPROTO=none or dhcp
+ USERCTL =yes or no
+ NM_CONTROLLED=yes or no
+ IPADDR=192.168.50.10
+ NETMASK=255.255.255.0
+ BROADCAST=192.168.50.255
+
+save the file & exit. 
+
+  ii- For CentOS adding the gateway is not inside the configuration file of Ethernet card but it is to be added in /etc/sysconfig/network/
+
+ to do it vi /etc/sysconfig/network
+ 
+ NETWORKING=yes
+ HOSTNAME=centos-srv.localdomain
+ GATEWAY=192.168.50.1
+
+save the file & exit. 
+  iii- For adding the nameservers we must have to edit the configuration in file /etc/resolv.conf for editing it vi /etc/resolv.conf
+
+ nameserver=208.67.222.222
+ nameserver=208.67.220.220
+
+each nameserver will be separated by one on separate line, save the file & exit.
+
+  iv- Now if everything goes well you can restart the network service & can monitor the effects accordingly.
+
+  v- service network restart or simply reboot the machine
+
+2- Bonding configuration
+
+Bonding actually means that you can utilize the multiple card of a server to work together. There are several ways that your card can work together.s
+
+Linux kernel can work in seven differrent mode.
+ 0- balance-rr 		//it means that ports sending & recieving packets equally & it offers LB/FT
+ 1- active-backup	//it means that you have working one port & one is as active backup means one of the port will be alsways in-active & it just provides FT
+ 2- balance-xor		//it means that ports send packets based on mac address & it offers both LB/FT
+ 3- 
+ 4- 802.3ad		//it means LB/FT based on switch support, if your switch supports
+ 5- balance-tlb		//it means 
+ 6- balance-alb		//
+
+ Bonding with in the linux
+ 1- CentOS
+ 2- Ubuntu
+
+1- CentOS
+As earlier we configured the network card, in similar way you have to edit/create the bonded interface. If you want to create a bonded interface you have to put the configuration in "/etc/sysconfig/network-scripts/ifcfg-bond0" 
+
+ "vi /etc/sysconfig/network-scripts/ifcfg-bond0"
+
+ DEVICE=bond0
+ ONBOOT=yes
+ BOOTPROTO=none
+ USERCTL=no
+ IPADDR=192.168.50.10
+ NETWORK=192.168.50.0
+ NETMASK=255.255.255.0
+
+That's the similar way in which we edit our ethernet card files, only differrence is bond0 interface physcially not existing. After adding these lines int bond0 file save & quit the editor.
+
+Now we have to modify the configuration for the physcial interfaces, for example for eth0 it should look like this;
+ 
+ "vi /etc/sysconfig/network-scripts/ifcfg-eth0"
+
+ DEVICE=eth0
+ ONBOOT=yes
+ BOOTPROTO=none
+ USERCTL=no
+ MASTER=bond0
+ SLAVE=yes
+
+save & quit the editor. Similarly for the eth1 card it would be something like this;
+
+ "vi /etc/sysconfig/network-scripts/ifcfg-eth1"
+ 
+ DEVICE=eth1
+ ONBOOT=yes
+ BOOTPROTO=none
+ USERCTL=no
+ MASTER=bond0
+ SLAVE=yes
+
+save & quit the editor.
+
+As of now their is no bonded device available yet, so we have to create a bonded device by adding a kernel module.
+
+ cd /etc/modeprobe.d/ and create a new file bonding.conf, we can call it any name we want.
+
+ vi/etc/modeprob.d/bonding.conf
+ 
+ alias bond0 bonding			//this means it is linking the bond0 device to bonding kernel module.
+ options bond0 mode=6 miimon=100	//These are the options such as when to refresh the state of the network card & type of the bonding. In this example we have configured the bonding for active-backup.
+
+2- Ubuntu
+1:04
+
+

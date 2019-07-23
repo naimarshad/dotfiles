@@ -1,0 +1,366 @@
+Step 1: Create Disk Partitions Layout
+
+1. First of all go do Arch Linux download page https://www.archlinux.org/download, grab the latest CD image (i.e. current stable version: 2014.05.01), create a bootable CD/USB then plug it into your system CD/USB drive.
+
+2. IMPORTANT STEP! Also make sure your system has an Ethernet plugged in cable with internet connectivity and also an active DHCP server enabled.
+
+3. After the CD/USB boots up you will be presented with first Arch Linux Installer options. Choose your CPU Architecture type and press Enter key.
+4. After the installer decompresses and loads the Linux Kernel you will be automatically thrown to an Arch Linux Bash terminal (TTY) with root privileges. A good step now is to verify your network connection and Hard Drives by issuing the following commands.
+# ping –c3 google.com
+# fdisk –l
+5. The next step is to chunk and prepare your Hard Disk partitions. For this stage you can use Fdisk or Cfdisk utilities to perform a disk partition layout for MBR disks or Gdisk for GPT disks. I recommend Cfdisk for its guidance and simplicity in use.
+
+For a basic layout partition table use the following structure.
+
+    Root partition (/dev/sda1) with at least 20G size as Primary with Boot flag, ext4 formatted.
+    Swap partition (/dev/sda2) with 2xRAM size as Primary, Swap On.
+    Home partition (/dev/sda5) with the rest of space as Extended, ext4 formatted.
+
+Now let’s actually start creating disk layout partition table by running cfdisk command, select Free Space then hit on New (this will be the system ROOT partition).
+6. Select Primary as type, enter partition Size in MB (20000), create partition at the Beginning of Free Space and mark it as Bootable as in the following screenshots.
+7. For Swap use down arrow key and select again the remaining Free Space and repeat the steps above: New -> Primary, 2xRAM as size -> Beginning.
+
+8. For Home partition use the following configuration: New -> Logical -> Enter for size (this will use the remaining Free Space). After you review Partition Table select Write, answer with yes, then Quit to exit cfdisk utility.
+9. For now your partition table has been written to HDD MRB but no file system was yet created on top of it. You can also get a better partition table review by running fdisk –l command again.
+# fdisk -l
+
+Now is time to create disk file system and format partitions with ext4. Issue the following commands for ROOT and HOME partitions.
+
+# mkfs.ext4 /dev/sda1
+# mkfs.ext4 /dev/sda5
+
+Format and initialize SWAP partition.
+
+# mkswap /dev/sda2
+# swapon /dev/sda2
+
+10. Now run lsblk command to double check partitions and make sure everything is in correctly configured so far.
+
+# lsblk
+Step 2: Install Arch Base System
+
+11. For performing an Arch Linux installation the two partitions created must be mount it on Arch Live running system to a mount point to be accessible. For this setup I shall use the /mnt Arch system live path to mount ROOT partition (/dev/sda1) and /mnt/home path to mount HOME partition (/dev/sda5). Don’t be worried about SWAP partition (it’s has already been initialized above). Use the following commands in the following order for this step.
+
+# mount /dev/sda1 /mnt
+# mkdir /mnt/home
+# mount /dev/sda5 /mnt/home
+
+12. After the partitions had been made accessible, is time to perform Arch Linux system installation. For a better packages download installation speed edit /etc/pacman.d/mirrorlist file by searching and selecting your closest mirror website ( usually choose your country server location) on top of mirror file list.
+
+# nano /etc/pacman.d/mirrorlist
+
+13. Install Arch Linux by issuing the following command and hit Enter key on both packages selection (default=all).
+
+# pacstrap -i /mnt base base-devel
+
+Depending on your system physical configuration and internet speed the installer can take from 5 to 20 min to complete. So, if you have nothing else to do you can watch the installer on how it performs.
+
+14. After all packages are installed it’s time to generate fstab file for our new Arch Linux system to be able to boot from newly partitions with the help of the following command.
+
+# genfstab -U -p /mnt >> /mnt/etc/fstab
+If there are any errors concerning this command you must open and manually edit fstab or else your system will not be able to boot properly.
+
+# nano /mnt/etc/fstab
+
+To get those Partitions UUID run blkid command.
+Step 3: System Configuration
+
+15. To configure Arch Linux you must chroot (some kind of jail) into your newly installation path which is /mnt by running the following command.
+
+# arch-chroot /mnt
+
+To get rid of that ugly shell, run /bin/bash shell interpreter.
+
+16. First step now, is configuring System Language. Choose and uncomment your preferred encoding languages from /etc/locale.gen file then set your locale by running the following commands.
+
+# nano /etc/locale.gen
+
+locale-gen
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+export LANG=en_US.UTF-8
+
+
+
+17. Next step is to configure your system time zone by creating a symlink for your sub time zone ( /usr/share/zoneinfo/Continent/Main_city ) to /etc/localtime path.
+
+# ls /usr/share/zoneinfo/
+# ln -s /usr/share/zoneinfo/Europe/Bucharest  /etc/localtime
+
+You can also configure hardware clock to use UTC (your distribution knows that your hardware clock is set to the local time).
+
+# hwclock --systohc --utc
+
+18. As many widely famous Linux distributions, Arch Linux uses its own repository mirrors for different world locations and multiple system architectures. The standard repos are enabled by default but to activate Multilib repositories on x64-bit, uncomment [multilib] directive from /etc/pacman.conf file.
+
+# nano /etc/pacman.conf
+
+19. To activate Yaourt Package Tool (downloading and building AUR packages) go to bottom of the same /etc/pacman.conf file and add the following directives.
+
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+
+20. After the repositories had been edited, is time to synchronize and update database packages using the following command.
+
+# pacman -Syu
+
+21. Now it’s time to add a password for root account and create a new user with sudo privileges on Arch box by issuing the commands below.
+
+# passwd
+# useradd -mg users -G wheel,storage,power -s /bin/bash your_new_user
+# passwd  your_new_user
+
+22. After the newly user has been added install sudo package.
+
+# pacman -S sudo
+23. To allow users in wheel group to perform administrative tasks open end edit /etc/sudoers file and uncomment “%wheel ALL=(ALL) ALL” line.
+
+# sudo visudo 
+OR
+# nano /etc/sudoers
+
+24. The last step is to install the Boot Loader in order for Arch to boot up after restart. The default boot loader for many Linux environments and Arch also is represented by GRUB package. To install boot loader on first system hard-disk and detect Arch and other systems on a multiboot environment run the following commands
+
+# pacman -S grub
+# grub-install /dev/sda
+# pacman -S os-prober
+# grub-mkconfig -o /boot/grub/grub.cfg
+Congratulations! ARCH Linux is installed and configured for your box. The last steps needed now is to exit chroot environment, unmount your partitions and reboot system.
+
+# exit
+# exit
+# umount /mnt/home
+# umount /mnt
+# reboot
+
+25. After the system reboots you will lose network connection and your Network Interface Card name will change. To manage this issue, login with newly created user with sudo powers and issue the following command to get NIC Ethernet name.
+
+# ip link
+
+26. After you get the name of the Ethernet connection start and enable the connection on Ethernet NIC running the following commands.
+
+# sudo systemctl enable dhcpcd@ens33.service
+# sudo systemctl start dhcpcd@ens33.service
+
+If you have multiple network interfaces on DHCP run the following command and verify connectivity issuing a ping command against google domain.
+
+# sudo systemctl enable dhcpcd.service
+
+Now your system contains a minimal basic installation that is fully functional to receive and install new software packages, but for now runs only on Command Line with no Graphical User Interface.
+
+Read Also: How to Install GUI (Cinnamon Desktop) in Arch Linux
+
+Due to its high-portability, rolling release circle, compiling source packages, fine granular control over software and processing speed Arch Linux resembles in many ways with Gentoo Linux but cannot rise to that complex architectural design.
+
+
+Note ... Setting up a secure shell server for remote access.
+# pacman -S openssh
+# nano /etc/ssh/sshd_config
+uncomment the port 22 line
+uncomment the Hostkey /etc/ssh/ssh_host_rsa_eky
+add the line below to allow users to connect to ssh server
+AllowUsers	user1	user2
+
+Start & enable the daemon to run at boot
+# systemctl start sshd.service
+# systemctl enable sshd.service
+
+
+---Installing GUI (Cinnamon Desktop) and Basic Softwares in Arch Linux---
+
+The previous Arch Linux topic, just covered the basic installation from scratch, with minimal configurations through command line needed to boot the system and access internet for future configurations.
+
+But, just running an Operating System from command line only, especially Arch Linux, is the job of Linux intermediate or guru users, can be very intimidating for newbies or those who came from Linux GUI distributions or even Microsoft Windows.
+
+Requirements
+
+Previous Arch Linux installation on a Desktop, Laptop or Netbook with a working Internet connection.
+
+    Arch Linux Installation and Configuration Guide with Screenshots
+
+Step 1: Install Xorg Server and Video Drivers
+
+1. After initial system login we need to do a full system update by issuing the following command.
+
+$ sudo pacman –Syu
+
+2. Before we install all the necessary software’s, we need the help of a package “bash-completion“, that automatically completes commands or shows a list of possible commands by pressing TAB key.
+
+$ sudo pacman –S bash-completion
+
+3. The next step is to install the default X environment that provides the main Xorg server configurations and 3D support.
+
+$ sudo pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils mesa
+sudo pacman -S xorg-twm xterm xorg-xclock
+
+5. For a laptop or netbook, also install drivers for touchpad input support.
+
+6. Now we need to install system VGA (Video Card) specific drivers, but first of all we need to identify our system graphics. Issue the following command to identify your video card.
+
+$ lspci | grep VGA
+$ sudo pacman -S xf86-input-synaptics
+
+If your system is a newer Laptop with Optimus support the output should show you two graphics card, usually an Intel and Nvidia or an Intel and ATI. The Linux drivers support for this kind of technology is now so brilliant at this time (you can try Bumblebee or Primus) for a minimal VGA switching.
+
+7. After you detected your Graphics, is now time to install appropriate drivers. By default, Arch offers Vesa default video driver – xf86-video-vesa – that can handle a large number of graphic chipsets but does not provide any 2D or 3D acceleration support.
+
+Also Arch Linux provides two types of Video Drivers.
+
+    Open Source (maintained and developed by distribution – recommended for installation).
+    Proprietary (developed and maintained by Video Cards manufacturer).
+
+In order to list all available Open Source video drivers provided by Arch Linux official repositories run the following commands.
+
+$ sudo pacman –Ss | grep xf86-video
+To list Proprietary drivers run the following commands.
+
+## Nvidia ##
+$ sudo pacman –Ss | grep nvidia
+
+## AMD/ATI ##
+$ sudo pacman –Ss | grep ATI
+$ sudo pacman –Ss | grep AMD
+
+## Intel ##
+$ sudo pacman –Ss | grep intel
+$ sudo pacman –Ss | grep Intel
+
+For Multilib Packages – 32-bit applications on Arch x86_64 – use the following commands.
+
+## Nvidia ##
+$ sudo pacman –Ss | grep lib32-nvidia
+$ sudo pacman –Ss | grep lib32-nouveau
+
+## ATI/AMD ##
+$ sudo pacman –Ss | grep lib32-ati
+
+## Intel ##
+$ sudo pacman –Ss | grep lib32-intel
+
+8. After you verify what drivers are available for your Graphics proceed with appropriate video driver package installation. As mentioned above you should stick to Open Source drivers, due to fact that they are maintained and properly tested by the community. To install Graphics Driver run the following command (after xf86-video – press TAB key to show list and autocomplete).
+
+$ sudo pacman  -S  xf86-video-[TAB]your_graphic_card
+
+For further information regarding Xorg and Graphics drivers go to Arch Linux Wiki Xorg page at https://wiki.archlinux.org/index.php/Xorg.
+
+9. After your Video Card appropriate drivers has been installed, is time to test Xorg server and video drivers by issuing the following command.
+
+$ sudo startx
+
+If everything is correctly configured a basic X session should start like in the screenshot below, which you can ditch by typing exit onto the larger console window.
+
+$ exit
+
+Step 2: Install Desktop Environment – Cinnamon
+
+10. Now is time to provide an awesome innovative customizable Graphical User Interface – Full Desktop Environment for our system by installing Cinnamon package. Run the following command to install Cinnamon and other dependency from official arch repository.
+
+$ sudo pacman -S cinnamon nemo-fileroller
+
+11. Next step is to install GDM display manager package which helps system to start X server and provides a Graphical User Interface for users to login to Cinnamon DE.
+
+$ sudo pacman –S gdm
+
+12. Next step is to enable then start and test GDM by logging to Arch Linux using your credentials.
+
+$ sudo systemctl enable gdm
+$ sudo systemctl start gdm
+
+13. After GDM loads you will be prompted with a Login window. Select your user -> click on Sign In left icon and choose Cinnamon, then enter your password and hit Sign In button or Enter key.
+
+	
+[(For virtualbox video drivers we have to install the below package)]
+
+$ sudo pacman -S virtualbox-guest-utils,\
+
+Then we have to enable the kernel module as below
+
+$ modprobe -a vboxguest vboxsf vboxvideo
+
+To load the VirtualBox module at boot time we must create a *.conf file (e.g. virtualbox.conf) in /etc/modules-load.d/
+
+/etc/modules-load.d/virtualbox.conf
+
+vboxguest
+vboxsf
+vboxvideo
+
+
+
+For further information regarding Xorg and Graphics drivers go to Arch Linux Wiki Xorg page at https://wiki.archlinux.org/index.php/Xorg.
+
+9. After your Video Card appropriate drivers has been installed, is time to test Xorg server and video drivers by issuing the following command.
+
+$ sudo startx
+
+If everything is correctly configured a basic X session should start like in the screenshot below, which you can ditch by typing exit onto the larger console window.
+
+$ exit
+
+
+$ sudo pacman –S net-tools
+$ ifconfig
+
+Next, install Network Manager.
+
+$ sudo pacman -S network-manager-applet
+
+Disable dhcpcd service.
+
+$ sudo systemctl stop dhcpcd@ens33.service
+$ sudo systemctl disable dhcpcd@ens33.service
+$ sudo systemctl stop dhcpcd.service
+$ sudo systemctl disable dhcpcd.service
+
+Start end enable Network Manager.
+
+$ sudo systemctl start NetworkManager
+$ sudo systemctl enable NetworkManager
+
+Step 3: Install Basic Softwares
+
+16. For now our system provides a minimum installed software that can’t be much of help on a day to day desktop or laptop use. Run the following long command to install basic softwares.
+
+
+$ sudo pacman -S pulseaudio pulseaudio-alsa pavucontrol gnome-terminal firefox flashplugin vlc chromium unzip unrar p7zip pidgin skype deluge smplayer audacious qmmp gimp xfburn thunderbird gedit gnome-system-monitor
+
+17. Also install codecs required for multimedia applications to encode or decode audio or video streams by issuing the following command
+
+$ sudo pacman -S a52dec faac faad2 flac jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer0.10-plugins
+
+$ sudo pacman -S libreoffice
+
+If you need other programs or utilities visit Arch Linux Packages page at https://www.archlinux.org/packages/, search for your package and install it via Pacman.
+
+To remove a package use –R switch with pacman command.
+
+$ sudo pacman -R package-to-remove
+
+19. To install community maintained software install Yaourt Package Manager Tool (not recommended to use yaourt for beginner users).
+
+$ sudo pacman -S yaourt
+
+Step 4: Customize Cinnamon Desktop
+
+20. Cinnamon System Settings provides the interface through you can adjust and customize Arch and Cinnamon DE with whatever settings suits your needs. The following settings will show you how to change your system general look and feel (theme and icons). First of all, install Faenza Icon Theme and Numix Theme.
+
+$ sudo pacman -S Faenza-icon-theme numix-themes
+
+21. Then open System settings –> Themes –> Other Settings –> choose Numix on Controls and Window borders and
+Faenza on Icons.
+
+22. To change default Cinnamon theme go to System settings –> Themes –> Get more online –> select and install Minty, then go to Installed tab, choose and Apply Minty theme.
+
+23. As a last customization to display a nice graphical monitoring tool on system toolbar first install the following packages.
+
+$ sudo pacman -S libgtop networkmanager
+
+Then open System Settings –> Applets –> Get more online, search for Multi-Core System Monitor and install it, then switch to Installed tab, right click and Add to panel.
+
+
+
+
+
+
+
+

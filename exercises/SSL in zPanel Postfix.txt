@@ -1,0 +1,138 @@
+SSL in zPanel Postfix
+Jump to: navigation, search
+
+Original post: http://forums.zpanelcp.com/Thread-ZPanel-Email-Self-Signed-Certificate-Dovecot-Postfix-SSL-TLS-Guide
+
+This will help to get trusted.
+
+How to enable SSL in Postfix:
+
+Step 1 (Generating the Certificate files)
+
+Please note:
+
+Please change "mail.alamal-sa.com" to your actual FQDN (mail.example.com)
+
+cd
+openssl genrsa -des3 -out mail.alamal-sa.com.key 2048
+chmod 600 mail.alamal-sa.com.key
+openssl req -new -key mail.alamal-sa.com.key -out mail.alamal-sa.com.csr
+openssl x509 -req -days 365 -in mail.alamal-sa.com.csr -signkey mail.alamal-sa.com.key -out mail.alamal-sa.com.crt
+openssl rsa -in mail.alamal-sa.com.key -out mail.alamal-sa.com.key.nopass
+mv mail.alamal-sa.com.key.nopass mail.alamal-sa.com.key
+openssl req -new -x509 -extensions v3_ca -keyout cakey.pem -out cacert.pem -days 3650
+chmod 600 mail.alamal-sa.com.key
+chmod 600 cakey.pem
+mv mail.alamal-sa.com.key /etc/pki/tls/private/
+mv mail.alamal-sa.com.crt /etc/pki/tls/certs/
+mv cakey.pem /etc/pki/tls/private/
+mv cacert.pem /etc/pki/tls/certs/
+
+Step 2 (Modify the "/etc/postfix/main.cf" file)
+
+Please note:
+
+You can use what ever method you prefer to modify the files, some use vi and some use nano. I actually use the built in editor of WinSCP. I strongly encourage everyone to first save a backup copy of the file just in case something does not work as expected.
+
+cd /etc/postfix/
+cp main.cf main.cf.bk
+nano main.cf
+
+ensure that all of the following variables are not commented and share the listed values. Save the file once variables are altered. Also these variables are not listed in any order. Please change "mail.alamal-sa.com" to your actual FQDN (mail.example.com)
+
+myhostname = mail.alamal-sa.com
+smtpd_tls_auth_only = no
+smtp_use_tls = yes
+smtpd_use_tls = yes
+smtp_tls_note_starttls_offer = yes
+smtpd_tls_key_file = /etc/pki/tls/private/mail.alamal-sa.com.key
+smtpd_tls_cert_file = /etc/pki/tls/certs/mail.alamal-sa.com.crt
+smtpd_tls_CAfile = /etc/pki/tls/certs/cacert.pem
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
+
+Step 3 (Modify the "/etc/postfix/master.cf" file)
+
+Please note:
+
+You can use what ever method you prefer to modify the files, some use vi and some use nano. I strongly encourage everyone to first save a backup copy of the file just in case something does not work as expected.
+
+cd /etc/postfix/
+cp master.cf master.cf.bk
+nano master.cf
+
+ensure that all of the following variables are not commented and share the listed values. Save the file once variables are altered. If not listed please place the variables below the line marked smtp inet n - n - - smtpd
+
+smtps inet n - n - - smtpd
+587 inet n - n - - smtpd
+465 inet n - n - - smtpd
+
+Step 4 (Modify the "/etc/dovecot/dovecot.conf" file)
+
+Please note: You can use what ever method you prefer to modify the files, some use vi and some use nano. I strongly encourage everyone to first save a backup copy of the file just in case something does not work as expected.
+
+cd /etc/dovecot/
+cp dovecot.conf dovecot.conf.bk
+nano dovecot.conf
+
+ensure that all of the following variables are not commented and share the listed values. Save the file once variables are altered. If not listed please insert the variables. Please change "mail.alamal-sa.com" to your actual FQDN (mail.example.com)
+
+ssl = yes
+ssl_cert = </etc/pki/tls/certs/mail.alamal-sa.com.crt
+ssl_key = </etc/pki/tls/private/mail.alamal-sa.com.key
+ssl_ca = </etc/pki/tls/certs/cacert.pem
+
+Step 5 (Restarting the Dovecot and Postfix services)
+
+Please note: The following commands will restart the mail services use by the server.
+
+cd
+service postfix reload
+service postfix restart
+service dovecot restart
+
+Step 6 (Testing account settings)
+
+Please note:
+
+If any errors occurred after performing the previous step please restore all modified files with the generated backups
+
+If all has went well we should now be able to add accounts with in your preferred email client.
+
+I will list the settings for both MS Outlook and Thunderbird since these are the two most popular clients.
+
+MS Outlook
+
+Email: whoever.alamal-sa.com
+
+username: whoever[at]alamal-sa.com
+
+Password: what_ever_you_made_it
+
+imap server: mail.alamal-sa.com use port 143 with TLS
+
+smtp server: mail.alamal-sa.com use port 587 with TLS
+
+
+Thunderbird
+
+Email: whoever.alamal-sa.com
+
+username: whoever[at]alamal-sa.com
+
+Password: what_ever_you_made_it
+
+imap server: mail.alamal-sa.com use port 143 with STARTTLS
+
+smtp server: mail.alamal-sa.com use port 587 with STARTTLS
+
+
+Things to consider
+
+ZPanel by default disables iptables during initial setup. If you have re-enabled iptables to secure your server please don't forget to open the ports mentioned in this guide.
+
+I will update this guide as needed and as requested if deemed appropriate.
+
+Thanks for your time. 

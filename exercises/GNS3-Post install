@@ -1,0 +1,31 @@
+1.First install gcc, flex, bison
+
+sudo apt-get install gcc flex bison
+
+2.now we need iniParser ,download it by wget
+
+sudo wget http://ndevilla.free.fr/iniparser/iniparser-3.1.tar.gz
+sudo tar -xvzf iniparser-3.1.tar.gz
+cd iniparser
+sudo make
+sudo cp libiniparser.* /usr/lib/
+sudo cp src/iniparser.h /usr/local/include
+sudo cp src/dictionary.h /usr/local/include
+
+3.now download the iouyap source code
+
+sudo wget https://github.com/GNS3/iouyap/archive/0.95.tar.gz
+sudo tar -xvzf 0.95.tar.gz
+cd iouyap-0.95
+sudo make install
+sudo chmod +x iouyap
+sudo cp iouyap /usr/local/bin/
+sudo setcap cap_net_raw,cap_net_admin+eip /usr/local/bin/iouyap
+
+sudo dpkg --add-architecture i386  
+sudo apt-get update  
+sudo apt-get install libc6:i386 libstdc++6:i386  
+sudo apt-get install libssl1.0.0:i386     
+sudo ln -s /lib/i386-linux-gnu/libcrypto.so.1.0.0 /lib/i386-linux-gnu/libcrypto.so.4  
+
+enjoy

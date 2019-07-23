@@ -1,0 +1,32 @@
+Install b43-fwcutter. This is the software package that does the extraction of the firmware from the proprietary driver.
+Code:
+su
+yum install b43-fwcutter
+Determine which native driver is being used by the wireless card (b43 or b43legacy). The kernel is generally good about detecting a Broadcom wireless card and loading the correct driver module for it. The following terminal command will list the loaded kernel modules in alphabetical order. Look for b43 or b43legacy.
+Code:
+lsmod | sort
+Do this step only if you need to install version 4 firmware for the b43 driver module. Copy and execute the following command lines one after the other in a Fedora terminal.
+Code:
+wget http://downloads.openwrt.org/sources/broadcom-wl-4.150.10.5.tar.bz2
+tar xjf broadcom-wl-4.150.10.5.tar.bz2
+cd broadcom-wl-4.150.10.5/driver	
+su
+b43-fwcutter -w /lib/firmware wl_apsta_mimo.o
+Do this step only if you need to install version 3 firmware for the b43legacy module.
+Code:
+wget http://downloads.openwrt.org/sources/wl_apsta-3.130.20.0.o
+su
+b43-fwcutter -w /lib/firmware wl_apsta-3.130.20.0.o
+Now reboot or restart NetworkManager and look in the NetworkManager panel icon for available networks (left-click the icon).
+Some things to try if it doesn't work
+Check the firmware files. There should be about three dozen .fw files in /lib/firmware/b43 (or /lib/firmware/b43legacy). If they're not there, then review the steps and re-install the firmware.
+Code:
+ls /lib/firmware/b43
+Check the loaded kernel modules again. The b43 or b43legacy module should be loaded, and potentially conflicting modules such as wl or ndiswrapper should not be loaded.
+Code:
+lsmod | sort
+If a conflicting module is being loaded from a previous driver effort, then either undo the steps from that previous effort, or blacklist the unwanted module. Example...
+Code:
+su
+echo "blacklist ndiswrapper" >> /etc/modprobe.d/blacklist.conf
+
