@@ -1,0 +1,16 @@
+{
+  "useCustomColors": false,
+  "showNumbers": true,
+  "forceMegabytes": true,
+  "arrowType": "arrow-big",
+  "minWidth": 0,
+  "byteThresholdActive": 1024,
+  "fontSizeModifier": 1,
+  "iconSizeModifier": 1,
+  "spacingInbetween": 0,
+  "colorSilent": "#313244",
+  "colorTx": "#fab387",
+  "colorRx": "#cba6f7",
+  "colorText": "#4da3b4eb",
+  "colorBackground": "#313244"
+}
