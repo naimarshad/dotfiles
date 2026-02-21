@@ -1,0 +1,13 @@
+{
+  "panel": {
+    "emptyTitle": "No VPN found",
+    "emptyDescription": "Use Network Manager to add a VPN"
+  },
+  "common": {
+    "vpn": "VPN",
+    "refresh": "Refresh",
+    "connected": "Connected",
+    "connect": "Connect",
+    "disconnect": "Disconnect"
+  }
+}

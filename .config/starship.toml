@@ -1,0 +1,109 @@
+# ~/.config/starship.toml
+# Minimal Fish + Starship prompt for: k8s, docker/podman, git, terraform, helm, ssh + right-side telemetry
+# set -U fish_greeting
+
+add_newline = true
+
+format = """
+╭─$directory $username$hostname at $docker_context$kubernetes$git_branch$git_status $terraform
+$character"""
+
+# Right side telemetry (keep it light; scripts are cached/best-effort)
+right_format = """$memory_usage ${custom.cpu} $time $cmd_duration"""
+
+# -------------------- LEFT SIDE --------------------
+
+[directory]
+home_symbol = " ~"
+truncation_length = 4
+truncation_symbol = "…/"
+format = "[$path]($style) "
+style = "bold cyan"
+
+[username]
+show_always = true
+format = "[$user]($style) "
+style_user = "bold yellow"
+style_root = "bold red"
+
+[hostname]
+ssh_only = true
+format = "[@$hostname]($style) "
+style = "bold yellow"
+
+[docker_context]
+disabled = false
+symbol = " "
+format = "[$symbol$context]($style) "
+style = "bold blue"
+
+[kubernetes]
+disabled = false
+symbol = "󱃾 "
+format = "[$symbol$context(::$namespace)]($style) "
+style = "bold blue"
+# Always show (no directory-based detection)
+detect_files = []
+detect_folders = []
+detect_extensions = []
+
+[git_branch]
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "bold purple"
+
+[git_status]
+format = "[$ahead_behind$modified$staged$untracked]($style) "
+style = "purple"
+
+# Make it human-ish
+modified = "!"
+staged = "+"
+untracked = "?"
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+
+[terraform]
+disabled = false
+symbol = "󱁢 "
+format = "[$symbol$workspace]($style) "
+style = "bold 105"
+detect_files = ["terraform.tfstate", ".terraform", "*.tf"]
+
+[cmd_duration]
+min_time = 200
+format = " [$duration]($style) "
+style = "bold white"
+
+[time]
+disabled = false
+time_format = "%H:%M:%S"
+format = " [$time]($style)"
+style = "bold white"
+
+[character]
+success_symbol = "╰───❯ "
+error_symbol = "╰──❯ "
+
+# -------------------- RIGHT SIDE --------------------
+
+[memory_usage]
+disabled = false
+threshold = 0
+symbol = " "
+format = "[$symbol${ram}]($style) "
+style = "bold 208"
+
+[custom.cpu]
+command = "~/.config/starship/cpu.sh"
+when = "test -x ~/.config/starship/cpu.sh"
+format = "[$output]($style) "
+style = "bold red"
+
+[custom.netinfo]
+command = "~/.config/starship/netinfo.sh"
+when = "test -x ~/.config/starship/netinfo.sh"
+format = "[$output]($style)"
+style = "dimmed white"
+
