@@ -325,7 +325,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Gruvbox",
+        "predefinedScheme": "Tokyo Night",
         "schedulingMode": "off",
         "useWallpaperColors": false
     },
@@ -690,11 +690,11 @@
             },
             {
                 "enabled": true,
-                "id": "zenBrowser"
+                "id": "ghostty"
             },
             {
                 "enabled": true,
-                "id": "ghostty"
+                "id": "zenBrowser"
             }
         ],
         "enableUserTheming": true
