@@ -6,7 +6,7 @@
         "clipboardWrapText": true,
         "customLaunchPrefix": "",
         "customLaunchPrefixEnabled": false,
-        "density": "comfortable",
+        "density": "default",
         "enableClipPreview": true,
         "enableClipboardHistory": true,
         "enableSessionSearch": true,
@@ -33,7 +33,7 @@
         "preferredPlayer": "",
         "visualizerType": "linear",
         "volumeFeedback": false,
-        "volumeOverdrive": false,
+        "volumeOverdrive": true,
         "volumeStep": 5
     },
     "bar": {
@@ -52,7 +52,8 @@
         "marginHorizontal": 4,
         "marginVertical": 4,
         "monitors": [
-            "HDMI-A-1"
+            "HDMI-A-1",
+            "eDP-1"
         ],
         "outerCorners": true,
         "position": "top",
@@ -67,6 +68,13 @@
         "useSeparateOpacity": false,
         "widgets": {
             "center": [
+            ],
+            "left": [
+                {
+                    "icon": "rocket",
+                    "iconColor": "tertiary",
+                    "id": "Launcher"
+                },
                 {
                     "characterCount": 2,
                     "colorizeIcons": false,
@@ -85,22 +93,6 @@
                     "showBadge": true,
                     "showLabelsOnlyWhenOccupied": true,
                     "unfocusedIconsOpacity": 1
-                }
-            ],
-            "left": [
-                {
-                    "icon": "rocket",
-                    "iconColor": "tertiary",
-                    "id": "Launcher"
-                },
-                {
-                    "clockColor": "none",
-                    "customFont": "",
-                    "formatHorizontal": "HH:mm ddd, MMM dd",
-                    "formatVertical": "HH mm - dd MM",
-                    "id": "Clock",
-                    "tooltipFormat": "HH:mm ddd, MMM dd",
-                    "useCustomFont": false
                 },
                 {
                     "defaultSettings": {
@@ -172,6 +164,9 @@
                     "textColor": "none",
                     "useFixedWidth": false,
                     "visualizerType": "linear"
+                },
+                {
+                    "id": "plugin:notes-scratchpad"
                 }
             ],
             "right": [
@@ -208,18 +203,6 @@
                     "id": "plugin:tailscale"
                 },
                 {
-                    "displayMode": "onhover",
-                    "iconColor": "none",
-                    "id": "Network",
-                    "textColor": "none"
-                },
-                {
-                    "displayMode": "onhover",
-                    "iconColor": "none",
-                    "id": "Bluetooth",
-                    "textColor": "none"
-                },
-                {
                     "defaultSettings": {
                         "arrowType": "caret",
                         "byteThresholdActive": 1024,
@@ -234,26 +217,13 @@
                     "id": "plugin:network-indicator"
                 },
                 {
-                    "deviceNativePath": "__default__",
-                    "displayMode": "graphic-clean",
-                    "hideIfIdle": false,
-                    "hideIfNotDetected": true,
-                    "id": "Battery",
-                    "showNoctaliaPerformance": false,
-                    "showPowerProfiles": false
+                    "id": "plugin:ip-monitor"
                 },
                 {
                     "displayMode": "onhover",
                     "iconColor": "none",
                     "id": "Volume",
                     "middleClickCommand": "pwvucontrol || pavucontrol",
-                    "textColor": "none"
-                },
-                {
-                    "applyToAllMonitors": false,
-                    "displayMode": "onhover",
-                    "iconColor": "none",
-                    "id": "Brightness",
                     "textColor": "none"
                 },
                 {
@@ -285,6 +255,36 @@
                         "mode": "region"
                     },
                     "id": "plugin:screenshot"
+                },
+                {
+                    "id": "plugin:network-manager-vpn"
+                },
+                {
+                    "id": "plugin:privacy-indicator"
+                },
+                {
+                    "id": "plugin:mini-docker"
+                },
+                {
+                    "deviceNativePath": "__default__",
+                    "displayMode": "icon-hover",
+                    "hideIfIdle": false,
+                    "hideIfNotDetected": true,
+                    "id": "Battery",
+                    "showNoctaliaPerformance": false,
+                    "showPowerProfiles": true
+                },
+                {
+                    "clockColor": "none",
+                    "customFont": "",
+                    "formatHorizontal": "HH:mm ddd, MMM dd",
+                    "formatVertical": "HH mm - dd MM",
+                    "id": "Clock",
+                    "tooltipFormat": "HH:mm ddd, MMM dd",
+                    "useCustomFont": false
+                },
+                {
+                    "id": "plugin:keybind-cheatsheet"
                 },
                 {
                     "colorizeDistroLogo": false,
@@ -325,7 +325,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Catppuccin Lavender",
+        "predefinedScheme": "Gruvbox",
         "schedulingMode": "off",
         "useWallpaperColors": false
     },
@@ -344,7 +344,7 @@
                 "id": "audio-card"
             },
             {
-                "enabled": false,
+                "enabled": true,
                 "id": "brightness-card"
             },
             {
@@ -398,13 +398,13 @@
     "dock": {
         "animationSpeed": 1,
         "backgroundOpacity": 1,
-        "colorizeIcons": false,
+        "colorizeIcons": true,
         "deadOpacity": 0.6,
         "displayMode": "auto_hide",
         "dockType": "floating",
         "enabled": true,
         "floatingRatio": 1,
-        "inactiveIndicators": false,
+        "inactiveIndicators": true,
         "monitors": [
         ],
         "onlySameOutput": true,
@@ -414,7 +414,7 @@
             "firefox",
             "code"
         ],
-        "pinnedStatic": false,
+        "pinnedStatic": true,
         "position": "bottom",
         "showFrameIndicator": true,
         "sitOnFrame": false,
@@ -424,7 +424,7 @@
         "allowPanelsOnScreenWithoutBar": true,
         "allowPasswordWithFprintd": false,
         "animationDisabled": false,
-        "animationSpeed": 1,
+        "animationSpeed": 1.25,
         "autoStartAuth": false,
         "avatarImage": "/home/naeem/Pictures/Naeem-Pic.jpg",
         "boxRadiusRatio": 1,
@@ -467,9 +467,10 @@
         "lockScreenMonitors": [
         ],
         "lockScreenTint": 0,
+        "passwordChars": false,
         "radiusRatio": 1,
         "reverseScroll": false,
-        "scaleRatio": 1.05,
+        "scaleRatio": 1,
         "screenRadiusRatio": 1,
         "shadowDirection": "bottom_right",
         "shadowOffsetX": 2,
@@ -577,7 +578,7 @@
         "countdownDuration": 10000,
         "enableCountdown": true,
         "largeButtonsLayout": "single-row",
-        "largeButtonsStyle": true,
+        "largeButtonsStyle": false,
         "position": "center",
         "powerOptions": [
             {
@@ -644,7 +645,7 @@
         "diskAvailWarningThreshold": 20,
         "diskCriticalThreshold": 90,
         "diskWarningThreshold": 80,
-        "enableDgpuMonitoring": false,
+        "enableDgpuMonitoring": true,
         "externalMonitor": "resources || missioncenter || jdsystemmonitor || corestats || system-monitoring-center || gnome-system-monitor || plasma-systemmonitor || mate-system-monitor || ukui-system-monitor || deepin-system-monitor || pantheon-system-monitor",
         "gpuCriticalThreshold": 90,
         "gpuWarningThreshold": 80,
@@ -661,31 +662,7 @@
         "activeTemplates": [
             {
                 "enabled": true,
-                "id": "gtk"
-            },
-            {
-                "enabled": true,
-                "id": "btop"
-            },
-            {
-                "enabled": true,
-                "id": "ghostty"
-            },
-            {
-                "enabled": true,
-                "id": "hyprland"
-            },
-            {
-                "enabled": true,
                 "id": "kcolorscheme"
-            },
-            {
-                "enabled": true,
-                "id": "qt"
-            },
-            {
-                "enabled": true,
-                "id": "zenBrowser"
             },
             {
                 "enabled": true,
@@ -693,11 +670,31 @@
             },
             {
                 "enabled": true,
-                "id": "foot"
+                "id": "gtk"
             },
             {
                 "enabled": true,
-                "id": "alacritty"
+                "id": "qt"
+            },
+            {
+                "enabled": true,
+                "id": "hyprland"
+            },
+            {
+                "enabled": true,
+                "id": "btop"
+            },
+            {
+                "enabled": true,
+                "id": "pywalfox"
+            },
+            {
+                "enabled": true,
+                "id": "zenBrowser"
+            },
+            {
+                "enabled": true,
+                "id": "ghostty"
             }
         ],
         "enableUserTheming": true
@@ -706,12 +703,12 @@
         "bluetoothDetailsViewMode": "grid",
         "bluetoothHideUnnamedDevices": false,
         "boxBorderEnabled": false,
-        "fontDefault": "Noto Sans",
+        "fontDefault": "Inter",
         "fontDefaultScale": 1,
         "fontFixed": "JetBrainsMonoNL Nerd Font Mono",
         "fontFixedScale": 1,
         "networkPanelView": "wifi",
-        "panelBackgroundOpacity": 0.93,
+        "panelBackgroundOpacity": 0.9,
         "panelsAttachedToBar": true,
         "settingsPanelMode": "attached",
         "tooltipsEnabled": true,
