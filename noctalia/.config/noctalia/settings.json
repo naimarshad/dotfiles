@@ -1179,31 +1179,11 @@
         "activeTemplates": [
             {
                 "enabled": true,
-                "id": "hyprland"
-            },
-            {
-                "enabled": true,
                 "id": "btop"
             },
             {
                 "enabled": true,
-                "id": "ghostty"
-            },
-            {
-                "enabled": true,
-                "id": "gtk"
-            },
-            {
-                "enabled": true,
-                "id": "qt"
-            },
-            {
-                "enabled": true,
                 "id": "kcolorscheme"
-            },
-            {
-                "enabled": true,
-                "id": "code"
             },
             {
                 "enabled": true,
@@ -1215,7 +1195,27 @@
             },
             {
                 "enabled": true,
+                "id": "gtk"
+            },
+            {
+                "enabled": true,
+                "id": "qt"
+            },
+            {
+                "enabled": true,
                 "id": "zenBrowser"
+            },
+            {
+                "enabled": true,
+                "id": "code"
+            },
+            {
+                "enabled": true,
+                "id": "ghostty"
+            },
+            {
+                "enabled": true,
+                "id": "hyprland"
             }
         ],
         "enableUserTheming": true
@@ -1241,6 +1241,162 @@
         "enableMultiMonitorDirectories": false,
         "enabled": true,
         "favorites": [
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 2.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 1.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 3.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 4.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 5.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/Next.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 6.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 7.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/ColorAbstract.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 9.png",
+                "useWallpaperColors": false
+            },
+            {
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
+                    "#f38ba8"
+                ],
+                "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 8.png",
+                "useWallpaperColors": false
+            }
         ],
         "fillColor": "#000000",
         "fillMode": "crop",
