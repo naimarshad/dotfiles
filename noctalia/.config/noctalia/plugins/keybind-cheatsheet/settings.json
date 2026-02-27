@@ -1,8 +1,29 @@
 {
-  "cheatsheetData": [],
+  "cheatsheetData": [
+    {
+      "title": "0 = fully opaque. Lower values let blur show through.",
+      "binds": []
+    },
+    {
+      "title": "Environment/DBus setup first",
+      "binds": []
+    },
+    {
+      "title": "Polkit (auth daemon) early",
+      "binds": []
+    },
+    {
+      "title": "Wallpaper daemon before shell",
+      "binds": []
+    },
+    {
+      "title": "Noctalia shell last (needs other services ready)",
+      "binds": []
+    }
+  ],
   "detectedCompositor": "hyprland",
   "niriConfigPath": "~/.config/niri/config.kdl",
-  "hyprlandConfigPath": "~/.config/hypr/keybinds.conf",
+  "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
   "modKeyVariable": "$mod",
   "windowHeight": 850,
   "windowWidth": 1400

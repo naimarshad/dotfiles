@@ -6,7 +6,7 @@
         "clipboardWrapText": true,
         "customLaunchPrefix": "",
         "customLaunchPrefixEnabled": false,
-        "density": "default",
+        "density": "compact",
         "enableClipPreview": true,
         "enableClipboardHistory": true,
         "enableSessionSearch": true,
@@ -14,7 +14,7 @@
         "enableWindowsSearch": false,
         "iconMode": "tabler",
         "ignoreMouseInput": false,
-        "overviewLayer": false,
+        "overviewLayer": true,
         "pinnedApps": [
         ],
         "position": "center",
@@ -39,11 +39,11 @@
     "bar": {
         "autoHideDelay": 500,
         "autoShowDelay": 150,
-        "backgroundOpacity": 0.93,
+        "backgroundOpacity": 0.7000000000000001,
         "barType": "simple",
         "capsuleColorKey": "none",
-        "capsuleOpacity": 1,
-        "density": "comfortable",
+        "capsuleOpacity": 0.9500000000000001,
+        "density": "default",
         "displayMode": "always_visible",
         "floating": false,
         "frameRadius": 12,
@@ -59,6 +59,7 @@
         "position": "top",
         "screenOverrides": [
             {
+                "density": "comfortable",
                 "enabled": true,
                 "name": "HDMI-A-1",
                 "widgets": {
@@ -86,7 +87,7 @@
                     "left": [
                         {
                             "icon": "rocket",
-                            "iconColor": "tertiary",
+                            "iconColor": "none",
                             "id": "Launcher"
                         },
                         {
@@ -174,6 +175,8 @@
                             "hidePassive": false,
                             "id": "Tray",
                             "pinned": [
+                                "You have 1 notification",
+                                "Cachy-Update"
                             ]
                         },
                         {
@@ -269,21 +272,6 @@
                             "id": "plugin:mini-docker"
                         },
                         {
-                            "defaultSettings": {
-                                "autoHeight": true,
-                                "cheatsheetData": [
-                                ],
-                                "columnCount": 3,
-                                "detectedCompositor": "",
-                                "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
-                                "modKeyVariable": "$mod",
-                                "niriConfigPath": "~/.config/niri/config.kdl",
-                                "windowHeight": 0,
-                                "windowWidth": 1400
-                            },
-                            "id": "plugin:keybind-cheatsheet"
-                        },
-                        {
                             "deviceNativePath": "__default__",
                             "displayMode": "icon-hover",
                             "hideIfIdle": false,
@@ -313,7 +301,7 @@
                         },
                         {
                             "colorizeDistroLogo": false,
-                            "colorizeSystemIcon": "none",
+                            "colorizeSystemIcon": "error",
                             "customIconPath": "",
                             "enableColorization": false,
                             "icon": "noctalia",
@@ -536,21 +524,6 @@
                             "id": "plugin:mini-docker"
                         },
                         {
-                            "defaultSettings": {
-                                "autoHeight": true,
-                                "cheatsheetData": [
-                                ],
-                                "columnCount": 3,
-                                "detectedCompositor": "",
-                                "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
-                                "modKeyVariable": "$mod",
-                                "niriConfigPath": "~/.config/niri/config.kdl",
-                                "windowHeight": 0,
-                                "windowWidth": 1400
-                            },
-                            "id": "plugin:keybind-cheatsheet"
-                        },
-                        {
                             "deviceNativePath": "__default__",
                             "displayMode": "icon-hover",
                             "hideIfIdle": false,
@@ -593,7 +566,7 @@
         ],
         "showCapsule": true,
         "showOutline": false,
-        "useSeparateOpacity": false,
+        "useSeparateOpacity": true,
         "widgets": {
             "center": [
                 {
@@ -812,21 +785,6 @@
                     "id": "plugin:mini-docker"
                 },
                 {
-                    "defaultSettings": {
-                        "autoHeight": true,
-                        "cheatsheetData": [
-                        ],
-                        "columnCount": 3,
-                        "detectedCompositor": "",
-                        "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
-                        "modKeyVariable": "$mod",
-                        "niriConfigPath": "~/.config/niri/config.kdl",
-                        "windowHeight": 0,
-                        "windowWidth": 1400
-                    },
-                    "id": "plugin:keybind-cheatsheet"
-                },
-                {
                     "deviceNativePath": "__default__",
                     "displayMode": "icon-hover",
                     "hideIfIdle": false,
@@ -955,28 +913,30 @@
     },
     "dock": {
         "animationSpeed": 1,
-        "backgroundOpacity": 1,
+        "backgroundOpacity": 0.9,
         "colorizeIcons": false,
         "deadOpacity": 0.6,
         "displayMode": "auto_hide",
         "dockType": "floating",
         "enabled": true,
-        "floatingRatio": 1,
+        "floatingRatio": 0.25,
         "inactiveIndicators": true,
         "monitors": [
         ],
-        "onlySameOutput": true,
+        "onlySameOutput": false,
         "pinnedApps": [
             "com.mitchellh.ghostty",
             "zen",
             "firefox",
-            "code"
+            "code",
+            "org.kde.kwrite",
+            "slack"
         ],
         "pinnedStatic": true,
         "position": "bottom",
         "showFrameIndicator": true,
         "sitOnFrame": false,
-        "size": 1.3
+        "size": 1.5
     },
     "general": {
         "allowPanelsOnScreenWithoutBar": true,
@@ -989,7 +949,7 @@
         "clockFormat": "hh\\nmm",
         "clockStyle": "custom",
         "compactLockScreen": false,
-        "dimmerOpacity": 0.2,
+        "dimmerOpacity": 0,
         "enableLockScreenCountdown": true,
         "enableShadows": false,
         "forceBlackScreenCorners": false,
@@ -1027,7 +987,7 @@
         "lockScreenTint": 0,
         "radiusRatio": 1,
         "reverseScroll": false,
-        "scaleRatio": 1,
+        "scaleRatio": 1.05,
         "screenRadiusRatio": 1,
         "shadowDirection": "bottom_right",
         "shadowOffsetX": 2,
@@ -1231,10 +1191,6 @@
             },
             {
                 "enabled": true,
-                "id": "zenBrowser"
-            },
-            {
-                "enabled": true,
                 "id": "gtk"
             },
             {
@@ -1247,11 +1203,19 @@
             },
             {
                 "enabled": true,
+                "id": "code"
+            },
+            {
+                "enabled": true,
+                "id": "yazi"
+            },
+            {
+                "enabled": true,
                 "id": "pywalfox"
             },
             {
                 "enabled": true,
-                "id": "code"
+                "id": "zenBrowser"
             }
         ],
         "enableUserTheming": true
@@ -1265,7 +1229,7 @@
         "fontFixed": "JetBrainsMonoNL Nerd Font Mono",
         "fontFixedScale": 1,
         "networkPanelView": "wifi",
-        "panelBackgroundOpacity": 0.74,
+        "panelBackgroundOpacity": 0.86,
         "panelsAttachedToBar": true,
         "settingsPanelMode": "attached",
         "tooltipsEnabled": true,
