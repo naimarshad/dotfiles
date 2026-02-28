@@ -43,7 +43,7 @@
         "barType": "simple",
         "capsuleColorKey": "none",
         "capsuleOpacity": 0.9500000000000001,
-        "density": "default",
+        "density": "comfortable",
         "displayMode": "always_visible",
         "floating": false,
         "frameRadius": 12,
@@ -312,8 +312,8 @@
                 }
             },
             {
-                "density": "mini",
-                "displayMode": "auto_hide",
+                "density": "default",
+                "displayMode": "always_visible",
                 "enabled": true,
                 "name": "eDP-1",
                 "widgets": {
@@ -987,7 +987,7 @@
         "lockScreenTint": 0,
         "radiusRatio": 1,
         "reverseScroll": false,
-        "scaleRatio": 1.05,
+        "scaleRatio": 1,
         "screenRadiusRatio": 1,
         "shadowDirection": "bottom_right",
         "shadowOffsetX": 2,
@@ -1229,7 +1229,7 @@
         "fontFixed": "JetBrainsMonoNL Nerd Font Mono",
         "fontFixedScale": 1,
         "networkPanelView": "wifi",
-        "panelBackgroundOpacity": 0.86,
+        "panelBackgroundOpacity": 0.85,
         "panelsAttachedToBar": true,
         "settingsPanelMode": "attached",
         "tooltipsEnabled": true,
