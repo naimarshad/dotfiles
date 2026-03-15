@@ -67,9 +67,8 @@ fi
 
 alias vim="nvim"
 alias fvim='nvim $(fzf --preview="bat --color=always {}")'
-alias kcx='kubectx'
-alias kns='kubens'
-alias kubectl="kubecolor"
+alias kcx='kubie ctx'
+alias kns='kubie ns'
 alias osbox='ssh opnsense'
 alias qnap='ssh qnap'
 alias pvelab='ssh pvelab'
@@ -84,6 +83,7 @@ alias wolpve='wol 64:00:6a:8a:db:d5'
 alias pik8s='export KUBECONFIG=/home/naeem/projects/private/pik8s/kubeconfig'
 alias sh01k8s='export KUBECONFIG=/home/naeem/projects/private/k0s/kubeconfig-sh01.yaml'
 alias bat='/usr/bin/batcat'
+alias pro='cd ~/projects/'
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
@@ -91,7 +91,6 @@ fi
 
 ### Fuzzy search configurations ###
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi" # \
 # --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
@@ -113,6 +112,70 @@ alias gro='cd $(git rev-parse --show-toplevel)'
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 
-compdef kubecolor=kubectl
+. "$HOME/.cargo/env"
 
-# eval "$(/usr/bin/mise activate zsh)"
+# Destructive verbs that require confirmation
+_PROD_PATTERN="prod|prd|production"
+_DANGEROUS="^(delete|scale|drain|cordon|taint|patch|apply|exec|edit|cp|replace)"
+
+kubectl() {
+  # KUBIE_CTX is set by kubie in its subshell — reliable indicator
+  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
+
+  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
+    if echo "$*" | grep -qE "$_DANGEROUS"; then
+
+      # Hard visual break — hard to overlook
+      echo ""
+      echo "  ╔══════════════════════════════════════╗"
+      echo "  ║   PRODUCTION CONTEXT: $ctx"
+      echo "  ╚══════════════════════════════════════╝"
+      echo ""
+      echo "  Namespace : ${KUBIE_NS:-$(command kubectl config view --minify -o jsonpath='{..namespace}')}"
+      echo "  Command   : kubectl $*"
+      echo ""
+      printf "  Type context name to confirm (%s): " "$ctx"
+      read -r _confirm
+
+      if [ "$_confirm" != "$ctx" ]; then
+        echo ""
+        echo "  ✓ Aborted — no changes made."
+        echo ""
+        return 1
+      fi
+      echo ""
+    fi
+  fi
+
+  command kubecolor "$@"
+}
+
+# Helm destructive verbs
+_HELM_DANGEROUS="^(upgrade|uninstall|rollback|delete)"
+
+helm() {
+  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
+
+  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
+    if echo "$*" | grep -qE "$_HELM_DANGEROUS"; then
+      echo ""
+      echo "  ╔══════════════════════════════════════╗"
+      echo "  ║   PRODUCTION HELM: $ctx"
+      echo "  ╚══════════════════════════════════════╝"
+      echo ""
+      echo "  Command : helm $*"
+      echo ""
+      printf "  Type context name to confirm (%s): " "$ctx"
+      read -r _confirm
+
+      if [ "$_confirm" != "$ctx" ]; then
+        echo "  ✓ Aborted."
+        return 1
+      fi
+    fi
+  fi
+
+  command helm "$@"
+}
+
+compdef kubecolor=kubectl
