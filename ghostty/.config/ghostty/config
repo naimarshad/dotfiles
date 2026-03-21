@@ -1,0 +1,78 @@
+copy-on-select = false
+window-save-state = always
+window-new-tab-position = end
+window-theme = auto
+window-padding-x = 10
+window-padding-y = 3
+window-padding-balance = true
+background-opacity = 1
+background-blur-radius = 60
+theme = Apple System Colors
+
+# Font
+font-family = "JetBrainsMono NF Regular"
+font-family-bold = "JetBrainsMono NF Regular"
+font-family-italic = "JetBrainsMono NF Regular"
+font-family-bold-italic = "JetBrainsMono NF Regular"
+font-size = 12
+font-feature = +calt
+font-feature = +liga
+font-feature = +ss01
+freetype-load-flags = hinting
+font-thicken = false
+font-synthetic-style = false
+
+# Rendering
+bold-is-bright = false
+
+
+# Reduce density
+adjust-cell-height = 8%
+adjust-cell-width  = 6%
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+
+# Mouse
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+
+scrollback-limit = 100000000
+shell-integration-features = no-cursor,sudo,no-title
+
+# Padding (important on large LG screens)
+window-padding-x = 6
+window-padding-y = 4
+window-padding-balance = true
+window-save-state = always
+window-colorspace = "display-p3"
+
+# keybindings
+keybind = alt+s>r=reload_config
+keybind = alt+s>n=new_window
+keybind = alt+s>c=new_tab
+
+# quick tab switch
+keybind = alt+s>1=goto_tab:1
+keybind = alt+s>2=goto_tab:2
+keybind = alt+s>3=goto_tab:3
+keybind = alt+s>4=goto_tab:4
+keybind = alt+s>5=goto_tab:5
+keybind = alt+s>6=goto_tab:6
+keybind = alt+s>7=goto_tab:7
+keybind = alt+s>8=goto_tab:8
+keybind = alt+s>9=goto_tab:9
+
+# split
+keybind = alt+s>]=new_split:right
+keybind = alt+s>-=new_split:down
+keybind = alt+s>j=goto_split:bottom
+keybind = alt+s>k=goto_split:top
+keybind = alt+s>h=goto_split:left
+keybind = alt+s>l=goto_split:right
+keybind = alt+s>z=toggle_split_zoom
+keybind = alt+s>e=equalize_splits
+
+
+shell-integration = none
