@@ -1,9 +1,9 @@
 {
-  "scratchpadContent": "",
+  "scratchpadContent": " Since it is just a dev cluster, I went with approach of deleteing the acual state from AWS, Then start with applying openebs module, platform_services module\n\nIt failed in between where I had to investigate why it was failing, Obeservations are below\n\nCluster secret in some namespace fails specifially in Traefik namespace everytime. (since I have cleaned up cluster multiple time)\n\nOpensearch Operator was failing due to some image pull. Imgare repo for kube-proxy was deprecated in upstream.\n\nAlerts\nStrimzi Operator got oom-killed in prod-skp\nNodeMemoryMajorPagesFaults (check if any futher investigation may require)\n\n\nPost 4 eye deployments\nFollowup on longhorn manager (prod-sysadmin cluster)\ninstance-manager-8c13b84a0f614972d784167cfaa37f1c pod disrubtion budget for\n\nTemper monkey\nnumberphile ",
   "panelWidth": 600,
   "panelHeight": 400,
   "fontSize": 14,
-  "cursorPosition": 0,
+  "cursorPosition": 625,
   "scrollPositionX": 0,
-  "scrollPositionY": 0
+  "scrollPositionY": 0.3119047619047619
 }
