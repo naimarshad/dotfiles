@@ -11,9 +11,10 @@ COMPLETION_WAITING_DOTS="true"
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/scripts:$HOME/bin:/usr/local/bin:/home/naeem/.local/bin:/home/naeem/go/bin:$PATH
 export PATH="$HOME/.krew/bin:$PATH"
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 # export DOCKER_HOST=tcp://192.168.1.10:2375
-#
 #export KUBECOLOR_PRESET="light"
 #export BAT_THEME=GitHub
 
@@ -31,10 +32,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 #ZSH_THEME="robbyrussell"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
-plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl kubectx vscode common-aliases command-not-found zsh-syntax-highlighting \
+plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl vscode common-aliases command-not-found zsh-syntax-highlighting \
   fzf zsh-completions zsh-autosuggestions zsh-history-substring-search 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
   git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd tmux virtualenv eza kind minikube)
-
 
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
 zstyle ':omz:plugins:alias-finder' exact yes # disabled by default
@@ -49,7 +49,7 @@ zstyle ':omz:plugins:eza' 'icons' yes
 autoload -Uz compinit && compinit -i
 
 source $ZSH/oh-my-zsh.sh
-# source ~/.zsh/catppuccin_macchiato-zsh-syntax-highlighting.zsh
+source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -65,6 +65,18 @@ else
   export EDITOR='nvim'
 fi
 
+###### General Use Alaises #####
+alias vim="nvim"
+alias fvim='vim $(fzf --preview="bat --color=always {}")'
+alias yayin="yay -S --noconfirm"
+alias play="cd ~/ri-work/playground"
+alias kk="kubecolor klock"
+alias kgir="kubectl get ingressroutes"
+alias mc="/usr/bin/mcli"
+alias dim="docker images"
+alias pro="cd /home/naeem/projects/"
+
+## Personal Aliases
 alias vim="nvim"
 alias fvim='nvim $(fzf --preview="bat --color=always {}")'
 alias kcx='kubie ctx'
@@ -76,10 +88,10 @@ alias sh01='ssh selfhost01'
 alias jellyfinpc='ssh jellyfinpc'
 alias ri-worklap='ssh ri-worklap'
 alias wifirouter='ssh wifirouter'
-alias pv01='ssh pv01'
 alias mm='ssh mattermost'
 alias jellyfinstation='ssh jellyfinstation'
-alias wolpve='wol 64:00:6a:8a:db:d5'
+alias jellyfinpc='ssh jellyfinpc'
+alias pvewol='wol 64:00:6a:8a:db:d5'
 alias pik8s='export KUBECONFIG=/home/naeem/projects/private/pik8s/kubeconfig'
 alias sh01k8s='export KUBECONFIG=/home/naeem/projects/private/k0s/kubeconfig-sh01.yaml'
 alias bat='/usr/bin/batcat'
@@ -90,15 +102,15 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
 fi
 
 ### Fuzzy search configurations ###
-
-
-export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi" # \
-# --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
-# --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
-# --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
-# --color=selected-bg:#45475A \
-# --color=border:#6C7086,label:#CDD6F4 \
-# --multi"
+#
+# Below is for light mode theme -- mocha
+export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
+--color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
+--color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
+--color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
+--color=selected-bg:#45475A \
+--color=border:#6C7086,label:#CDD6F4 \
+--multi"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -108,11 +120,28 @@ export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi" # \
 # RI Sepcfic aliases & environment variables
 alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
 alias gro='cd $(git rev-parse --show-toplevel)'
+alias review="gh search prs --review-requested naeem-tipu --state open --review required"
+alias merge="gh search prs --author naeem-tipu --state open --review approved"
+alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
+alias iac="cd /home/naeem/ri-work/git-repos/platform/iac"
+alias aiac="cd /home/naeem/ri-work/git-repos/platform/iac/ansible"
+alias tiac="cd /home/naeem/ri-work/git-repos/platform/iac/terraform"
+alias hc="cd /home/naeem/ri-work/git-repos/platform/iac/helm_charts/"
+alias hv="cd /home/naeem/ri-work/git-repos/platform/iac/helm_values/"
+alias dev_platform="cd /home/naeem/ri-work/git-repos/platform/iac/terraform/non-prod/pks/natwork/dev-platform/"
+alias spsd='sops decrypt'
+alias spse='sops edit'
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+export JIRA_USERMAIL=naeem.tipu@riskident.com
+export ANSIBLE_REMOTE_USER=naeemtipu
+export ANSIBLE_BECOME=True
 
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
-
-. "$HOME/.cargo/env"
 
 # Destructive verbs that require confirmation
 _PROD_PATTERN="prod|prd|production"
@@ -177,5 +206,7 @@ helm() {
 
   command helm "$@"
 }
+
+eval "$(/home/naeem/.local/bin/mise activate zsh)"
 
 compdef kubecolor=kubectl
