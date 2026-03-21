@@ -106,7 +106,7 @@ export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi" # \
 
 
 # RI Sepcfic aliases & environment variables
-alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert c5a952f424e09b34fdc20b70d52942cefa9e849bd9052c5730b93c7477e59d20"
+alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
 alias gro='cd $(git rev-parse --show-toplevel)'
 
 zle -N kube-toggle
