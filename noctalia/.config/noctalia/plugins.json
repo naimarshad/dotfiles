@@ -39,6 +39,10 @@
             "enabled": true,
             "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
         },
+        "next-meeting": {
+            "enabled": true,
+            "sourceUrl": "local"
+        },
         "notes-scratchpad": {
             "enabled": true,
             "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
