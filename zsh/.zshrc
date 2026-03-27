@@ -94,7 +94,7 @@ alias jellyfinpc='ssh jellyfinpc'
 alias pvewol='wol 64:00:6a:8a:db:d5'
 alias pik8s='export KUBECONFIG=/home/naeem/projects/private/pik8s/kubeconfig'
 alias sh01k8s='export KUBECONFIG=/home/naeem/projects/private/k0s/kubeconfig-sh01.yaml'
-alias bat='/usr/bin/batcat'
+#alias bat='/usr/bin/bat'
 alias pro='cd ~/projects/'
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then

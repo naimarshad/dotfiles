@@ -32,6 +32,7 @@
         ],
         "preferredPlayer": "",
         "spectrumFrameRate": 30,
+        "spectrumMirrored": true,
         "visualizerType": "linear",
         "volumeFeedback": false,
         "volumeFeedbackSoundFile": "",
@@ -49,7 +50,6 @@
         "density": "comfortable",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
-        "floating": false,
         "fontScale": 1.1,
         "frameRadius": 12,
         "frameThickness": 8,
@@ -63,7 +63,8 @@
             "HDMI-A-1",
             "eDP-1",
             "DP-5",
-            "DP-6"
+            "DP-6",
+            "DP-3"
         ],
         "mouseWheelAction": "workspace",
         "mouseWheelWrap": true,
@@ -182,6 +183,15 @@
                         }
                     ],
                     "right": [
+                        {
+                            "defaultSettings": {
+                                "displayMode": "alwaysShow",
+                                "icsUrl": "",
+                                "maxTitleLength": 30,
+                                "refreshInterval": 300
+                            },
+                            "id": "plugin:next-meeting"
+                        },
                         {
                             "blacklist": [
                             ],
@@ -1063,6 +1073,255 @@
                         }
                     ]
                 }
+            },
+            {
+                "enabled": true,
+                "name": "DP-3",
+                "widgets": {
+                    "center": [
+                    ],
+                    "left": [
+                        {
+                            "colorizeSystemIcon": "none",
+                            "customIconPath": "",
+                            "enableColorization": false,
+                            "icon": "rocket",
+                            "iconColor": "tertiary",
+                            "id": "Launcher",
+                            "useDistroLogo": false
+                        },
+                        {
+                            "characterCount": 2,
+                            "colorizeIcons": false,
+                            "emptyColor": "secondary",
+                            "enableScrollWheel": true,
+                            "focusedColor": "primary",
+                            "followFocusedScreen": false,
+                            "fontWeight": "bold",
+                            "groupedBorderOpacity": 1,
+                            "hideUnoccupied": false,
+                            "iconScale": 0.8,
+                            "id": "Workspace",
+                            "labelMode": "index",
+                            "occupiedColor": "secondary",
+                            "pillSize": 0.6,
+                            "showApplications": false,
+                            "showApplicationsHover": false,
+                            "showBadge": true,
+                            "showLabelsOnlyWhenOccupied": true,
+                            "unfocusedIconsOpacity": 1
+                        },
+                        {
+                            "compactMode": true,
+                            "diskPath": "/",
+                            "iconColor": "none",
+                            "id": "SystemMonitor",
+                            "showCpuCores": false,
+                            "showCpuFreq": false,
+                            "showCpuTemp": true,
+                            "showCpuUsage": true,
+                            "showDiskAvailable": false,
+                            "showDiskUsage": false,
+                            "showDiskUsageAsPercent": false,
+                            "showGpuTemp": false,
+                            "showLoadAverage": false,
+                            "showMemoryAsPercent": false,
+                            "showMemoryUsage": true,
+                            "showNetworkStats": false,
+                            "showSwapUsage": false,
+                            "textColor": "none",
+                            "useMonospaceFont": true,
+                            "usePadding": false
+                        },
+                        {
+                            "defaultSettings": {
+                                "cursorPosition": 0,
+                                "filePath": "",
+                                "fontSize": 14,
+                                "panelHeight": 400,
+                                "panelWidth": 600,
+                                "scratchpadContent": "",
+                                "scrollPositionX": 0,
+                                "scrollPositionY": 0
+                            },
+                            "id": "plugin:notes-scratchpad"
+                        },
+                        {
+                            "defaultSettings": {
+                                "autoStartBreaks": false,
+                                "autoStartWork": false,
+                                "longBreakDuration": 15,
+                                "sessionsBeforeLongBreak": 4,
+                                "shortBreakDuration": 5,
+                                "workDuration": 25
+                            },
+                            "id": "plugin:pomodoro"
+                        },
+                        {
+                            "compactMode": false,
+                            "hideMode": "hidden",
+                            "hideWhenIdle": false,
+                            "id": "MediaMini",
+                            "maxWidth": 145,
+                            "panelShowAlbumArt": true,
+                            "scrollingMode": "hover",
+                            "showAlbumArt": true,
+                            "showArtistFirst": true,
+                            "showProgressRing": true,
+                            "showVisualizer": false,
+                            "textColor": "none",
+                            "useFixedWidth": false,
+                            "visualizerType": "linear"
+                        },
+                        {
+                            "colorizeIcons": false,
+                            "hideMode": "hidden",
+                            "id": "ActiveWindow",
+                            "maxWidth": 145,
+                            "scrollingMode": "hover",
+                            "showIcon": true,
+                            "textColor": "none",
+                            "useFixedWidth": false
+                        }
+                    ],
+                    "right": [
+                        {
+                            "blacklist": [
+                            ],
+                            "chevronColor": "none",
+                            "colorizeIcons": false,
+                            "drawerEnabled": true,
+                            "hidePassive": false,
+                            "id": "Tray",
+                            "pinned": [
+                            ]
+                        },
+                        {
+                            "hideWhenZero": false,
+                            "hideWhenZeroUnread": false,
+                            "iconColor": "none",
+                            "id": "NotificationHistory",
+                            "showUnreadBadge": true,
+                            "unreadBadgeColor": "primary"
+                        },
+                        {
+                            "defaultSettings": {
+                                "errorIcon": "alert-circle",
+                                "iconColor": "primary",
+                                "loadingIcon": "loader",
+                                "refreshInterval": 300,
+                                "successIcon": "network"
+                            },
+                            "id": "plugin:ip-monitor"
+                        },
+                        {
+                            "defaultSettings": {
+                                "arrowType": "caret",
+                                "byteThresholdActive": 1024,
+                                "fontSizeModifier": 1,
+                                "forceMegabytes": false,
+                                "iconSizeModifier": 1,
+                                "minWidth": 0,
+                                "showNumbers": true,
+                                "spacingInbetween": 0,
+                                "useCustomColors": false
+                            },
+                            "id": "plugin:network-indicator"
+                        },
+                        {
+                            "defaultSettings": {
+                                "compactMode": false,
+                                "defaultPeerAction": "copy-ip",
+                                "hideDisconnected": false,
+                                "pingCount": 5,
+                                "refreshInterval": 5000,
+                                "showIpAddress": true,
+                                "showPeerCount": true,
+                                "terminalCommand": ""
+                            },
+                            "id": "plugin:tailscale"
+                        },
+                        {
+                            "displayMode": "onhover",
+                            "iconColor": "none",
+                            "id": "Volume",
+                            "middleClickCommand": "pwvucontrol || pavucontrol",
+                            "textColor": "none"
+                        },
+                        {
+                            "defaultSettings": {
+                                "audioCodec": "opus",
+                                "audioSource": "default_output",
+                                "colorRange": "limited",
+                                "copyToClipboard": false,
+                                "directory": "",
+                                "filenamePattern": "recording_yyyyMMdd_HHmmss",
+                                "frameRate": "60",
+                                "hideInactive": false,
+                                "iconColor": "none",
+                                "quality": "very_high",
+                                "resolution": "original",
+                                "showCursor": true,
+                                "videoCodec": "h264",
+                                "videoSource": "portal"
+                            },
+                            "id": "plugin:screen-recorder"
+                        },
+                        {
+                            "defaultSettings": {
+                                "mode": "region"
+                            },
+                            "id": "plugin:screenshot"
+                        },
+                        {
+                            "defaultSettings": {
+                                "activeColor": "primary",
+                                "hideInactive": false,
+                                "inactiveColor": "none",
+                                "removeMargins": false
+                            },
+                            "id": "plugin:privacy-indicator"
+                        },
+                        {
+                            "defaultSettings": {
+                                "refreshInterval": 5000
+                            },
+                            "id": "plugin:mini-docker"
+                        },
+                        {
+                            "deviceNativePath": "__default__",
+                            "displayMode": "icon-hover",
+                            "hideIfIdle": false,
+                            "hideIfNotDetected": true,
+                            "id": "Battery",
+                            "showNoctaliaPerformance": false,
+                            "showPowerProfiles": true
+                        },
+                        {
+                            "clockColor": "none",
+                            "customFont": "",
+                            "formatHorizontal": "HH:mm ddd, MMM dd",
+                            "formatVertical": "HH mm - dd MM",
+                            "id": "Clock",
+                            "tooltipFormat": "HH:mm ddd, MMM dd",
+                            "useCustomFont": false
+                        },
+                        {
+                            "defaultSettings": {
+                            },
+                            "id": "plugin:kde-connect"
+                        },
+                        {
+                            "colorizeDistroLogo": false,
+                            "colorizeSystemIcon": "none",
+                            "customIconPath": "",
+                            "enableColorization": false,
+                            "icon": "noctalia",
+                            "id": "ControlCenter",
+                            "useDistroLogo": false
+                        }
+                    ]
+                }
             }
         ],
         "showCapsule": true,
@@ -1462,7 +1721,8 @@
             "code",
             "slack",
             "org.gnome.Calculator",
-            "obsidian"
+            "obsidian",
+            "google-chrome"
         ],
         "pinnedStatic": true,
         "position": "bottom",
@@ -1480,7 +1740,7 @@
         "avatarImage": "/home/naeem/Pictures/Naeem-Pic.jpg",
         "boxRadiusRatio": 1,
         "clockFormat": "hh\\nmm",
-        "clockStyle": "custom",
+        "clockStyle": "digital",
         "compactLockScreen": false,
         "dimmerOpacity": 0,
         "enableBlurBehind": true,
@@ -1584,8 +1844,7 @@
         "bluetoothRssiPollingEnabled": false,
         "disableDiscoverability": false,
         "networkPanelView": "wifi",
-        "wifiDetailsViewMode": "list",
-        "wifiEnabled": false
+        "wifiDetailsViewMode": "list"
     },
     "nightLight": {
         "autoSchedule": true,
@@ -1705,6 +1964,13 @@
                 "countdownEnabled": true,
                 "enabled": true,
                 "keybind": "7"
+            },
+            {
+                "action": "userspaceReboot",
+                "command": "",
+                "countdownEnabled": true,
+                "enabled": false,
+                "keybind": ""
             }
         ],
         "showHeader": true,
@@ -1766,15 +2032,19 @@
             },
             {
                 "enabled": true,
-                "id": "code"
-            },
-            {
-                "enabled": true,
                 "id": "ghostty"
             },
             {
                 "enabled": true,
                 "id": "hyprland"
+            },
+            {
+                "enabled": true,
+                "id": "zed"
+            },
+            {
+                "enabled": true,
+                "id": "code"
             }
         ],
         "enableUserTheming": true
@@ -1981,6 +2251,7 @@
             "pixelate",
             "honeycomb"
         ],
+        "useOriginalImages": false,
         "useSolidColor": false,
         "useWallhaven": false,
         "viewMode": "single",
