@@ -49,7 +49,6 @@ zstyle ':omz:plugins:eza' 'icons' yes
 autoload -Uz compinit && compinit -i
 
 source $ZSH/oh-my-zsh.sh
-source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -68,15 +67,11 @@ fi
 ###### General Use Alaises #####
 alias vim="nvim"
 alias fvim='vim $(fzf --preview="bat --color=always {}")'
-alias yayin="yay -S --noconfirm"
-alias play="cd ~/ri-work/playground"
 alias kk="kubecolor klock"
 alias kgir="kubectl get ingressroutes"
 alias mc="/usr/bin/mcli"
 alias dim="docker images"
 alias pro="cd /home/naeem/projects/"
-
-## Personal Aliases
 alias vim="nvim"
 alias fvim='nvim $(fzf --preview="bat --color=always {}")'
 alias kcx='kubie ctx'
@@ -92,10 +87,11 @@ alias mm='ssh mattermost'
 alias jellyfinstation='ssh jellyfinstation'
 alias jellyfinpc='ssh jellyfinpc'
 alias pvewol='wol 64:00:6a:8a:db:d5'
-alias pik8s='export KUBECONFIG=/home/naeem/projects/private/pik8s/kubeconfig'
-alias sh01k8s='export KUBECONFIG=/home/naeem/projects/private/k0s/kubeconfig-sh01.yaml'
-#alias bat='/usr/bin/bat'
-alias pro='cd ~/projects/'
+alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
+alias gro='cd $(git rev-parse --show-toplevel)'
+alias review="gh search prs --review-requested naeem-tipu --state open --review required"
+alias merge="gh search prs --author naeem-tipu --state open --review approved"
+alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
@@ -115,30 +111,6 @@ export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
-
-
-# RI Sepcfic aliases & environment variables
-alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
-alias gro='cd $(git rev-parse --show-toplevel)'
-alias review="gh search prs --review-requested naeem-tipu --state open --review required"
-alias merge="gh search prs --author naeem-tipu --state open --review approved"
-alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
-alias iac="cd /home/naeem/ri-work/git-repos/platform/iac"
-alias aiac="cd /home/naeem/ri-work/git-repos/platform/iac/ansible"
-alias tiac="cd /home/naeem/ri-work/git-repos/platform/iac/terraform"
-alias hc="cd /home/naeem/ri-work/git-repos/platform/iac/helm_charts/"
-alias hv="cd /home/naeem/ri-work/git-repos/platform/iac/helm_values/"
-alias dev_platform="cd /home/naeem/ri-work/git-repos/platform/iac/terraform/non-prod/pks/natwork/dev-platform/"
-alias spsd='sops decrypt'
-alias spse='sops edit'
-
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-export JIRA_USERMAIL=naeem.tipu@riskident.com
-export ANSIBLE_REMOTE_USER=naeemtipu
-export ANSIBLE_BECOME=True
 
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
@@ -206,7 +178,5 @@ helm() {
 
   command helm "$@"
 }
-
-eval "$(/home/naeem/.local/bin/mise activate zsh)"
 
 compdef kubecolor=kubectl
