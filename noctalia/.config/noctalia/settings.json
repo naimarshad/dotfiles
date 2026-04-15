@@ -202,7 +202,8 @@
                             "id": "Tray",
                             "pinned": [
                                 "You have 1 notification",
-                                "Cachy-Update"
+                                "Cachy-Update",
+                                "KDE Connect"
                             ]
                         },
                         {
@@ -1442,6 +1443,7 @@
                     "maxWidth": 145,
                     "scrollingMode": "hover",
                     "showIcon": true,
+                    "showText": true,
                     "textColor": "none",
                     "useFixedWidth": false
                 }
@@ -1620,6 +1622,7 @@
         "monitorForColors": "",
         "predefinedScheme": "Catppuccin",
         "schedulingMode": "off",
+        "syncGsettings": true,
         "useWallpaperColors": false
     },
     "controlCenter": {
@@ -1716,13 +1719,15 @@
         "onlySameOutput": false,
         "pinnedApps": [
             "com.mitchellh.ghostty",
+            "nemo",
             "zen",
             "firefox",
+            "google-chrome",
             "code",
-            "slack",
-            "org.gnome.Calculator",
+            "org.gnome.gedit",
             "obsidian",
-            "google-chrome"
+            "slack",
+            "org.gnome.Calculator"
         ],
         "pinnedStatic": true,
         "position": "bottom",
@@ -1793,6 +1798,7 @@
         "showHibernateOnLockScreen": false,
         "showScreenCorners": false,
         "showSessionButtonsOnLockScreen": false,
+        "smoothScrollEnabled": true,
         "telemetryEnabled": false
     },
     "hooks": {
@@ -1823,27 +1829,28 @@
     },
     "location": {
         "analogClockInCalendar": false,
+        "autoLocate": true,
         "firstDayOfWeek": -1,
         "hideWeatherCityName": false,
         "hideWeatherTimezone": false,
-        "name": "norderstedt, germany",
+        "name": "Hamburg",
         "showCalendarEvents": true,
         "showCalendarWeather": true,
         "showWeekNumberInCalendar": false,
         "use12hourFormat": false,
         "useFahrenheit": false,
         "weatherEnabled": true,
-        "weatherShowEffects": true
+        "weatherShowEffects": true,
+        "weatherTaliaMascotAlways": false
     },
     "network": {
-        "airplaneModeEnabled": false,
         "bluetoothAutoConnect": true,
         "bluetoothDetailsViewMode": "grid",
         "bluetoothHideUnnamedDevices": false,
         "bluetoothRssiPollIntervalMs": 60000,
         "bluetoothRssiPollingEnabled": false,
         "disableDiscoverability": false,
-        "networkPanelView": "wifi",
+        "networkPanelView": "ethernet",
         "wifiDetailsViewMode": "list"
     },
     "nightLight": {
@@ -2070,6 +2077,7 @@
         "enabled": true,
         "favorites": [
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2083,6 +2091,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2096,6 +2105,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2109,6 +2119,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2122,6 +2133,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2135,6 +2147,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2148,6 +2161,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2161,6 +2175,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2174,6 +2189,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2187,6 +2203,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2200,6 +2217,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2213,6 +2231,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Catppuccin",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2229,6 +2248,7 @@
         "fillColor": "#000000",
         "fillMode": "crop",
         "hideWallpaperFilenames": false,
+        "linkLightAndDarkWallpapers": true,
         "monitorDirectories": [
         ],
         "overviewBlur": 0.4,
