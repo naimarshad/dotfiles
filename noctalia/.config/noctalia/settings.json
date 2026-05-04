@@ -6,7 +6,7 @@
         "clipboardWrapText": true,
         "customLaunchPrefix": "",
         "customLaunchPrefixEnabled": false,
-        "density": "compact",
+        "density": "default",
         "enableClipPreview": true,
         "enableClipboardChips": true,
         "enableClipboardHistory": true,
@@ -14,12 +14,18 @@
         "enableSessionSearch": true,
         "enableSettingsSearch": false,
         "enableWindowsSearch": false,
-        "iconMode": "tabler",
+        "iconMode": "native",
         "ignoreMouseInput": false,
         "overviewLayer": true,
         "pinnedApps": [
+            "google-chrome",
+            "zen",
+            "firefox",
+            "com.mitchellh.ghostty",
+            "slack",
+            "localsend"
         ],
-        "position": "center",
+        "position": "top_center",
         "screenshotAnnotationTool": "",
         "showCategories": false,
         "showIconBackground": false,
@@ -42,15 +48,15 @@
     "bar": {
         "autoHideDelay": 500,
         "autoShowDelay": 150,
-        "backgroundOpacity": 0.8300000000000001,
+        "backgroundOpacity": 0.93,
         "barType": "simple",
         "capsuleColorKey": "none",
-        "capsuleOpacity": 0.9,
-        "contentPadding": 4,
+        "capsuleOpacity": 1,
+        "contentPadding": 2,
         "density": "comfortable",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
-        "fontScale": 1.1,
+        "fontScale": 1,
         "frameRadius": 12,
         "frameThickness": 8,
         "hideOnOverview": false,
@@ -68,7 +74,7 @@
         ],
         "mouseWheelAction": "workspace",
         "mouseWheelWrap": true,
-        "outerCorners": true,
+        "outerCorners": false,
         "position": "top",
         "reverseScroll": false,
         "rightClickAction": "controlCenter",
@@ -308,8 +314,8 @@
                             "showPowerProfiles": true
                         },
                         {
-                            "clockColor": "none",
-                            "customFont": "",
+                            "clockColor": "secondary",
+                            "customFont": "Inter",
                             "formatHorizontal": "HH:mm ddd, MMM dd",
                             "formatVertical": "HH mm - dd MM",
                             "id": "Clock",
@@ -330,7 +336,7 @@
             },
             {
                 "density": "default",
-                "displayMode": "auto_hide",
+                "displayMode": "always_visible",
                 "enabled": true,
                 "name": "eDP-1",
                 "widgets": {
@@ -1329,7 +1335,7 @@
         "showOnWorkspaceSwitch": true,
         "showOutline": false,
         "useSeparateOpacity": true,
-        "widgetSpacing": 2,
+        "widgetSpacing": 6,
         "widgets": {
             "center": [
                 {
@@ -1357,6 +1363,7 @@
             "left": [
                 {
                     "colorizeSystemIcon": "none",
+                    "colorizeSystemText": "none",
                     "customIconPath": "",
                     "enableColorization": false,
                     "icon": "rocket",
@@ -1578,6 +1585,7 @@
                 {
                     "colorizeDistroLogo": false,
                     "colorizeSystemIcon": "none",
+                    "colorizeSystemText": "none",
                     "customIconPath": "",
                     "enableColorization": false,
                     "icon": "noctalia",
@@ -1695,21 +1703,21 @@
     },
     "dock": {
         "animationSpeed": 1,
-        "backgroundOpacity": 0.9,
+        "backgroundOpacity": 1,
         "colorizeIcons": false,
         "deadOpacity": 0.6,
         "displayMode": "auto_hide",
         "dockType": "floating",
         "enabled": true,
-        "floatingRatio": 0.25,
-        "groupApps": false,
+        "floatingRatio": 1,
+        "groupApps": true,
         "groupClickAction": "cycle",
         "groupContextMenuMode": "extended",
         "groupIndicatorStyle": "dots",
         "inactiveIndicators": true,
-        "indicatorColor": "primary",
+        "indicatorColor": "none",
         "indicatorOpacity": 0.6,
-        "indicatorThickness": 3,
+        "indicatorThickness": 6,
         "launcherIcon": "",
         "launcherIconColor": "none",
         "launcherPosition": "end",
@@ -1731,23 +1739,23 @@
         ],
         "pinnedStatic": true,
         "position": "bottom",
-        "showDockIndicator": false,
+        "showDockIndicator": true,
         "showLauncherIcon": false,
         "sitOnFrame": false,
-        "size": 1.5
+        "size": 1
     },
     "general": {
         "allowPanelsOnScreenWithoutBar": true,
         "allowPasswordWithFprintd": false,
         "animationDisabled": false,
-        "animationSpeed": 1,
-        "autoStartAuth": false,
-        "avatarImage": "/home/naeem/Pictures/Naeem-Pic.jpg",
+        "animationSpeed": 0.9,
+        "autoStartAuth": true,
+        "avatarImage": "/home/naeem/Pictures/Naeem-2nd-Avatar.png",
         "boxRadiusRatio": 1,
         "clockFormat": "hh\\nmm",
         "clockStyle": "digital",
         "compactLockScreen": false,
-        "dimmerOpacity": 0,
+        "dimmerOpacity": 0.2,
         "enableBlurBehind": true,
         "enableLockScreenCountdown": true,
         "enableLockScreenMediaControls": false,
@@ -1780,7 +1788,7 @@
         },
         "language": "",
         "lockOnSuspend": true,
-        "lockScreenAnimations": false,
+        "lockScreenAnimations": true,
         "lockScreenBlur": 0.4,
         "lockScreenCountdownDuration": 5000,
         "lockScreenMonitors": [
@@ -1850,13 +1858,13 @@
         "bluetoothRssiPollIntervalMs": 60000,
         "bluetoothRssiPollingEnabled": false,
         "disableDiscoverability": false,
-        "networkPanelView": "ethernet",
+        "networkPanelView": "wifi",
         "wifiDetailsViewMode": "list"
     },
     "nightLight": {
         "autoSchedule": true,
         "dayTemp": "6500",
-        "enabled": false,
+        "enabled": true,
         "forced": false,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
@@ -2011,10 +2019,6 @@
         "activeTemplates": [
             {
                 "enabled": true,
-                "id": "btop"
-            },
-            {
-                "enabled": true,
                 "id": "kcolorscheme"
             },
             {
@@ -2031,10 +2035,6 @@
             },
             {
                 "enabled": true,
-                "id": "qt"
-            },
-            {
-                "enabled": true,
                 "id": "zenBrowser"
             },
             {
@@ -2043,15 +2043,23 @@
             },
             {
                 "enabled": true,
-                "id": "hyprland"
-            },
-            {
-                "enabled": true,
                 "id": "zed"
             },
             {
                 "enabled": true,
                 "id": "code"
+            },
+            {
+                "enabled": true,
+                "id": "qt"
+            },
+            {
+                "enabled": true,
+                "id": "hyprland"
+            },
+            {
+                "enabled": true,
+                "id": "btop"
             }
         ],
         "enableUserTheming": true
@@ -2062,7 +2070,7 @@
         "fontDefaultScale": 1,
         "fontFixed": "JetBrainsMonoNL Nerd Font Mono",
         "fontFixedScale": 1,
-        "panelBackgroundOpacity": 0.85,
+        "panelBackgroundOpacity": 0.93,
         "panelsAttachedToBar": true,
         "scrollbarAlwaysVisible": false,
         "settingsPanelMode": "attached",

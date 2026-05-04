@@ -52,10 +52,10 @@ Item {
         applyUiScale: false
         crossed: !(mainInstance?.tailscaleRunning ?? false)
         color: {
-          if (mainInstance?.tailscaleRunning ?? false) return Color.mPrimary
+          if (mainInstance?.tailscaleRunning ?? false) return Color.mOnPrimary
           return mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface
         }
-        opacity: (mainInstance?.isRefreshing ?? false) ? 0.5 : 1.0
+        opacity: 1.0
       }
 
       // Show details when not in compact mode and there's something to show
@@ -90,12 +90,19 @@ Item {
 
     model: [
       {
+        "label": pluginApi?.tr("context.login"),
+        "action": "login",
+        "icon": "login",
+        "visible": mainInstance?.needsLogin ?? false
+      },
+      {
         "label": (mainInstance?.tailscaleRunning ?? false)
           ? pluginApi?.tr("context.disconnect")
           : pluginApi?.tr("context.connect"),
         "action": "toggle-tailscale",
         "icon": (mainInstance?.tailscaleRunning ?? false) ? "plug-x" : "plug",
-        "enabled": mainInstance?.tailscaleInstalled ?? false
+        "enabled": mainInstance?.tailscaleInstalled ?? false,
+        "visible": !(mainInstance?.needsLogin ?? false)
       },
       {
         "label": pluginApi?.tr("actions.widget-settings"),
@@ -113,6 +120,10 @@ Item {
       } else if (action === "toggle-tailscale") {
         if (mainInstance) {
           mainInstance.toggleTailscale()
+        }
+      } else if (action === "login") {
+        if (mainInstance) {
+          mainInstance.loginTailscale()
         }
       }
     }

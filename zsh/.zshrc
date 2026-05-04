@@ -34,7 +34,7 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl vscode common-aliases command-not-found zsh-syntax-highlighting \
   fzf zsh-completions zsh-autosuggestions zsh-history-substring-search 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
-  git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd tmux virtualenv eza kind minikube)
+  git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd virtualenv eza kind minikube)
 
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
 zstyle ':omz:plugins:alias-finder' exact yes # disabled by default
@@ -49,8 +49,8 @@ zstyle ':omz:plugins:eza' 'icons' yes
 autoload -Uz compinit && compinit -i
 
 source $ZSH/oh-my-zsh.sh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/catppuccin_macchiato-zsh-syntax-highlighting.zsh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -93,30 +93,26 @@ alias mm='ssh mattermost'
 alias jellyfinstation='ssh jellyfinstation'
 alias jellyfinpc='ssh jellyfinpc'
 alias pvewol='wol 64:00:6a:8a:db:d5'
-alias pik8s='export KUBECONFIG=/home/naeem/projects/private/pik8s/kubeconfig'
-alias sh01k8s='export KUBECONFIG=/home/naeem/projects/private/k0s/kubeconfig-sh01.yaml'
-#alias bat='/usr/bin/bat'
 alias pro='cd ~/projects/'
+alias rnotes='cd ~/Obsidian/ri-runbooks/'
+alias pnotes='cd ~/Obsidian/personal-runbooks/'
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
 fi
 
 ### Fuzzy search configurations ###
-#
-# Below is for light mode theme -- mocha
+# Below is for light mode theme -- macchiato
 export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
---color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
---color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
---color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
---color=selected-bg:#45475A \
---color=border:#6C7086,label:#CDD6F4 \
---multi"
+--color=bg+:#363A4F,bg:#24273A,spinner:#F4DBD6,hl:#ED8796 \
+--color=fg:#CAD3F5,header:#ED8796,info:#C6A0F6,pointer:#F4DBD6 \
+--color=marker:#B7BDF8,fg+:#CAD3F5,prompt:#C6A0F6,hl+:#ED8796 \
+--color=selected-bg:#494D64 \
+--color=border:#6E738D,label:#CAD3F5 --multi"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
-
 
 # RI Sepcfic aliases & environment variables
 alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
@@ -139,7 +135,7 @@ eval "$(pyenv init -)"
 
 export JIRA_USERMAIL=naeem.tipu@riskident.com
 export ANSIBLE_REMOTE_USER=naeemtipu
-export ANSIBLE_BECOME=True
+#export ANSIBLE_BECOME=True
 
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
