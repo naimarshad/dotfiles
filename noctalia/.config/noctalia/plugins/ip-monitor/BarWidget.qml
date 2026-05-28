@@ -17,6 +17,8 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
 
   property var cfg: pluginApi?.pluginSettings || ({})
   property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
@@ -39,8 +41,10 @@ Item {
   readonly property bool isVerticalBar: barPosition === "left" || barPosition === "right"
 
   readonly property string currentIcon: {
-    if (fetchState === "loading") return loadingIconKey;
-    if (fetchState === "error") return errorIconKey;
+    if (fetchState === "loading")
+      return loadingIconKey;
+    if (fetchState === "error")
+      return errorIconKey;
     return successIconKey;
   }
 
@@ -53,11 +57,11 @@ Item {
   onIpMonitorServiceChanged: {
     Logger.d("IpMonitor", "BarWidget ipMonitorService changed:", ipMonitorService !== null);
   }
-  
+
   onCurrentIpChanged: {
     Logger.d("IpMonitor", "BarWidget currentIp changed to:", currentIp);
   }
-  
+
   Component.onCompleted: {
     Logger.d("IpMonitor", "BarWidget completed refresh");
   }
@@ -82,8 +86,10 @@ Item {
         lines.push("");
         if (data.city || data.country) {
           var parts = [];
-          if (data.city) parts.push(data.city);
-          if (data.country) parts.push(data.country);
+          if (data.city)
+            parts.push(data.city);
+          if (data.country)
+            parts.push(data.country);
           lines.push(parts.join(", "));
         }
       }
@@ -142,4 +148,3 @@ Item {
     }
   }
 }
-
