@@ -7,7 +7,7 @@ window-padding-y = 3
 window-padding-balance = true
 background-opacity = 1
 background-blur-radius = 60
-theme = Apple System Colors
+theme = noctalia
 
 # Font
 font-family = "JetBrainsMono NF Regular"
