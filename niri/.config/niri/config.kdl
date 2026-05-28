@@ -408,7 +408,13 @@ spawn-at-startup "sh" "-c" "/home/naeem/.config/hypr/import-gsettings.sh"
 spawn-at-startup "powerprofilesctl" "set" "balanced"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
-spawn-at-startup "hypridle"
+// swayidle: standard idle daemon for niri (replaces hypridle)
+// Lock after 10 min idle, displays off after 3 hours, lock before sleep.
+spawn-at-startup "sh" "-c" "swayidle -w \
+  timeout 600 'qs -c noctalia-shell ipc call lockScreen lock' \
+  timeout 10800 'niri msg action power-off-monitors' \
+  resume 'niri msg action power-on-monitors' \
+  before-sleep 'qs -c noctalia-shell ipc call lockScreen lock'"
 spawn-at-startup "slack"
 spawn-at-startup "seafile-applet"
 spawn-at-startup "obsidian"
