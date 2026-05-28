@@ -23,7 +23,9 @@
             "firefox",
             "com.mitchellh.ghostty",
             "slack",
-            "localsend"
+            "localsend",
+            "code",
+            "goose-desktop"
         ],
         "position": "top_center",
         "screenshotAnnotationTool": "",
@@ -53,7 +55,7 @@
         "capsuleColorKey": "none",
         "capsuleOpacity": 1,
         "contentPadding": 2,
-        "density": "comfortable",
+        "density": "default",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
         "fontScale": 1,
@@ -82,7 +84,7 @@
         "rightClickFollowMouse": true,
         "screenOverrides": [
             {
-                "density": "comfortable",
+                "density": "default",
                 "enabled": true,
                 "name": "HDMI-A-1",
                 "widgets": {
@@ -323,6 +325,12 @@
                             "useCustomFont": false
                         },
                         {
+                            "id": "plugin:kubectl-ctx"
+                        },
+                        {
+                            "id": "plugin:github-feed"
+                        },
+                        {
                             "colorizeDistroLogo": false,
                             "colorizeSystemIcon": "error",
                             "customIconPath": "",
@@ -335,7 +343,7 @@
                 }
             },
             {
-                "density": "default",
+                "density": "compact",
                 "displayMode": "always_visible",
                 "enabled": true,
                 "name": "eDP-1",
@@ -563,6 +571,12 @@
                             "id": "Clock",
                             "tooltipFormat": "HH:mm ddd, MMM dd",
                             "useCustomFont": false
+                        },
+                        {
+                            "id": "plugin:kubectl-ctx"
+                        },
+                        {
+                            "id": "plugin:github-feed"
                         },
                         {
                             "colorizeDistroLogo": false,
@@ -819,6 +833,9 @@
                             "useCustomFont": false
                         },
                         {
+                            "id": "plugin:github-feed"
+                        },
+                        {
                             "colorizeDistroLogo": false,
                             "colorizeSystemIcon": "none",
                             "customIconPath": "",
@@ -826,6 +843,9 @@
                             "icon": "noctalia",
                             "id": "ControlCenter",
                             "useDistroLogo": false
+                        },
+                        {
+                            "id": "plugin:kubectl-ctx"
                         }
                     ]
                 }
@@ -1077,6 +1097,12 @@
                             "icon": "noctalia",
                             "id": "ControlCenter",
                             "useDistroLogo": false
+                        },
+                        {
+                            "id": "plugin:github-feed"
+                        },
+                        {
+                            "id": "plugin:kubectl-ctx"
                         }
                     ]
                 }
@@ -1326,6 +1352,12 @@
                             "icon": "noctalia",
                             "id": "ControlCenter",
                             "useDistroLogo": false
+                        },
+                        {
+                            "id": "plugin:github-feed"
+                        },
+                        {
+                            "id": "plugin:kubectl-ctx"
                         }
                     ]
                 }
@@ -1583,6 +1615,37 @@
                     "useCustomFont": false
                 },
                 {
+                    "defaultSettings": {
+                        "colorizationBadge": "Primary",
+                        "colorizationBadgeText": "Primary",
+                        "colorizationEnabled": false,
+                        "colorizationIcon": "Primary",
+                        "defaultTab": 0,
+                        "enableSystemNotifications": false,
+                        "githubUrl": "",
+                        "maxEvents": 50,
+                        "notifyForks": true,
+                        "notifyGitHubNotifications": true,
+                        "notifyMyRepoForks": true,
+                        "notifyMyRepoStars": true,
+                        "notifyPRs": true,
+                        "notifyRepoCreations": true,
+                        "notifyStars": true,
+                        "openInBrowser": true,
+                        "refreshInterval": 1800,
+                        "showForks": true,
+                        "showMyRepoForks": true,
+                        "showMyRepoStars": true,
+                        "showNotificationBadge": true,
+                        "showPRs": true,
+                        "showRepoCreations": true,
+                        "showStars": true,
+                        "token": "",
+                        "username": ""
+                    },
+                    "id": "plugin:github-feed"
+                },
+                {
                     "colorizeDistroLogo": false,
                     "colorizeSystemIcon": "none",
                     "colorizeSystemText": "none",
@@ -1591,6 +1654,18 @@
                     "icon": "noctalia",
                     "id": "ControlCenter",
                     "useDistroLogo": false
+                },
+                {
+                    "defaultSettings": {
+                        "iconColor": "none",
+                        "kubeconfigPath": "",
+                        "panelHeight": 680,
+                        "panelWidth": 620,
+                        "pollInterval": 60,
+                        "showErrorBadge": true,
+                        "terminal": ""
+                    },
+                    "id": "plugin:kubectl-ctx"
                 }
             ]
         }

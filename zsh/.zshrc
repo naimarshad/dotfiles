@@ -71,7 +71,9 @@ alias vim="nvim"
 alias fvim='vim $(fzf --preview="bat --color=always {}")'
 alias yayin="yay -S --noconfirm"
 alias play="cd ~/ri-work/playground"
-alias kk="kubecolor klock"
+alias kk="kubectl-klock"
+alias kvs="kubectl-view_secret"
+alias szero="kubectl-szero"
 alias kgir="kubectl get ingressroutes"
 alias mc="/usr/bin/mcli"
 alias dim="docker images"
@@ -80,8 +82,8 @@ alias pro="cd /home/naeem/projects/"
 ## Personal Aliases
 alias vim="nvim"
 alias fvim='nvim $(fzf --preview="bat --color=always {}")'
-alias kcx='kubie ctx'
-alias kns='kubie ns'
+alias kcx='kubectl-ctx'
+alias kns='kubectl-ns'
 alias osbox='ssh opnsense'
 alias qnap='ssh qnap'
 alias pvelab='ssh pvelab'
