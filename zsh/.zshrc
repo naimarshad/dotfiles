@@ -14,6 +14,7 @@ export PATH="$HOME/.krew/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
+export KUBECONFIG=~/.kube/config:~/.kube/config-all
 # export DOCKER_HOST=tcp://192.168.1.10:2375
 #export KUBECOLOR_PRESET="light"
 #export BAT_THEME=GitHub
@@ -74,8 +75,8 @@ alias dim="docker images"
 alias pro="cd /home/naeem/projects/"
 alias vim="nvim"
 alias fvim='nvim $(fzf --preview="bat --color=always {}")'
-alias kcx='kubie ctx'
-alias kns='kubie ns'
+alias kcx='kubectl-ctx'
+alias kns='kubectl-ns'
 alias osbox='ssh opnsense'
 alias qnap='ssh qnap'
 alias pvelab='ssh pvelab'
@@ -179,4 +180,20 @@ helm() {
   command helm "$@"
 }
 
+# Add these lines to the file:
+#export OPENROUTER_API_KEY=""
+#export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
+#export ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY"
+#export ANTHROPIC_API_KEY="" # Important: Must be explicitly empty
+## After saving, restart your terminal for changes to take effect
+#
+## Changing default model for Claude
+#export ANTHROPIC_DEFAULT_OPUS_MODEL="stepfun/step-3.5-flash:free"
+#export ANTHROPIC_DEFAULT_SONNET_MODEL="nvidia/nemotron-3-super-120b-a12b:free"
+#export ANTHROPIC_DEFAULT_HAIKU_MODEL="google/veo-3.1"
+#export CLAUDE_CODE_SUBAGENT_MODEL="anthropic/claude-opus-4.6"
+
 compdef kubecolor=kubectl
+
+# opencode
+export PATH=/home/naeem/.opencode/bin:$PATH
