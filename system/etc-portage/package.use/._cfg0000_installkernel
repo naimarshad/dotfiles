@@ -1,0 +1,8 @@
+sys-kernel/installkernel systemd-boot dracut
+# required by sys-kernel/installkernel-68::gentoo[dracut,-uki,systemd-boot]
+# required by sys-kernel/gentoo-kernel-bin-6.18.38::gentoo[-generic-uki,initramfs]
+# required by virtual/dist-kernel-6.18.38::gentoo
+>=sys-apps/systemd-260.1-r2 boot
+# required by gnome-extra/nemo-6.6.4::gentoo
+# required by nemo (argument)
+>=x11-libs/xapp-3.2.2 introspection
