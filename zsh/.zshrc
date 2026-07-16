@@ -14,7 +14,7 @@ export PATH="$HOME/.krew/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
-export KUBECONFIG=~/.kube/config:~/.kube/config-all
+export PATH="$HOME/.local/bin:$PATH"
 # export DOCKER_HOST=tcp://192.168.1.10:2375
 #export KUBECOLOR_PRESET="light"
 #export BAT_THEME=GitHub
@@ -33,8 +33,8 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 #ZSH_THEME="robbyrussell"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
-plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl vscode common-aliases command-not-found zsh-syntax-highlighting \
-  fzf zsh-completions zsh-autosuggestions zsh-history-substring-search 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
+plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl vscode common-aliases command-not-found fzf \
+  zsh-autosuggestions zsh-history-substring-search 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
   git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd tmux virtualenv eza kind minikube)
 
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
@@ -100,7 +100,7 @@ fi
 
 ### Fuzzy search configurations ###
 #
-# Below is for light mode theme -- mocha
+# Below is for dark mode theme -- mocha
 export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
 --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
 --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
@@ -192,6 +192,8 @@ helm() {
 #export ANTHROPIC_DEFAULT_SONNET_MODEL="nvidia/nemotron-3-super-120b-a12b:free"
 #export ANTHROPIC_DEFAULT_HAIKU_MODEL="google/veo-3.1"
 #export CLAUDE_CODE_SUBAGENT_MODEL="anthropic/claude-opus-4.6"
+
+eval "$(mise activate zsh)"
 
 compdef kubecolor=kubectl
 
