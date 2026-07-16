@@ -28,7 +28,7 @@ The entire identity of this machine is **~6 config files + one package list + yo
 | `/etc/portage/package.mask/*` | `rust-source` mask, any version pins | repo |
 | `/etc/portage/repos.conf/*` | the cosmic-overlay definition | repo |
 | `/var/lib/portage/world` | **every package you explicitly installed** | repo |
-| dotfiles (`~/.config`, shell, etc.) | user environment | chezmoi |
+| dotfiles (`~/.config`, shell, etc.) | user environment | stow (dotfiles repo) |
 
 `world` is the keystone — it is Gentoo's nearest equivalent to a NixOS `systemPackages` list. Every `emerge` you ran appended to it. Restoring these files and running one `emerge @world` rebuilds the machine.
 
@@ -40,7 +40,7 @@ The entire identity of this machine is **~6 config files + one package list + yo
 > Partitioning, stage3, chroot, kernel deploy, and bootloader (**Runbook Phases 01–09**) touch bare hardware and firmware state that no file can capture. NixOS has the same limitation — you still run its installer. Accept ~30–45 min of manual bootstrap; **everything after the base system is declarative.**
 
 - **MANUAL (from the runbook):** Phases **01 → 09** — boot media, disk/btrfs layout, stage3, chroot, Portage bootstrap, kernel, fstab, users, bootloader. Produces a *bootable base system*.
-- **DECLARATIVE (this note):** restore committed config + `world`, one emerge, chezmoi apply, re-enable services. Produces *this machine*.
+- **DECLARATIVE (this note):** restore committed config + `world`, one emerge, `stow` the dotfiles, re-enable services. Produces *this machine*.
 
 ---
 
@@ -124,8 +124,15 @@ sudo systemctl enable NetworkManager systemd-timesyncd sshd greetd \
 # PipeWire is per-user:
 systemctl --user enable pipewire pipewire-pulse wireplumber
 
-# User environment
-chezmoi init --apply <your-dotfiles-remote>   # or: chezmoi apply if already cloned
+# User environment — GNU stow symlinks each package from the repo into $HOME.
+# The dotfiles repo is already cloned (Step B). Ensure you're on the host branch:
+cd ~/dotfiles && git switch machine/workforce
+sudo emerge --ask app-admin/stow          # if not already pulled via @world
+
+# Stow each package you keep (names match the top-level dirs in your repo):
+stow zsh ghostty hypr btop fish            # adjust to your actual package set
+# Or, to stow everything at once (careful with conflicts):
+#   stow */
 
 # COSMIC session backends were installed via @world; log into COSMIC to verify
 ```
