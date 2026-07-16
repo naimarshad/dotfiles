@@ -49,6 +49,9 @@ zstyle ':omz:plugins:eza' 'icons' yes
 
 autoload -Uz compinit && compinit -i
 
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(mise activate zsh)"
+
 source $ZSH/oh-my-zsh.sh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -193,9 +196,10 @@ helm() {
 #export ANTHROPIC_DEFAULT_HAIKU_MODEL="google/veo-3.1"
 #export CLAUDE_CODE_SUBAGENT_MODEL="anthropic/claude-opus-4.6"
 
-eval "$(mise activate zsh)"
+# opencode
+export PATH=/home/naeem/.opencode/bin:$PATH
+
+source /usr/share/zsh/site-functions/zsh-syntax-highlighting.zsh
 
 compdef kubecolor=kubectl
 
-# opencode
-export PATH=/home/naeem/.opencode/bin:$PATH
