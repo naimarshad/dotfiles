@@ -3,7 +3,7 @@
 
 // Global: rounded corners + frosted-glass blur on all windows.
 // xray true  = blur the wallpaper layer (macOS vibrancy style, consistent backdrop)
-// opacity 0.82 = enough transparency for the blur effect to read clearly
+// opacity 0.90 = mostly solid but still lets the blur read (uniform, active == inactive)
 // noise 0.1 = subtle grain to reduce banding
 // saturation 1.4 = vibrancy boost (macOS uses ~140% on its frosted surfaces)
 //
@@ -11,7 +11,7 @@
 window-rule {
     geometry-corner-radius 10
     clip-to-geometry true
-    opacity 0.80
+    opacity 0.90
     background-effect {
         xray true
         blur true
@@ -27,11 +27,11 @@ window-rule {
 // Explicitly lock both focus states to identical opacity
 window-rule {
     match is-active=true
-    opacity 0.80
+    opacity 0.90
 }
 window-rule {
     match is-active=false
-    opacity 0.80
+    opacity 0.90
 }
 
 // Floating + workspace assignments
