@@ -1,30 +1,604 @@
 {
   "cheatsheetData": [
     {
-      "title": "0 = fully opaque. Lower values let blur show through.",
-      "binds": []
+      "title": "Noctalia",
+      "binds": [
+        {
+          "keys": "Super + Space",
+          "desc": "Launcher",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "Space"
+        },
+        {
+          "keys": "Super + Shift + W",
+          "desc": "Window Switcher",
+          "_verb": "spawn",
+          "_mods": "Super+Shift",
+          "_mainKey": "W"
+        },
+        {
+          "keys": "Super + Shift + E",
+          "desc": "Emoji Picker",
+          "_verb": "spawn",
+          "_mods": "Super+Shift",
+          "_mainKey": "E"
+        },
+        {
+          "keys": "Super + B",
+          "desc": "Clipboard History",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "B"
+        },
+        {
+          "keys": "Super + Shift + Comma",
+          "desc": "Settings",
+          "_verb": "spawn",
+          "_mods": "Super+Shift",
+          "_mainKey": "Comma"
+        },
+        {
+          "keys": "Super + C",
+          "desc": "Calendar",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "C"
+        },
+        {
+          "keys": "Super + T",
+          "desc": "Control Center",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "T"
+        },
+        {
+          "keys": "Super + N",
+          "desc": "Control Center",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "N"
+        },
+        {
+          "keys": "Super + L",
+          "desc": "Lock Screen",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "L"
+        },
+        {
+          "keys": "Ctrl + Alt + P",
+          "desc": "Session Menu",
+          "_verb": "spawn",
+          "_mods": "Ctrl+Alt",
+          "_mainKey": "P"
+        },
+        {
+          "keys": "Ctrl + Alt + D",
+          "desc": "Do Not Disturb",
+          "_verb": "spawn",
+          "_mods": "Ctrl+Alt",
+          "_mainKey": "D"
+        },
+        {
+          "keys": "Super + Shift + P",
+          "desc": "media Controls: toggle",
+          "_verb": "spawn",
+          "_mods": "Super+Shift",
+          "_mainKey": "P"
+        }
+      ]
     },
     {
-      "title": "Environment/DBus setup first",
-      "binds": []
+      "title": "Applications",
+      "binds": [
+        {
+          "keys": "Super + Return",
+          "desc": "Run: ghostty",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "Return"
+        },
+        {
+          "keys": "Super + E",
+          "desc": "Run: nemo",
+          "_verb": "spawn",
+          "_mods": "Super",
+          "_mainKey": "E"
+        },
+        {
+          "keys": "Super + Shift + R",
+          "desc": "Run: niri",
+          "_verb": "spawn",
+          "_mods": "Super+Shift",
+          "_mainKey": "R"
+        },
+        {
+          "keys": "Vol Up",
+          "desc": "Run: wpctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioRaiseVolume"
+        },
+        {
+          "keys": "Vol Down",
+          "desc": "Run: wpctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioLowerVolume"
+        },
+        {
+          "keys": "Mute",
+          "desc": "Run: wpctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioMute"
+        },
+        {
+          "keys": "Mic Mute",
+          "desc": "Run: wpctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioMicMute"
+        },
+        {
+          "keys": "Bright Up",
+          "desc": "Run: brightnessctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86MonBrightnessUp"
+        },
+        {
+          "keys": "Bright Down",
+          "desc": "Run: brightnessctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86MonBrightnessDown"
+        },
+        {
+          "keys": "Play",
+          "desc": "Run: playerctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioPlay"
+        },
+        {
+          "keys": "Next",
+          "desc": "Run: playerctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioNext"
+        },
+        {
+          "keys": "Prev",
+          "desc": "Run: playerctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86AudioPrev"
+        }
+      ]
     },
     {
-      "title": "Polkit (auth daemon) early",
-      "binds": []
+      "title": "Window Management",
+      "binds": [
+        {
+          "keys": "Super + Q",
+          "desc": "Close Window",
+          "_verb": "close-window",
+          "_mods": "Super",
+          "_mainKey": "Q"
+        },
+        {
+          "keys": "Super + Shift + F",
+          "desc": "Fullscreen Window",
+          "_verb": "fullscreen-window",
+          "_mods": "Super+Shift",
+          "_mainKey": "F"
+        },
+        {
+          "keys": "Super + P",
+          "desc": "Expel Window From Column",
+          "_verb": "expel-window-from-column",
+          "_mods": "Super",
+          "_mainKey": "P"
+        },
+        {
+          "keys": "Super + Period",
+          "desc": "Consume Window Into Column",
+          "_verb": "consume-window-into-column",
+          "_mods": "Super",
+          "_mainKey": "Period"
+        }
+      ]
     },
     {
-      "title": "Wallpaper daemon before shell",
-      "binds": []
+      "title": "Column Navigation",
+      "binds": [
+        {
+          "keys": "Super + Left",
+          "desc": "Focus Column Left",
+          "_verb": "focus-column-left",
+          "_mods": "Super",
+          "_mainKey": "Left"
+        },
+        {
+          "keys": "Super + Right",
+          "desc": "Focus Column Right",
+          "_verb": "focus-column-right",
+          "_mods": "Super",
+          "_mainKey": "Right"
+        },
+        {
+          "keys": "Super + H",
+          "desc": "Focus Column Left",
+          "_verb": "focus-column-left",
+          "_mods": "Super",
+          "_mainKey": "H"
+        }
+      ]
     },
     {
-      "title": "Noctalia shell last (needs other services ready)",
-      "binds": []
+      "title": "Window Focus",
+      "binds": [
+        {
+          "keys": "Super + Up",
+          "desc": "Focus Window Up",
+          "_verb": "focus-window-up",
+          "_mods": "Super",
+          "_mainKey": "Up"
+        },
+        {
+          "keys": "Super + Down",
+          "desc": "Focus Window Down",
+          "_verb": "focus-window-down",
+          "_mods": "Super",
+          "_mainKey": "Down"
+        },
+        {
+          "keys": "Super + K",
+          "desc": "Focus Window Up",
+          "_verb": "focus-window-up",
+          "_mods": "Super",
+          "_mainKey": "K"
+        },
+        {
+          "keys": "Super + J",
+          "desc": "Focus Window Down",
+          "_verb": "focus-window-down",
+          "_mods": "Super",
+          "_mainKey": "J"
+        }
+      ]
+    },
+    {
+      "title": "Workspace Navigation",
+      "binds": [
+        {
+          "keys": "Super + 1-9",
+          "desc": "Focus Workspace 1-9",
+          "_verb": "focus-workspace",
+          "_mods": "Super",
+          "_mainKey": "1-9",
+          "_merged": true
+        },
+        {
+          "keys": "Super + 0",
+          "desc": "Focus Workspace 10",
+          "_verb": "focus-workspace",
+          "_mods": "Super",
+          "_mainKey": "0"
+        },
+        {
+          "keys": "Super + Tab",
+          "desc": "Focus Workspace Down",
+          "_verb": "focus-workspace-down",
+          "_mods": "Super",
+          "_mainKey": "Tab"
+        },
+        {
+          "keys": "Super + Shift + Tab",
+          "desc": "Focus Workspace Up",
+          "_verb": "focus-workspace-up",
+          "_mods": "Super+Shift",
+          "_mainKey": "Tab"
+        },
+        {
+          "keys": "Super + WheelScrollDown",
+          "desc": "Focus Workspace Down",
+          "_verb": "focus-workspace-down",
+          "_mods": "Super",
+          "_mainKey": "WheelScrollDown"
+        },
+        {
+          "keys": "Super + WheelScrollUp",
+          "desc": "Focus Workspace Up",
+          "_verb": "focus-workspace-up",
+          "_mods": "Super",
+          "_mainKey": "WheelScrollUp"
+        }
+      ]
+    },
+    {
+      "title": "Move Columns",
+      "binds": [
+        {
+          "keys": "Super + Shift + Left",
+          "desc": "Move Column Left",
+          "_verb": "move-column-left",
+          "_mods": "Super+Shift",
+          "_mainKey": "Left"
+        },
+        {
+          "keys": "Super + Shift + Right",
+          "desc": "Move Column Right",
+          "_verb": "move-column-right",
+          "_mods": "Super+Shift",
+          "_mainKey": "Right"
+        },
+        {
+          "keys": "Super + Shift + H",
+          "desc": "Move Column Left",
+          "_verb": "move-column-left",
+          "_mods": "Super+Shift",
+          "_mainKey": "H"
+        },
+        {
+          "keys": "Super + Shift + L",
+          "desc": "Move Column Right",
+          "_verb": "move-column-right",
+          "_mods": "Super+Shift",
+          "_mainKey": "L"
+        },
+        {
+          "keys": "Super + Ctrl + Down",
+          "desc": "Move Column To Workspace Down",
+          "_verb": "move-column-to-workspace-down",
+          "_mods": "Super+Ctrl",
+          "_mainKey": "Down"
+        },
+        {
+          "keys": "Super + Ctrl + Up",
+          "desc": "Move Column To Workspace Up",
+          "_verb": "move-column-to-workspace-up",
+          "_mods": "Super+Ctrl",
+          "_mainKey": "Up"
+        }
+      ]
+    },
+    {
+      "title": "Move Windows",
+      "binds": [
+        {
+          "keys": "Super + Shift + Up",
+          "desc": "Move Window Up",
+          "_verb": "move-window-up",
+          "_mods": "Super+Shift",
+          "_mainKey": "Up"
+        },
+        {
+          "keys": "Super + Shift + Down",
+          "desc": "Move Window Down",
+          "_verb": "move-window-down",
+          "_mods": "Super+Shift",
+          "_mainKey": "Down"
+        },
+        {
+          "keys": "Super + Shift + K",
+          "desc": "Move Window Up",
+          "_verb": "move-window-up",
+          "_mods": "Super+Shift",
+          "_mainKey": "K"
+        },
+        {
+          "keys": "Super + Shift + J",
+          "desc": "Move Window Down",
+          "_verb": "move-window-down",
+          "_mods": "Super+Shift",
+          "_mainKey": "J"
+        },
+        {
+          "keys": "Super + Shift + 1-9",
+          "desc": "Move Window To Workspace 1-9",
+          "_verb": "move-window-to-workspace",
+          "_mods": "Super+Shift",
+          "_mainKey": "1-9",
+          "_merged": true
+        },
+        {
+          "keys": "Super + Shift + 0",
+          "desc": "Move Window To Workspace 10",
+          "_verb": "move-window-to-workspace",
+          "_mods": "Super+Shift",
+          "_mainKey": "0"
+        }
+      ]
+    },
+    {
+      "title": "Column Management",
+      "binds": [
+        {
+          "keys": "Super + M",
+          "desc": "Maximize Column",
+          "_verb": "maximize-column",
+          "_mods": "Super",
+          "_mainKey": "M"
+        }
+      ]
+    },
+    {
+      "title": "Column Width",
+      "binds": [
+        {
+          "keys": "Super + Alt + Right",
+          "desc": "Set Column Width \"+5%\"",
+          "_verb": "set-column-width",
+          "_mods": "Super+Alt",
+          "_mainKey": "Right"
+        },
+        {
+          "keys": "Super + Alt + Left",
+          "desc": "Set Column Width \" 5%\"",
+          "_verb": "set-column-width",
+          "_mods": "Super+Alt",
+          "_mainKey": "Left"
+        },
+        {
+          "keys": "Super + R",
+          "desc": "Switch Preset Column Width",
+          "_verb": "switch-preset-column-width",
+          "_mods": "Super",
+          "_mainKey": "R"
+        }
+      ]
+    },
+    {
+      "title": "Screenshots",
+      "binds": [
+        {
+          "keys": "PrtSc",
+          "desc": "Screenshot",
+          "_verb": "screenshot",
+          "_mods": "",
+          "_mainKey": "Print"
+        },
+        {
+          "keys": "Super + PrtSc",
+          "desc": "Screenshot Screen",
+          "_verb": "screenshot-screen",
+          "_mods": "Super",
+          "_mainKey": "Print"
+        },
+        {
+          "keys": "Super + Shift + PrtSc",
+          "desc": "Screenshot Window",
+          "_verb": "screenshot-window",
+          "_mods": "Super+Shift",
+          "_mainKey": "Print"
+        }
+      ]
+    },
+    {
+      "title": "System",
+      "binds": [
+        {
+          "keys": "Super + Shift + Escape",
+          "desc": "Quit Skip Confirmation=True",
+          "_verb": "quit",
+          "_mods": "Super+Shift",
+          "_mainKey": "Escape"
+        }
+      ]
+    },
+    {
+      "title": "Other",
+      "binds": [
+        {
+          "keys": "Super + Slash",
+          "desc": "Show Hotkey Overlay",
+          "_verb": "show-hotkey-overlay",
+          "_mods": "Super",
+          "_mainKey": "Slash"
+        },
+        {
+          "keys": "Super + O",
+          "desc": "Toggle Overview",
+          "_verb": "toggle-overview",
+          "_mods": "Super",
+          "_mainKey": "O"
+        },
+        {
+          "keys": "Super + Alt + Down",
+          "desc": "Set Window Height \"+5%\"",
+          "_verb": "set-window-height",
+          "_mods": "Super+Alt",
+          "_mainKey": "Down"
+        },
+        {
+          "keys": "Super + Alt + Up",
+          "desc": "Set Window Height \" 5%\"",
+          "_verb": "set-window-height",
+          "_mods": "Super+Alt",
+          "_mainKey": "Up"
+        },
+        {
+          "keys": "Super + F",
+          "desc": "Toggle Window Floating",
+          "_verb": "toggle-window-floating",
+          "_mods": "Super",
+          "_mainKey": "F"
+        },
+        {
+          "keys": "Super + BracketLeft",
+          "desc": "Consume Or Expel Window Left",
+          "_verb": "consume-or-expel-window-left",
+          "_mods": "Super",
+          "_mainKey": "BracketLeft"
+        },
+        {
+          "keys": "Super + BracketRight",
+          "desc": "Consume Or Expel Window Right",
+          "_verb": "consume-or-expel-window-right",
+          "_mods": "Super",
+          "_mainKey": "BracketRight"
+        },
+        {
+          "keys": "Super + Grave",
+          "desc": "Switch Focus Between Floating And Tiling",
+          "_verb": "switch-focus-between-floating-and-tiling",
+          "_mods": "Super",
+          "_mainKey": "Grave"
+        },
+        {
+          "keys": "Super + Shift + U",
+          "desc": "Move Workspace To Monitor Left",
+          "_verb": "move-workspace-to-monitor-left",
+          "_mods": "Super+Shift",
+          "_mainKey": "U"
+        },
+        {
+          "keys": "Super + Shift + I",
+          "desc": "Move Workspace To Monitor Right",
+          "_verb": "move-workspace-to-monitor-right",
+          "_mods": "Super+Shift",
+          "_mainKey": "I"
+        }
+      ]
     }
   ],
-  "detectedCompositor": "hyprland",
-  "niriConfigPath": "~/.config/niri/config.kdl",
-  "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
-  "modKeyVariable": "$mod",
+  "detectedCompositor": "niri",
+  "windowWidth": 1400,
   "windowHeight": 850,
-  "windowWidth": 1400
+  "autoHeight": true,
+  "columnCount": 3,
+  "modKeyVariable": "$mod",
+  "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
+  "hyprlandLuaConfigPath": "~/.config/hypr/hyprland.lua",
+  "hyprlandParserMode": "auto",
+  "niriConfigPath": "~/.config/niri/config.kdl",
+  "mangoConfigPath": "~/.config/mango/config.conf",
+  "mergeSequentialBinds": true,
+  "showUndescribedBinds": true,
+  "splitLargeWorkspaceCategory": true,
+  "workspaceSplitThreshold": 12,
+  "keyColorAlt": "#FF6B6B",
+  "keyColorXF86": "#4ECDC4",
+  "keyColorPrint": "#95E1D3",
+  "keyColorNumeric": "#A8DADC",
+  "keyColorMouse": "#F38181",
+  "keyColorSuper": "",
+  "keyColorCtrl": "",
+  "keyColorShift": "",
+  "keyColorDefault": "#6C757D",
+  "keyLabelColor": "#FFFFFF",
+  "keyTextSuper": "",
+  "keyTextCtrl": "",
+  "keyTextShift": "",
+  "keyTextAlt": "",
+  "keyTextXF86": "",
+  "keyTextPrint": "",
+  "keyTextNumeric": "",
+  "keyTextMouse": "",
+  "keyTextDefault": "",
+  "descriptionTextColor": "",
+  "bindOverrides": {}
 }

@@ -131,6 +131,13 @@ alias dev_platform="cd /home/naeem/ri-work/git-repos/platform/iac/terraform/non-
 alias spsd='sops decrypt'
 alias spse='sops edit'
 
+# IaC path navigation related aliases
+alias tprod-paymenthubb2c='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-paymenthubb2c'
+alias tprod-deviceident='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-deviceident/'
+alias tprod-skreditpartner='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-skreditpartner/'
+alias tprod-frida2='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-frida2/'
+alias tprod-database='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-database/'
+
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"

@@ -1,0 +1,109 @@
+// WINDOW RULES
+// app-id and title support Rust regex: r#"pattern"#
+
+// Global: rounded corners + frosted-glass blur on all windows.
+// xray true  = blur the wallpaper layer (macOS vibrancy style, consistent backdrop)
+// opacity 0.82 = enough transparency for the blur effect to read clearly
+// noise 0.1 = subtle grain to reduce banding
+// saturation 1.4 = vibrancy boost (macOS uses ~140% on its frosted surfaces)
+//
+// Requires niri v26.04+. Check with: niri --version
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+    opacity 0.80
+    background-effect {
+        xray true
+        blur true
+        noise 0.15
+        saturation 1.4
+    }
+    // Popups (context menus, dropdowns) must be fully opaque — no blur.
+    popups {
+        opacity 1.0
+    }
+}
+
+// Explicitly lock both focus states to identical opacity
+window-rule {
+    match is-active=true
+    opacity 0.80
+}
+window-rule {
+    match is-active=false
+    opacity 0.80
+}
+
+// Floating + workspace assignments
+window-rule {
+    match app-id="^virt-manager$"
+    open-on-workspace "files"
+}
+window-rule {
+    match app-id=r#"^org\.gnome\.FileRoller$"#
+    open-floating true
+}
+window-rule {
+    match app-id=r#"^org\.gnome\.Calculator$"#
+    open-floating true
+}
+window-rule {
+    match app-id=r#"^org\.pulseaudio\.pavucontrol$"#
+    open-floating true
+}
+window-rule {
+    match app-id=r#"^org\.kde\.kcalc$"#
+    open-floating true
+}
+window-rule {
+    match title="^Picture-in-Picture$"
+    open-floating true
+}
+window-rule {
+    match title="^Open File$"
+    open-floating true
+}
+window-rule {
+    match title="^Save As$"
+    open-floating true
+}
+window-rule {
+    match title="^Save File$"
+    open-floating true
+}
+window-rule {
+    match app-id=r#"^steam_app_813780$"#
+    open-floating true
+}
+
+// Workspace assignments
+window-rule {
+    match app-id="^obsidian$"
+    open-on-workspace "work"
+    default-column-width { proportion 0.4; }
+}
+window-rule {
+    match app-id=r#"^zen.*"#
+    open-on-workspace "work"
+    default-column-width { proportion 0.4; }
+}
+window-rule {
+    match app-id="^code(-url-handler)?$"
+    open-on-workspace "work"
+    default-column-width { proportion 0.66667; }
+}
+window-rule {
+    match app-id="^firefox$"
+    open-on-workspace "personal"
+    default-column-width { proportion 0.5; }
+}
+window-rule {
+    match app-id="^slack$"
+    open-on-workspace "social"
+    default-column-width { proportion 1.0; }
+}
+window-rule {
+    match app-id=r#"^org\.mozilla\.Thunderbird$"#
+    open-on-workspace "laptop"
+    default-column-width { proportion 1.0; }
+}

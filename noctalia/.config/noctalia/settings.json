@@ -25,7 +25,10 @@
             "slack",
             "localsend",
             "code",
-            "goose-desktop"
+            "goose-desktop",
+            "obsidian",
+            "org.mozilla.Thunderbird",
+            "org.gnome.gedit"
         ],
         "position": "top_center",
         "screenshotAnnotationTool": "",
@@ -1703,7 +1706,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Catppuccin",
+        "predefinedScheme": "Catppuccin Lavender",
         "schedulingMode": "off",
         "syncGsettings": true,
         "useWallpaperColors": false
@@ -1806,11 +1809,13 @@
             "zen",
             "firefox",
             "google-chrome",
+            "org.mozilla.Thunderbird",
             "code",
             "org.gnome.gedit",
             "obsidian",
             "slack",
-            "org.gnome.Calculator"
+            "org.gnome.Calculator",
+            "signal"
         ],
         "pinnedStatic": true,
         "position": "bottom",
@@ -1823,7 +1828,7 @@
         "allowPanelsOnScreenWithoutBar": true,
         "allowPasswordWithFprintd": false,
         "animationDisabled": false,
-        "animationSpeed": 0.9,
+        "animationSpeed": 1.1500000000000001,
         "autoStartAuth": true,
         "avatarImage": "/home/naeem/Pictures/Naeem-2nd-Avatar.png",
         "boxRadiusRatio": 1,
@@ -1834,7 +1839,7 @@
         "enableBlurBehind": true,
         "enableLockScreenCountdown": true,
         "enableLockScreenMediaControls": false,
-        "enableShadows": true,
+        "enableShadows": false,
         "forceBlackScreenCorners": false,
         "iRadiusRatio": 1,
         "keybinds": {
@@ -2102,7 +2107,11 @@
             },
             {
                 "enabled": true,
-                "id": "pywalfox"
+                "id": "hyprland"
+            },
+            {
+                "enabled": true,
+                "id": "btop"
             },
             {
                 "enabled": true,
@@ -2110,11 +2119,19 @@
             },
             {
                 "enabled": true,
-                "id": "zenBrowser"
+                "id": "ghostty"
             },
             {
                 "enabled": true,
-                "id": "ghostty"
+                "id": "niri"
+            },
+            {
+                "enabled": true,
+                "id": "pywalfox"
+            },
+            {
+                "enabled": true,
+                "id": "zenBrowser"
             },
             {
                 "enabled": true,
@@ -2127,20 +2144,12 @@
             {
                 "enabled": true,
                 "id": "qt"
-            },
-            {
-                "enabled": true,
-                "id": "hyprland"
-            },
-            {
-                "enabled": true,
-                "id": "btop"
             }
         ],
         "enableUserTheming": true
     },
     "ui": {
-        "boxBorderEnabled": true,
+        "boxBorderEnabled": false,
         "fontDefault": "Inter",
         "fontDefaultScale": 1,
         "fontFixed": "JetBrainsMonoNL Nerd Font Mono",
@@ -2151,18 +2160,18 @@
         "settingsPanelMode": "attached",
         "settingsPanelSideBarCardStyle": false,
         "tooltipsEnabled": true,
-        "translucentWidgets": false
+        "translucentWidgets": true
     },
     "wallpaper": {
         "automationEnabled": true,
         "directory": "/home/naeem/Pictures/Wallpapers",
         "enableMultiMonitorDirectories": false,
-        "enabled": true,
+        "enabled": false,
         "favorites": [
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2176,7 +2185,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2190,7 +2199,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2204,7 +2213,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2217,13 +2226,13 @@
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
+                "colorScheme": "Catppuccin Lavender",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
+                    "#b4befe",
+                    "#f5bde6",
+                    "#c6a0f6",
                     "#f38ba8"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 5.png",
@@ -2232,7 +2241,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2246,7 +2255,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2260,7 +2269,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2274,7 +2283,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2288,13 +2297,13 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#8839ef",
+                    "#fe640b",
+                    "#40a02b",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/ColorAbstract.png",
                 "useWallpaperColors": false
@@ -2302,7 +2311,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
@@ -2316,7 +2325,7 @@
             {
                 "appearance": "dark",
                 "colorScheme": "Catppuccin",
-                "darkMode": true,
+                "darkMode": false,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
                     "#cba6f7",
