@@ -16,8 +16,8 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 export PATH="$HOME/.local/bin:$PATH"
 # export DOCKER_HOST=tcp://192.168.1.10:2375
-#export KUBECOLOR_PRESET="light"
-#export BAT_THEME=GitHub
+export KUBECOLOR_PRESET="light"
+export BAT_THEME=GitHub
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
@@ -33,7 +33,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 #ZSH_THEME="robbyrussell"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
-plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl vscode common-aliases command-not-found fzf \
+plugins=(alias-finder aliases git docker docker-compose colorize kubectl vscode common-aliases command-not-found fzf \
   zsh-autosuggestions zsh-history-substring-search 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
   git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd tmux virtualenv eza kind minikube)
 
@@ -103,14 +103,12 @@ fi
 
 ### Fuzzy search configurations ###
 #
-# Below is for dark mode theme -- mocha
-export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
---color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
---color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
---color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
---color=selected-bg:#45475A \
---color=border:#6C7086,label:#CDD6F4 \
---multi"
+export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi \
+--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
+--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
+--color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
+--color=selected-bg:#BCC0CC \
+--color=border:#9CA0B0,label:#4C4F69"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -132,9 +130,9 @@ kubectl() {
 
       # Hard visual break — hard to overlook
       echo ""
-      echo "  ╔══════════════════════════════════════╗"
-      echo "  ║   PRODUCTION CONTEXT: $ctx"
-      echo "  ╚══════════════════════════════════════╝"
+      echo "  ╔════════════════════════════════════════════════╗"
+      echo "  ║   PRODUCTION CONTEXT: $ctx"                    ║
+      echo "  ╚════════════════════════════════════════════════╝"
       echo ""
       echo "  Namespace : ${KUBIE_NS:-$(command kubectl config view --minify -o jsonpath='{..namespace}')}"
       echo "  Command   : kubectl $*"
@@ -164,9 +162,9 @@ helm() {
   if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
     if echo "$*" | grep -qE "$_HELM_DANGEROUS"; then
       echo ""
-      echo "  ╔══════════════════════════════════════╗"
-      echo "  ║   PRODUCTION HELM: $ctx"
-      echo "  ╚══════════════════════════════════════╝"
+      echo "  ╔════════════════════════════════════════════════╗"
+      echo "  ║   PRODUCTION HELM: $ctx"                       ║
+      echo "  ╚════════════════════════════════════════════════╝"
       echo ""
       echo "  Command : helm $*"
       echo ""
