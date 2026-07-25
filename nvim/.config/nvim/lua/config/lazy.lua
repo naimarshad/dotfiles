@@ -15,6 +15,11 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  -- Cap concurrent git fetches during install/sync. Left unbounded, lazy.nvim
+  -- fires 50+ simultaneous git fetches to github.com, which floods flaky
+  -- home-router DNS resolvers and causes "Could not resolve host" failures
+  -- even though DNS and connectivity are otherwise fine.
+  concurrency = 10,
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
