@@ -53,20 +53,54 @@ the router onto a public resolver (1.1.1.1 / 8.8.8.8) via NetworkManager, not a
 config change.
 
 ### Next steps / verification checklist
-- [ ] `git pull origin machine/workforce` on this machine, restart `nvim`
-- [ ] `:Lazy sync` repeatedly until `Failed (0)` — no plugin left uninstalled
-- [ ] Confirm catppuccin latte loads on startup (no more dark-theme fallback)
-- [ ] `:checkhealth` — clean, especially treesitter (needs a C compiler:
-      `cc`/`gcc`/`make` — install `build-essential` on Debian if missing)
-- [ ] Open a `.go` / `.rs` file → `:LspInfo` shows an attached server, `K` hovers,
-      `<leader>cf` formats
-- [ ] Open a `Dockerfile` / `values.yaml` → diagnostics from hadolint/yaml-ls
-- [ ] `<leader>gg` → lazygit opens (needs `lazygit` binary installed on the system)
-- [ ] `<leader>ac` → Claude Code terminal toggles (needs `claude` CLI on PATH);
-      `<leader>ab` adds current buffer as context; visual-select + `<leader>as`
-      sends selection; `<leader>aa` / `<leader>ad` accept/deny a diff
-- [ ] Typing in a code buffer shows Supermaven ghost-text suggestions
-- [ ] Once stable, commit the regenerated `lazy-lock.json` to pin versions
+- [x] `git pull origin machine/workforce` on this machine, restart `nvim` —
+      branch was already in sync with remote, nothing to pull
+- [x] `:Lazy sync` repeatedly until `Failed (0)` — converged; `lazy-lock.json`
+      regenerated with all 50+ plugins resolved (was flaky at first due to the
+      documented DNS burst issue, self-resolved on retry)
+- [x] Confirm catppuccin latte loads on startup — verified headlessly
+      (`vim.g.colors_name == "catppuccin-latte"`, `background == "light"`)
+- [x] `:checkhealth` — clean for everything IDE-relevant. Remaining ❌ are
+      optional media features (image/PDF/LaTeX/Mermaid preview — need
+      `magick`/`tectonic`/`mmdc`, none installed, not needed for coding) and
+      `luarocks` (no plugin requires it). Not blockers.
+- [x] Go/Rust/Dockerfile/shell/YAML LSPs verified attached headlessly: gopls,
+      rust-analyzer, dockerls, bashls, yamlls, helm_ls all attach correctly on
+      their respective filetypes. `<leader>cf` format-on-save verified working
+      (gofumpt reformats a messy `.go` file correctly).
+- [x] `<leader>gg` lazygit — `lazygit` binary installed via apt (was missing)
+- [x] `<leader>ac` Claude Code terminal — `claude` CLI confirmed on PATH at
+      `~/.local/bin/claude`; `claudecode.nvim` config in `lua/plugins/claude.lua`
+      is correct as-is
+- [ ] Supermaven ghost-text suggestions — **not verifiable headlessly**, needs
+      an interactive session to eyeball ghost-text while typing
+- [ ] `<leader>gg` / `<leader>ac` opening the actual TUI panes — also needs an
+      interactive session; config is verified correct but not click-tested
+- [x] Regenerated `lazy-lock.json` — committed (see below)
+
+**Root cause found and fixed this session: this machine was missing basically
+every language toolchain**, not just plugins. `go`, `npm`/`node`, `rustc`/`cargo`,
+`python3-venv`, `lazygit`, `ripgrep`, and `fd-find` were all absent, which
+silently broke every `mason.nvim` tool/LSP install that depends on them
+(gopls, dockerls, bashls, yamlls, jsonls, delve, gofumpt, goimports,
+markdown-toc, markdownlint-cli2, yamllint, plus the Snacks picker's fuzzy
+finder). All installed via `sudo apt install` (Go/Node/lazygit/venv/rg/fd) and
+`rustup` (Rust, with the `rust-analyzer` component) — installed with the
+user's confirmation. `~/.zshenv`, `~/.bashrc`, `~/.profile` already source
+`~/.cargo/env`, so new shells pick up cargo's PATH automatically.
+
+Also found and fixed (unrelated but blocking): `/etc/apt/sources.list.d/docker.sources`
+had appeared mid-session (timestamped today, cause unknown — not created by any
+command in this session) missing the required `Suites:` field, which broke
+*all* `apt` operations. Fixed by adding `Suites: bookworm`.
+
+Separately, discovered mason.nvim's `ensure_installed` auto-install is
+unreliable when driven headlessly/scripted (timing-dependent, silently no-ops
+in several attempts) — had to install several LSP servers/tools directly via
+`require("mason-registry")` Lua API to get them to actually land. In normal
+interactive use (`:Mason`, or just opening files) this should behave as
+expected per `mason.nvim`/`mason-lspconfig` semantics.
+
 - [ ] Optional: backport this same IDE setup to `main` (already on
       `claude/neovim-setup-plan-skw4hu`) and/or to the other machine branch
       `machine/ri-t-0931`, if wanted
