@@ -9,3 +9,6 @@ vim.g.ai_cmp = false
 
 -- Ask for confirmation instead of erroring on unsaved changes / :q etc.
 vim.opt.confirm = true
+
+-- Light theme (catppuccin latte), to match a light KDE Plasma setup.
+vim.opt.background = "light"
