@@ -10,10 +10,11 @@ KDE Plasma, light theme). Do not merge `main` into this branch — main and
 workforce have diverged (different hypr/noctalia/zsh/ghostty configs); only
 cherry-pick specific commits across.
 
-**Full plan doc** (background, options considered, VSCode-feature mapping):
-`NEOVIM_IDE_PLAN.md` on branch `claude/neovim-setup-plan-skw4hu` (main-based,
-not yet on workforce — the plan's content is summarized below, this is just
-where the long-form version lives if needed).
+The original long-form plan doc lived on branch `claude/neovim-setup-plan-skw4hu`
+(background, options considered, VSCode-feature mapping); that branch was an
+early draft superseded by the actual implementation on `machine/workforce`
+(more extras enabled, more fixes applied) and has been deleted. The plan's
+content is summarized below.
 
 ### Decisions locked in
 - Languages: Go, Rust, + DevOps (Shell, Docker, YAML, Helm, JSON, TOML, Markdown, Git)
@@ -101,9 +102,8 @@ in several attempts) — had to install several LSP servers/tools directly via
 interactive use (`:Mason`, or just opening files) this should behave as
 expected per `mason.nvim`/`mason-lspconfig` semantics.
 
-- [ ] Optional: backport this same IDE setup to `main` (already on
-      `claude/neovim-setup-plan-skw4hu`) and/or to the other machine branch
-      `machine/ri-t-0931`, if wanted
+- [ ] Optional: backport this same IDE setup to `main` and/or to the other
+      machine branch `machine/ri-t-0931`, if wanted
 
 ### Files touched (all under `nvim/.config/nvim/`, a GNU stow package)
 - `lazyvim.json` — extras list
