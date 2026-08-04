@@ -19,6 +19,9 @@ Obsidian vault (`~/Obsidian/personal-runbooks/Debian/debian-sid-plasma-runbook.m
 and kept in sync with it manually — edit either copy, then port changes to
 the other.
 
+- Host tooling: `apt` for system packages, Flatpak for desktop apps, and `rustup` for the Rust toolchain.
+- Treat older install notes as historical unless they match the current files on this Debian sid branch.
+
 The original long-form plan doc lived on branch `claude/neovim-setup-plan-skw4hu`
 (background, options considered, VSCode-feature mapping); that branch was an
 early draft superseded by the actual implementation on `machine/workforce`
