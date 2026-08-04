@@ -10,6 +10,15 @@ KDE Plasma, light theme). Do not merge `main` into this branch — main and
 workforce have diverged (different hypr/noctalia/zsh/ghostty configs); only
 cherry-pick specific commits across.
 
+### Distro: Debian sid (final)
+
+The install/reinstall plan for this machine is `Debian Sid — Plasma Install
+Runbook.md` (repo root) — debootstrap + systemd-boot + btrfs/snapper + KDE
+Plasma 6 (Wayland), apt + Flatpak as the two software lanes. Sourced from the
+Obsidian vault (`~/Obsidian/personal-runbooks/Debian/debian-sid-plasma-runbook.md`)
+and kept in sync with it manually — edit either copy, then port changes to
+the other.
+
 The original long-form plan doc lived on branch `claude/neovim-setup-plan-skw4hu`
 (background, options considered, VSCode-feature mapping); that branch was an
 early draft superseded by the actual implementation on `machine/workforce`
