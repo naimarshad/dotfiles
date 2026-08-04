@@ -24,6 +24,7 @@ export ZSH=/home/naeem/.oh-my-zsh
 export TERM="xterm-256color"
 export HISTSIZE="-1"
 export KUBECTL_KYAML=true
+export SOPS_AGE_KEY_FILE="/home/naeem/.config/sops/age/keys.txt"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -51,6 +52,8 @@ autoload -Uz compinit && compinit -i
 
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
+eval "$(omp completions zsh)"
+
 
 source $ZSH/oh-my-zsh.sh
 # User configuration
@@ -73,7 +76,7 @@ alias vim="nvim"
 alias fvim='vim $(fzf --preview="bat --color=always {}")'
 alias kk="kubecolor klock"
 alias kgir="kubectl get ingressroutes"
-alias mc="/usr/bin/mcli"
+#alias mc="/usr/bin/mcli"
 alias dim="docker images"
 alias pro="cd /home/naeem/projects/"
 alias vim="nvim"
@@ -90,7 +93,7 @@ alias wifirouter='ssh wifirouter'
 alias mm='ssh mattermost'
 alias jellyfinstation='ssh jellyfinstation'
 alias jellyfinpc='ssh jellyfinpc'
-alias pvewol='wol 64:00:6a:8a:db:d5'
+alias pvewol='wakeonlan 64:00:6a:8a:db:d5'
 alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
 alias gro='cd $(git rev-parse --show-toplevel)'
 alias review="gh search prs --review-requested naeem-tipu --state open --review required"
@@ -197,7 +200,8 @@ helm() {
 # opencode
 export PATH=/home/naeem/.opencode/bin:$PATH
 
-source /usr/share/zsh/site-functions/zsh-syntax-highlighting.zsh
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source /usr/share/zsh/site-functions/zsh-syntax-highlighting.zsh
 
 compdef kubecolor=kubectl
 
