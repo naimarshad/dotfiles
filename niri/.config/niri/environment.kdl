@@ -1,11 +1,11 @@
 // xcursor-theme must be set at compositor level — env vars alone are not enough.
 cursor {
-    xcursor-theme "Bibata-Modern-Amber"
+    xcursor-theme "Bibata-Modern-Classic"
     xcursor-size 24
 }
 
 environment {
-    GTK_THEME                           "adw-gtk3-dark"
+    GTK_THEME                           "adw-gtk3"
     QT_QPA_PLATFORM                     "wayland;xcb"
     QT_QPA_PLATFORMTHEME                "qt6ct"
     QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
@@ -15,7 +15,7 @@ environment {
     CLUTTER_BACKEND                     "wayland"
     GDK_SCALE                           "1"
     GDK_DPI_SCALE                       "1"
-    XCURSOR_THEME                       "Bibata-Modern-Amber"
+    XCURSOR_THEME                       "Bibata-Modern-Classic"
     XCURSOR_SIZE                        "24"
     XDG_CURRENT_DESKTOP                 "niri"
     XDG_SESSION_DESKTOP                 "niri"

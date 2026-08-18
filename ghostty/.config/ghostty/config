@@ -6,8 +6,13 @@ window-padding-x = 10
 window-padding-y = 3
 window-padding-balance = true
 background-opacity = 1
+<<<<<<< Updated upstream
+background-blur-radius = 80
+theme = "Catppuccin Latte"
+=======
 background-blur-radius = 60
 theme = noctalia
+>>>>>>> Stashed changes
 
 # Font
 font-family = "JetBrainsMono NF Regular"
