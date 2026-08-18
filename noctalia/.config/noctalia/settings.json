@@ -1675,13 +1675,9 @@
     },
     "brightness": {
         "backlightDeviceMappings": [
-            {
-                "device": "/sys/class/backlight/intel_backlight",
-                "output": "HDMI-A-1"
-            }
         ],
         "brightnessStep": 5,
-        "enableDdcSupport": true,
+        "enableDdcSupport": false,
         "enforceMinimum": true
     },
     "calendar": {
@@ -1701,13 +1697,17 @@
         ]
     },
     "colorSchemes": {
-        "darkMode": true,
+        "darkMode": false,
         "generationMethod": "tonal-spot",
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Catppuccin Lavender",
+        "predefinedScheme": "Catppuccin Frappe Blue",
+<<<<<<< Updated upstream
         "schedulingMode": "off",
+=======
+        "schedulingMode": "location",
+>>>>>>> Stashed changes
         "syncGsettings": true,
         "useWallpaperColors": false
     },
@@ -1827,7 +1827,7 @@
     "general": {
         "allowPanelsOnScreenWithoutBar": true,
         "allowPasswordWithFprintd": false,
-        "animationDisabled": false,
+        "animationDisabled": true,
         "animationSpeed": 1.1500000000000001,
         "autoStartAuth": true,
         "avatarImage": "/home/naeem/Pictures/Naeem-2nd-Avatar.png",
@@ -1835,13 +1835,13 @@
         "clockFormat": "hh\\nmm",
         "clockStyle": "digital",
         "compactLockScreen": false,
-        "dimmerOpacity": 0.2,
+        "dimmerOpacity": 0.1,
         "enableBlurBehind": true,
         "enableLockScreenCountdown": true,
         "enableLockScreenMediaControls": false,
         "enableShadows": false,
         "forceBlackScreenCorners": false,
-        "iRadiusRatio": 1,
+        "iRadiusRatio": 1.1,
         "keybinds": {
             "keyDown": [
                 "Down"
@@ -1875,9 +1875,9 @@
         ],
         "lockScreenTint": 0,
         "passwordChars": false,
-        "radiusRatio": 1,
+        "radiusRatio": 1.1,
         "reverseScroll": false,
-        "scaleRatio": 1,
+        "scaleRatio": 1.05,
         "screenRadiusRatio": 1,
         "shadowDirection": "bottom_right",
         "shadowOffsetX": 2,
@@ -1906,12 +1906,12 @@
         "enabled": true,
         "fadeDuration": 5,
         "lockCommand": "",
-        "lockTimeout": 660,
+        "lockTimeout": 600,
         "resumeLockCommand": "",
         "resumeScreenOffCommand": "",
         "resumeSuspendCommand": "",
         "screenOffCommand": "",
-        "screenOffTimeout": 600,
+        "screenOffTimeout": 300,
         "suspendCommand": "",
         "suspendTimeout": 10800
     },
@@ -1943,12 +1943,12 @@
     },
     "nightLight": {
         "autoSchedule": true,
-        "dayTemp": "6500",
+        "dayTemp": "5235",
         "enabled": true,
         "forced": false,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
-        "nightTemp": "4000"
+        "nightTemp": "4115"
     },
     "noctaliaPerformance": {
         "disableDesktopWidgets": true,
@@ -2099,14 +2099,7 @@
         "activeTemplates": [
             {
                 "enabled": true,
-                "id": "kcolorscheme"
-            },
-            {
-                "enabled": true,
-                "id": "yazi"
-            },
-            {
-                "enabled": true,
+<<<<<<< Updated upstream
                 "id": "hyprland"
             },
             {
@@ -2119,23 +2112,34 @@
             },
             {
                 "enabled": true,
-                "id": "ghostty"
+                "id": "kcolorscheme"
             },
             {
                 "enabled": true,
                 "id": "niri"
+=======
+                "id": "btop"
+            },
+            {
+                "enabled": true,
+                "id": "ghostty"
+            },
+            {
+                "enabled": true,
+                "id": "gtk"
+            },
+            {
+                "enabled": true,
+                "id": "kcolorscheme"
             },
             {
                 "enabled": true,
                 "id": "pywalfox"
+>>>>>>> Stashed changes
             },
             {
                 "enabled": true,
-                "id": "zenBrowser"
-            },
-            {
-                "enabled": true,
-                "id": "zed"
+                "id": "qt"
             },
             {
                 "enabled": true,
@@ -2143,7 +2147,42 @@
             },
             {
                 "enabled": true,
-                "id": "qt"
+<<<<<<< Updated upstream
+                "id": "zed"
+            },
+            {
+                "enabled": true,
+=======
+>>>>>>> Stashed changes
+                "id": "yazi"
+            },
+            {
+                "enabled": true,
+<<<<<<< Updated upstream
+                "id": "zenBrowser"
+            },
+            {
+                "enabled": true,
+                "id": "pywalfox"
+=======
+                "id": "zed"
+            },
+            {
+                "enabled": true,
+                "id": "niri"
+            },
+            {
+                "enabled": true,
+                "id": "scroll"
+            },
+            {
+                "enabled": true,
+                "id": "telegram"
+>>>>>>> Stashed changes
+            },
+            {
+                "enabled": true,
+                "id": "alacritty"
             }
         ],
         "enableUserTheming": true
@@ -2151,14 +2190,14 @@
     "ui": {
         "boxBorderEnabled": false,
         "fontDefault": "Inter",
-        "fontDefaultScale": 1,
+        "fontDefaultScale": 1.05,
         "fontFixed": "JetBrainsMonoNL Nerd Font Mono",
-        "fontFixedScale": 1,
-        "panelBackgroundOpacity": 0.93,
+        "fontFixedScale": 1.05,
+        "panelBackgroundOpacity": 0.7000000000000001,
         "panelsAttachedToBar": true,
         "scrollbarAlwaysVisible": false,
         "settingsPanelMode": "attached",
-        "settingsPanelSideBarCardStyle": false,
+        "settingsPanelSideBarCardStyle": true,
         "tooltipsEnabled": true,
         "translucentWidgets": true
     },
@@ -2170,139 +2209,143 @@
         "favorites": [
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 2.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 1.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 3.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 4.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin Lavender",
+                "colorScheme": "Catppuccin Frappe Blue",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#b4befe",
-                    "#f5bde6",
-                    "#c6a0f6",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 5.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/Next.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 6.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 7.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
+<<<<<<< Updated upstream
+                "colorScheme": "Catppuccin Frappe Blue",
+=======
                 "colorScheme": "Catppuccin",
-                "darkMode": false,
+>>>>>>> Stashed changes
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
+                    "#1e66f5",
+                    "#7287fd",
                     "#8839ef",
-                    "#fe640b",
-                    "#40a02b",
                     "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/ColorAbstract.png",
@@ -2310,28 +2353,39 @@
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+<<<<<<< Updated upstream
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
+=======
+                "colorScheme": "Catppuccin Lavender",
+                "darkMode": true,
+                "generationMethod": "tonal-spot",
+                "paletteColors": [
+                    "#306ac5",
+                    "#e0709d",
+                    "#7948cc",
+                    "#cd1d3d"
+>>>>>>> Stashed changes
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 9.png",
                 "useWallpaperColors": false
             },
             {
                 "appearance": "dark",
-                "colorScheme": "Catppuccin",
-                "darkMode": false,
+                "colorScheme": "Catppuccin Frappe Blue",
+                "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
-                    "#cba6f7",
-                    "#fab387",
-                    "#94e2d5",
-                    "#f38ba8"
+                    "#1e66f5",
+                    "#7287fd",
+                    "#8839ef",
+                    "#d20f39"
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 8.png",
                 "useWallpaperColors": false

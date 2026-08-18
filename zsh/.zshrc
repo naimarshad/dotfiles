@@ -14,9 +14,15 @@ export PATH="$HOME/.krew/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
+# export KUBECOLOR_PRESET="dark"
+export BAT_THEME="Catppuccin Latte"
 # export DOCKER_HOST=tcp://192.168.1.10:2375
-#export KUBECOLOR_PRESET="light"
+<<<<<<< Updated upstream
+=======
+KUBECOLOR_LIGHT_BACKGROUND=true
+export KUBECOLOR_PRESET="light"
 #export BAT_THEME=GitHub
+>>>>>>> Stashed changes
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
@@ -50,7 +56,8 @@ autoload -Uz compinit && compinit -i
 
 source $ZSH/oh-my-zsh.sh
 #source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.zsh/catppuccin_macchiato-zsh-syntax-highlighting.zsh
+source ~/.zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
+# source ~/.zsh/catppuccin_macchiato-zsh-syntax-highlighting.zsh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -104,13 +111,12 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
 fi
 
 ### Fuzzy search configurations ###
-# Below is for light mode theme -- macchiato
-export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
---color=bg+:#363A4F,bg:#24273A,spinner:#F4DBD6,hl:#ED8796 \
---color=fg:#CAD3F5,header:#ED8796,info:#C6A0F6,pointer:#F4DBD6 \
---color=marker:#B7BDF8,fg+:#CAD3F5,prompt:#C6A0F6,hl+:#ED8796 \
---color=selected-bg:#494D64 \
---color=border:#6E738D,label:#CAD3F5 --multi"
+export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi \
+--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
+--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
+--color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
+--color=selected-bg:#BCC0CC \
+--color=border:#9CA0B0,label:#4C4F69"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -122,6 +128,8 @@ alias gro='cd $(git rev-parse --show-toplevel)'
 alias review="gh search prs --review-requested naeem-tipu --state open --review required"
 alias merge="gh search prs --author naeem-tipu --state open --review approved"
 alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
+alias iacdel="cd /home/naeem/ri-work/git-repos/platform/iac/ && gco main && rm -rf .claude/hooks && rm -rf .claude/settings.json && rm -rf AGENTS.md"
+alias iacrest="cd /home/naeem/ri-work/git-repos/platform/iac/ && gco main && git restore .claude/hooks && git restore .claude/settings.json && git restore AGENTS.md"
 alias iac="cd /home/naeem/ri-work/git-repos/platform/iac"
 alias aiac="cd /home/naeem/ri-work/git-repos/platform/iac/ansible"
 alias tiac="cd /home/naeem/ri-work/git-repos/platform/iac/terraform"
@@ -215,4 +223,8 @@ helm() {
 
 eval "$(/home/naeem/.local/bin/mise activate zsh)"
 
+
+export KUBECOLOR_LIGHT_BACKGROUND=true
 compdef kubecolor=kubectl
+
+
