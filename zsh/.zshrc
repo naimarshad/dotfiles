@@ -17,12 +17,9 @@ export VAGRANT_DEFAULT_PROVIDER=libvirt
 # export KUBECOLOR_PRESET="dark"
 export BAT_THEME="Catppuccin Latte"
 # export DOCKER_HOST=tcp://192.168.1.10:2375
-<<<<<<< Updated upstream
-=======
-KUBECOLOR_LIGHT_BACKGROUND=true
+export KUBECOLOR_LIGHT_BACKGROUND=true
 export KUBECOLOR_PRESET="light"
 #export BAT_THEME=GitHub
->>>>>>> Stashed changes
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
@@ -157,16 +154,36 @@ export ANSIBLE_REMOTE_USER=naeemtipu
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 
-# Destructive verbs that require confirmation
-_PROD_PATTERN="prod|prd|production"
-_DANGEROUS="^(delete|scale|drain|cordon|taint|patch|apply|exec|edit|cp|replace)"
+# Destructive verbs that require confirmation. Exported because the shell
+# snapshot used by external tooling captures functions but not plain variables.
+# Matched against the subcommand alone, so no anchors here.
+export _PROD_PATTERN="prod|prd|production"
+export _DANGEROUS="delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set"
+export _READONLY="get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff"
 
 kubectl() {
   # KUBIE_CTX is set by kubie in its subshell — reliable indicator
   local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
 
+  # An unset pattern would leave grep testing an empty regex, which matches
+  # everything, so never rely on the values above being in scope.
+  : "${_PROD_PATTERN:=prod|prd|production}"
+  : "${_DANGEROUS:=delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set}"
+  : "${_READONLY:=get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff}"
+
+  # Decide on the first argument that names a subcommand, whichever list it
+  # lands in. Taking the first non-flag token instead lets
+  # "kubectl -n default delete pod" through, because "default" is neither a
+  # flag nor a verb.
+  local a _verdict="safe"
+  for a in "$@"; do
+    [[ $a == -* ]] && continue
+    if echo "$a" | grep -qxE "$_READONLY"; then _verdict="safe"; break; fi
+    if echo "$a" | grep -qxE "$_DANGEROUS"; then _verdict="danger"; break; fi
+  done  
+
   if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-    if echo "$*" | grep -qE "$_DANGEROUS"; then
+    if [ "$_verdict" = danger ]; then
 
       # Hard visual break — hard to overlook
       echo ""
@@ -193,14 +210,33 @@ kubectl() {
   command kubecolor "$@"
 }
 
-# Helm destructive verbs
-_HELM_DANGEROUS="^(upgrade|uninstall|rollback|delete)"
+# Helm destructive verbs. Exported because the shell snapshot used by external
+# tooling captures functions but not plain variables. Matched against the
+# subcommand alone, so no anchors here.
+export _HELM_DANGEROUS="install|upgrade|uninstall|rollback|delete"
+export _HELM_READONLY="diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion"
 
 helm() {
+  # An unset pattern would leave grep testing an empty regex, which matches
+  # everything, so never rely on the values above being in scope.
+  : "${_PROD_PATTERN:=prod|prd|production}"
+  : "${_HELM_DANGEROUS:=install|upgrade|uninstall|rollback|delete}"
+  : "${_HELM_READONLY:=diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion}"
+
+  # Decide on the first argument that names a subcommand, whichever list it
+  # lands in. Taking the first non-flag token instead lets
+  # "helm --namespace x upgrade" through, because "x" is neither a flag nor a
+  # verb. Checking read-only first is what keeps "helm diff upgrade" quiet.
+  local a _verdict="safe"
+  for a in "$@"; do
+    [[ $a == -* ]] && continue
+    if echo "$a" | grep -qxE "$_HELM_READONLY"; then _verdict="safe"; break; fi
+    if echo "$a" | grep -qxE "$_HELM_DANGEROUS"; then _verdict="danger"; break; fi
+  done
   local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
 
   if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-    if echo "$*" | grep -qE "$_HELM_DANGEROUS"; then
+    if [ "$_verdict" = danger ]; then
       echo ""
       echo "  ╔══════════════════════════════════════╗"
       echo "  ║   PRODUCTION HELM: $ctx"
@@ -226,5 +262,3 @@ eval "$(/home/naeem/.local/bin/mise activate zsh)"
 
 export KUBECOLOR_LIGHT_BACKGROUND=true
 compdef kubecolor=kubectl
-
-
