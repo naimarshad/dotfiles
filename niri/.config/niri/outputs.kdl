@@ -1,5 +1,6 @@
 // OUTPUTS — ri-t-0931
-// Layout: [HDMI-A-1 ultrawide] [DP-1 vertical] [eDP-1 built-in]
+// Home layout:   [HDMI-A-1 ultrawide] [DP-1 vertical] [eDP-1 built-in]
+// Office layout:  [eDP-1 built-in] [DP-3/DP-5 P34w-20 ultrawide]
 // DP-1 rotated 270° at 2560x1440 → logical size 1440×2560, so eDP-1 starts at x=4880
 
 output "HDMI-A-1" {
@@ -24,8 +25,16 @@ output "eDP-1" {
 }
 
 // --- Office dock: Lenovo P34w-20 ultrawide, laptop sits to its left ---
-// eDP-1 spans x=[4880, 6680] (1800px logical), so DP-5 starts at x=6680.
-// Only applied at the office; ignored at home where DP-5 is absent.
+// The dock enumerates this monitor as DP-3 or DP-5 depending on port and MST
+// branch, so both connectors are configured identically. Only one is ever present.
+// eDP-1 spans x=[4880, 6680] (1800px logical), so the ultrawide starts at x=6680.
+// Both blocks are ignored at home, where neither connector is live.
+output "DP-3" {
+    mode "3440x1440@59.973"
+    position x=6680 y=0
+    scale 1.0
+}
+
 output "DP-5" {
     mode "3440x1440@59.973"
     position x=6680 y=0

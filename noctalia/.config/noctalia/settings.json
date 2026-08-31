@@ -1677,7 +1677,7 @@
         "backlightDeviceMappings": [
         ],
         "brightnessStep": 5,
-        "enableDdcSupport": false,
+        "enableDdcSupport": true,
         "enforceMinimum": true
     },
     "calendar": {
@@ -1703,11 +1703,7 @@
         "manualSunset": "18:30",
         "monitorForColors": "",
         "predefinedScheme": "Catppuccin Frappe Blue",
-<<<<<<< Updated upstream
         "schedulingMode": "off",
-=======
-        "schedulingMode": "location",
->>>>>>> Stashed changes
         "syncGsettings": true,
         "useWallpaperColors": false
     },
@@ -2099,7 +2095,6 @@
         "activeTemplates": [
             {
                 "enabled": true,
-<<<<<<< Updated upstream
                 "id": "hyprland"
             },
             {
@@ -2117,25 +2112,6 @@
             {
                 "enabled": true,
                 "id": "niri"
-=======
-                "id": "btop"
-            },
-            {
-                "enabled": true,
-                "id": "ghostty"
-            },
-            {
-                "enabled": true,
-                "id": "gtk"
-            },
-            {
-                "enabled": true,
-                "id": "kcolorscheme"
-            },
-            {
-                "enabled": true,
-                "id": "pywalfox"
->>>>>>> Stashed changes
             },
             {
                 "enabled": true,
@@ -2147,38 +2123,19 @@
             },
             {
                 "enabled": true,
-<<<<<<< Updated upstream
                 "id": "zed"
             },
             {
                 "enabled": true,
-=======
->>>>>>> Stashed changes
                 "id": "yazi"
             },
             {
                 "enabled": true,
-<<<<<<< Updated upstream
                 "id": "zenBrowser"
             },
             {
                 "enabled": true,
                 "id": "pywalfox"
-=======
-                "id": "zed"
-            },
-            {
-                "enabled": true,
-                "id": "niri"
-            },
-            {
-                "enabled": true,
-                "id": "scroll"
-            },
-            {
-                "enabled": true,
-                "id": "telegram"
->>>>>>> Stashed changes
             },
             {
                 "enabled": true,
@@ -2335,11 +2292,7 @@
             },
             {
                 "appearance": "dark",
-<<<<<<< Updated upstream
                 "colorScheme": "Catppuccin Frappe Blue",
-=======
-                "colorScheme": "Catppuccin",
->>>>>>> Stashed changes
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
                 "paletteColors": [
@@ -2353,7 +2306,6 @@
             },
             {
                 "appearance": "dark",
-<<<<<<< Updated upstream
                 "colorScheme": "Catppuccin Frappe Blue",
                 "darkMode": true,
                 "generationMethod": "tonal-spot",
@@ -2362,16 +2314,6 @@
                     "#7287fd",
                     "#8839ef",
                     "#d20f39"
-=======
-                "colorScheme": "Catppuccin Lavender",
-                "darkMode": true,
-                "generationMethod": "tonal-spot",
-                "paletteColors": [
-                    "#306ac5",
-                    "#e0709d",
-                    "#7948cc",
-                    "#cd1d3d"
->>>>>>> Stashed changes
                 ],
                 "path": "/home/naeem/Pictures/Wallpapers/AppBreweryWallpaper 9.png",
                 "useWallpaperColors": false
