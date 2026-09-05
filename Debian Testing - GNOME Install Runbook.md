@@ -1,18 +1,18 @@
 ---
-title: "Debian Testing: Plasma Install Runbook"
-aliases: ["Debian Testing Runbook", "Forky Runbook", "T490 Debian Rev 2"]
-tags: [debian, testing, forky, plasma, systemd-boot, btrfs, runbook, thinkpad-t490]
+title: "Debian Testing: GNOME Install Runbook"
+aliases: ["Debian Testing Runbook", "Forky Runbook", "T490 Debian Rev 3"]
+tags: [debian, testing, forky, gnome, niri, systemd-boot, btrfs, runbook, thinkpad-t490]
 machine: "ThinkPad T490 (20N2004AGE)"
 arch: "amd64"
 init: "systemd + systemd-boot"
 filesystem: "btrfs + snapper"
-desktop: "KDE Plasma 6 (Wayland)"
+desktop: "GNOME (Wayland), niri + Noctalia later"
 method: "debootstrap"
 supersedes: "Debian Sid — Plasma Install Runbook.md"
-rev: "2"
+rev: "3"
 ---
 
-# Debian Testing: a binary-native daily driver
+# Debian Testing + GNOME: a binary-native daily driver
 
 **Debian testing**, tracked through the rolling `testing` alias: prebuilt everything, a btrfs + snapper + systemd-boot spine, and native access to the third-party `.deb` ecosystem. Installed by hand with `debootstrap` for full control over the disk layout and bootloader.
 
@@ -28,8 +28,9 @@ Rev 1 targeted Sid on a disk shared with Windows 11. Two things changed, and the
 
 1. **Suite: unstable becomes testing.** Affects the bootstrap, the sources file, and the upgrade discipline. Nothing else.
 2. **The disk is blank. No Windows, no existing partition table.** Every "never reformat the shared ESP" constraint is gone, the ESP can finally be sized properly, the boot-order fight with Windows Boot Manager disappears, and a partitioning step that Rev 1 never needed is now Step 02.
+3. **Desktop: Plasma becomes GNOME** (Rev 3), with niri + Noctalia as a later migration in Step 17 rather than the starting point.
 
-Sections are numbered as **Steps** rather than Phases. The btrfs layout, chroot, machine-id ordering, kernel cmdline, systemd-boot, Plasma, the two software lanes, and snapper are all unchanged from Rev 1, because none of them depend on the suite or on Windows.
+Sections are numbered as **Steps** rather than Phases. The btrfs layout, chroot, machine-id ordering, kernel cmdline, systemd-boot, the two software lanes, and snapper are all unchanged from Rev 1, because none of them depend on the suite, on Windows, or on the desktop.
 
 ## Facts
 
@@ -258,8 +259,8 @@ reboot
 
 ---
 
-## 10 · Minimal Plasma
-*a full Wayland desktop, no app-suite. `--no-install-recommends` is the minimalism lever*
+## 10 · Minimal GNOME
+*a full Wayland desktop from one curated metapackage*
 
 > [!success] qtwebengine is a non-event
 > Whatever pulls `qtwebengine` here gets a prebuilt `.deb`. There is nothing to configure, verify, or keep binary. It simply is.
@@ -267,27 +268,33 @@ reboot
 ```bash
 sudo apt update && sudo apt full-upgrade -y
 
-# minimal metapackage + Wayland session + SDDM, WITHOUT the recommended extras
-sudo apt install --no-install-recommends -y \
-  plasma-desktop plasma-workspace-wayland sddm
-
-sudo systemctl enable sddm
+sudo apt install -y gnome-core
+sudo systemctl enable gdm3
 ```
+
+> [!warning] Do not reach for `--no-install-recommends` here
+> That flag was the minimalism lever for `plasma-desktop`, and carrying the habit over to GNOME is the mistake this callout exists to prevent. `gnome-core` is already the curated minimum, and GNOME leans on Recommends for portal, keyring, and session integration, so stripping them leaves a desktop missing pieces you then debug one at a time. If you want tighter than `gnome-core`, drop to `gnome-shell` and add components deliberately.
 
 > [!note] The three metapackage tiers
-> `plasma-desktop` = minimal (what you want). `kde-standard` = fuller day-to-day set (Kate, Okular, KMail, Gwenview). `kde-full` = the lot. `--no-install-recommends` suppresses the optional Recommends that apt would otherwise pull.
+> `gnome-shell` = the shell alone, you assemble the session yourself. `gnome-core` = curated minimal desktop, depends on `gdm3` and `gnome-shell` (both >= 48) and brings nautilus (what you want). `gnome` = the full environment with extra apps and games.
+
+`gnome-core` already depends on `gdm3`, so the `systemctl enable gdm3` above is usually a no-op. It is cheap to run and cheaper than a black screen on first boot.
 
 ## 11 · Common add-ons
-*KDE Connect, wallet, Dolphin + remote folders, all plain `.deb`*
+*keyring, file manager, phone integration*
 
 ```bash
-sudo apt install -y \
-  kdeconnect kwalletmanager \
-  dolphin kio-extras          # kio-extras brings sftp:// smb:// fish:// workers
+sudo apt install -y gnome-keyring
+
+# nautilus arrives with gnome-core; nemo is what the dotfiles and niri binds expect
+sudo apt install -y nemo
 ```
 
-> [!note] SMB included
-> `kio-extras` ships the SMB/SFTP workers already, no per-flag rebuild needed. KWallet integration comes with the Plasma session. If you run a firewall, KDE Connect still needs TCP+UDP `1714-1764`.
+> [!note] Verify the KDE Connect equivalent before installing
+> Under GNOME the integration is a shell extension rather than the Plasma applet. Search the archive first, per Step 00: `apt-cache search gsconnect` and `apt-cache search kdeconnect`. The `kdeconnect` package itself still works outside Plasma if you prefer it. Whichever you pick, a firewall still needs TCP+UDP `1714-1764`.
+
+> [!note] Why nemo and not just nautilus
+> The dotfiles and the niri keybinds on the other machine both call `nemo`, so installing it now keeps Step 15 and Step 17 consistent. Leaving nautilus in place costs nothing.
 
 ## 12 · Desktop essentials
 *audio, power, portals, fonts*
@@ -297,7 +304,7 @@ sudo apt install -y \
 sudo apt install -y \
   pipewire-audio wireplumber \
   power-profiles-daemon \
-  xdg-desktop-portal-kde \
+  xdg-desktop-portal-gnome \
   fonts-jetbrains-mono fonts-noto fonts-noto-color-emoji
 
 # Arabic + Nerd symbols: verify names in the archive first
@@ -346,8 +353,8 @@ flatpak remote-add --if-not-exists --user \
 flatpak install --user flathub app.zen_browser.zen
 ```
 
-> [!success] Portal already in place
-> `xdg-desktop-portal-kde` from Step 12 gives Flatpak apps native file dialogs and screen-share under Plasma. `--user` keeps installs in `@home`, so they survive a root rollback and ride your normal backup.
+> [!success] Portal already in place, and it survives the niri migration
+> `xdg-desktop-portal-gnome` from Step 12 gives Flatpak apps native file dialogs and screen-share under GNOME. It is also the exact portal the niri setup on the other machine restarts at startup for screencasting, so Step 17 inherits it rather than replacing it. `--user` keeps installs in `@home`, so they survive a root rollback and ride your normal backup.
 
 ## 15 · Dotfiles & tooling
 ```bash
@@ -406,6 +413,39 @@ flatpak update --user && flatpak uninstall --user --unused
 
 ---
 
+---
+
+## 17 · Later · niri + Noctalia
+*the eventual target, and the one place this machine leaves the two-lane premise*
+
+Not part of the first install. Get GNOME stable, dotfiles stowed, and snapper working first, then come back. GNOME stays installed either way: it is a working fallback session at the gdm3 login screen while niri is still being tuned.
+
+> [!danger] niri is not in the Debian archive
+> Checked on packages.debian.org: forky ships `librust-niri-ipc-dev` and `niri-companion` (5.0.0), but there is **no `niri` package**. Quickshell, which Noctalia runs on, **is** packaged: `quickshell` 0.3.0-1 in forky, also available in trixie-backports.
+> So the shell half of the target is apt-native and the compositor half is not. This is the single point where the machine departs from the two-lane premise in Step 00, and it is worth deciding deliberately rather than discovering mid-migration.
+
+**Pick a lane for niri before starting, and write down which one you picked:**
+
+1. **Build from source.** Rust and cargo, a third lane on top of apt and Flatpak, and a compositor you now maintain by hand across testing's library churn. Honest but ongoing work.
+2. **A trusted third-party repo.** Treat it exactly like any vendor repo in Step 13: keyring in `/etc/apt/keyrings/`, deb822 `.sources` with `Signed-By`, pinned. Verify who publishes it before trusting it with your session.
+
+Neither is verified in this runbook. Whichever you choose, capture the exact steps here afterwards so the next rebuild is not a research project.
+
+**What is already settled:**
+
+```bash
+# The Noctalia runtime is a normal apt package
+sudo apt install -y quickshell
+```
+
+> [!note] Noctalia's shell code is not in the dotfiles repo
+> The `noctalia/` package carries settings, colorschemes, and plugins, not the shell itself. The shell comes from upstream separately and is launched with `qs -c noctalia-shell --no-duplicate`. Budget for that as its own step.
+
+> [!note] Session entry
+> The other machine launches niri from `~/.zprofile` via `start-niri.sh`, which execs `niri-session` so the ScreenCast D-Bus interface registers. With gdm3 already installed here you can instead drop a niri session file and pick it at the login screen, which keeps GNOME one menu entry away when something breaks. Decide once and keep the dotfiles consistent with it.
+
+---
+
 ## Restore checklist
 - [ ] correct device confirmed with `lsblk` before `sgdisk --zap-all`
 - [ ] GPT created · 1 GiB ESP (`ef00`) · root partition (`8300`) · both formatted
@@ -414,10 +454,11 @@ flatpak update --user && flatpak uninstall --user --unused
 - [ ] `/etc/kernel/cmdline` has `root=UUID` + `rootflags=subvol=@`
 - [ ] `systemd-boot` installed · `bootctl list` shows the kernel
 - [ ] `efibootmgr` shows Linux Boot Manager first
-- [ ] `plasma-desktop` only, `--no-install-recommends` · add-ons · portals · fonts
+- [ ] `gnome-core` installed WITHOUT `--no-install-recommends` · gdm3 enabled · add-ons · portals · fonts
 - [ ] third-party repos added (keyring + `Signed-By`, pinned) · Flatpak apps restored
 - [ ] dotfiles stowed · snapper + pre-apt hook + weekly timer live
-- [ ] `AGENTS.md` updated from "Debian sid" to "Debian testing"
+- [ ] `AGENTS.md` updated from "Debian sid" to "Debian testing", and from Hyprland to GNOME
+- [ ] Step 17 deferred deliberately, not forgotten · niri lane chosen and written down
 
 ---
-*Debian testing (rolling alias) · Plasma · systemd-boot · btrfs/snapper · Rev. 2*
+*Debian testing (rolling alias) · GNOME now, niri + Noctalia later · systemd-boot · btrfs/snapper · Rev. 3*
