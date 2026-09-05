@@ -234,14 +234,24 @@ bootctl list            # a Debian entry with your kernel must appear
 ```
 
 ## 08 · Users · sudo · network · base tools
+*install the packages, then enable their units*
+
+> [!warning] Install the units before enabling them, and Rev 1 got this wrong too
+> `systemctl enable ssh` fails with `Unit ssh.service does not exist` unless `openssh-server` is installed, and `systemd-timesyncd` is its own package in forky rather than part of `systemd`, so it fails the same way one argument later. Both are missing from a fresh debootstrap. The unit name `ssh` is correct: `openssh-server` ships `ssh.service`, not `sshd.service`.
+
+> [!danger] No sshd here means no remote install
+> Step 09 has you reboot and finish the desktop over SSH. The `ssh` you started back in Step 01 belongs to the live environment, not to the system being built. Skip `openssh-server` and you reboot into a machine you cannot log into remotely.
+
 ```bash
 passwd                              # root
-apt install -y sudo network-manager zstd git curl ca-certificates
+apt install -y sudo network-manager openssh-server systemd-timesyncd \
+               zstd git curl ca-certificates
 
 useradd -m -G sudo,audio,video,plugdev -s /bin/bash naeem
 passwd naeem
 
 systemctl enable NetworkManager ssh systemd-timesyncd
+systemctl is-enabled NetworkManager ssh systemd-timesyncd   # expect three 'enabled' lines
 ```
 
 ## 09 · First reboot
@@ -454,6 +464,7 @@ sudo apt install -y quickshell
 - [ ] `/etc/kernel/cmdline` has `root=UUID` + `rootflags=subvol=@`
 - [ ] `systemd-boot` installed · `bootctl list` shows the kernel
 - [ ] `efibootmgr` shows Linux Boot Manager first
+- [ ] `openssh-server` and `systemd-timesyncd` installed · all three units report `enabled` before rebooting
 - [ ] `gnome-core` installed WITHOUT `--no-install-recommends` · gdm3 enabled · add-ons · portals · fonts
 - [ ] third-party repos added (keyring + `Signed-By`, pinned) · Flatpak apps restored
 - [ ] dotfiles stowed · snapper + pre-apt hook + weekly timer live
