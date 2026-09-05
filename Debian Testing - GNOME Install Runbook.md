@@ -392,9 +392,6 @@ stow zsh fish ghostty nvim btop starship tmux k9s noctalia
 > [!note] `AGENTS.md` on this branch still says "Base OS: Debian sid"
 > It also describes Hyprland as the compositor. Update both once the machine is up, or the next session's context starts from a false premise.
 
-> [!note] `AGENTS.md` on this branch still says "Base OS: Debian sid"
-> Update it once the machine is up, or the next session's context starts from a false premise.
-
 ---
 
 ## 16 · Snapper & two-lane maintenance
