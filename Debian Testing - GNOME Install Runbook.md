@@ -367,16 +367,30 @@ flatpak install --user flathub app.zen_browser.zen
 > `xdg-desktop-portal-gnome` from Step 12 gives Flatpak apps native file dialogs and screen-share under GNOME. It is also the exact portal the niri setup on the other machine restarts at startup for screencasting, so Step 17 inherits it rather than replacing it. `--user` keeps installs in `@home`, so they survive a root rollback and ride your normal backup.
 
 ## 15 · Dotfiles & tooling
-```bash
-sudo apt install -y zsh stow ghostty nemo mise
-# (verify: some tools may come from a vendor repo added in Step 13)
+> [!warning] `ghostty` and `mise` are not in the Debian archive
+> Checked on packages.debian.org across every suite: no `ghostty` package at all, and nothing matching `mise` as the version manager. `apt install ghostty mise` fails with "Unable to locate package" twice. Both come from upstream, so route them through the Step 13 vendor pattern (keyring, deb822 `.sources`, `Signed-By`, pinned) or a source build, and verify who publishes the repo before trusting it. `zsh`, `stow`, and `nemo` are all in the archive.
 
+*apt lane*
+```bash
+sudo apt install -y zsh stow          # nemo already installed in Step 11
+chsh -s /bin/zsh naeem
+```
+
+*dotfiles*
+```bash
 git clone <dotfiles-remote> ~/dotfiles
 cd ~/dotfiles && git switch machine/workforce
-stow zsh ghostty git mise ...
-chsh -s /bin/zsh naeem
-mise install
+stow zsh fish ghostty nvim btop starship tmux k9s noctalia
 ```
+
+> [!note] Stow only what the branch actually carries
+> The packages on `machine/workforce` are `btop fish ghostty hypr k9s noctalia nvim starship tmux zsh`. There is no `git` or `mise` package in the repo, and `hypr` is stale for this machine now that the target is GNOME then niri. Stow `ghostty` even before the terminal is installed; the config simply waits for it.
+
+> [!note] The niri config lives on the other branch
+> `machine/workforce` has no `niri` package. When you reach Step 17 the compositor config has to come across from `machine/ri-t-0931`, by cherry-pick rather than merge, since the two branches carry deliberately different package sets.
+
+> [!note] `AGENTS.md` on this branch still says "Base OS: Debian sid"
+> It also describes Hyprland as the compositor. Update both once the machine is up, or the next session's context starts from a false premise.
 
 > [!note] `AGENTS.md` on this branch still says "Base OS: Debian sid"
 > Update it once the machine is up, or the next session's context starts from a false premise.
