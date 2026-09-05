@@ -203,15 +203,25 @@ systemd-machine-id-setup        # BEFORE the kernel: entries are keyed on machin
 > [!warning] cmdline is required, initramfs-tools has no DPS
 > Debian's `initramfs-tools` cannot discover the root filesystem at boot, so `/etc/kernel/cmdline` **must** carry `root=UUID=…` and the btrfs `rootflags=subvol=@`. Miss this and you boot to an emergency shell. This is unchanged from Rev 1 and has nothing to do with the suite.
 
+> [!warning] Order matters here, and Rev 1 got it wrong
+> `/etc/initramfs-tools/initramfs.conf` ships in `initramfs-tools-core`, which only arrives as a dependency of `linux-image-amd64`. Editing it before installing the kernel fails with `sed: can't read … No such file or directory`. Install `initramfs-tools` first so the config exists, then edit, then install the kernel, which builds the initramfs small the first time. A fresh debootstrap chroot may also lack `/etc/kernel`, so create it before the redirect or the cmdline silently never gets written.
+
 ```bash
 ROOT=$(blkid -s UUID -o value /dev/nvme0n1p2)
+mkdir -p /etc/kernel
 echo "root=UUID=$ROOT rootflags=subvol=@ rw quiet" > /etc/kernel/cmdline
+cat /etc/kernel/cmdline     # must show a real UUID, not an empty root=UUID=
 
 # smaller initramfs: dep = only needed modules. Optional now, see Step 02.
+apt install -y initramfs-tools
 sed -i 's/^MODULES=.*/MODULES=dep/' /etc/initramfs-tools/initramfs.conf
+grep ^MODULES= /etc/initramfs-tools/initramfs.conf   # must print MODULES=dep
 
 apt install -y linux-image-amd64 firmware-linux intel-microcode
 ```
+
+> [!note] If you already installed the kernel first
+> No harm done. Run the `sed` now, then `update-initramfs -u -k all` to rebuild the existing initramfs with the smaller module set.
 
 > [!success] One package installs the whole bootloader
 > Installing `systemd-boot` runs `bootctl install`, registers it in the UEFI boot order, and creates loader entries for the kernel already present. No manual `bootctl`, no hand-written entries. Future kernel upgrades regenerate entries automatically via the kernel hook.
