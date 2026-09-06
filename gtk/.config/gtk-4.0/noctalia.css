@@ -4,15 +4,15 @@
 * stylelint-disable at-rule-no-unknown
 */
 
-@define-color accent_color #1e66f5;
-@define-color accent_bg_color #1e66f5;
+@define-color accent_color #8839ef;
+@define-color accent_bg_color #8839ef;
 @define-color accent_fg_color #eff1f5;
 
 @define-color destructive_bg_color #d20f39;
-@define-color destructive_fg_color #eff1f5;
+@define-color destructive_fg_color #dce0e8;
 
 @define-color error_bg_color #d20f39;
-@define-color error_fg_color #eff1f5;
+@define-color error_fg_color #dce0e8;
 
 @define-color window_bg_color #eff1f5;
 @define-color window_fg_color #4c4f69;
@@ -44,6 +44,10 @@
 @define-color secondary_sidebar_bg_color #eff1f5;
 @define-color secondary_sidebar_fg_color #4c4f69;
 
+/* Focused selection states */
+@define-color theme_selected_bg_color @accent_bg_color;
+@define-color theme_selected_fg_color @accent_fg_color;
+
 /* Backdrop/unfocused states */
 @define-color theme_unfocused_fg_color @window_fg_color;
 @define-color theme_unfocused_text_color @view_fg_color;
@@ -53,15 +57,15 @@
 @define-color theme_unfocused_selected_fg_color @accent_fg_color;
 
 :root {
-    --accent-color: #1e66f5;
-    --accent-bg-color: #1e66f5; 
+    --accent-color: #8839ef;
+    --accent-bg-color: #8839ef; 
     --accent-fg-color: #eff1f5;
 
     --destructive-bg-color: #d20f39;
-    --destructive-fg-color: #eff1f5;
+    --destructive-fg-color: #dce0e8;
 
     --error-bg-color: #d20f39;
-    --error-fg-color: #eff1f5;
+    --error-fg-color: #dce0e8;
     --error-color: #d20f39;
 
     --window-bg-color: #eff1f5;
@@ -91,13 +95,13 @@
     --sidebar-backdrop-color: @window_bg_color;
     --sidebar-border-color: @window_bg_color;
 
-    --warning-bg-color: #d5c0f2;
-    --warning-fg-color: #220647;
-    --warning-color: #8839ef;
+    --warning-bg-color: #afd7a7;
+    --warning-fg-color: #183c10;
+    --warning-color: #40a02b;
 
-    --success-color: #7287fd;
-    --success-bg-color: #bbc4f6;
-    --success-fg-color: #010c4b;
+    --success-color: #fe640b;
+    --success-bg-color: #f7d1ba;
+    --success-fg-color: #4c1c00;
     
     --shade-color: rgba(0, 0, 0, 0.36);
 }
