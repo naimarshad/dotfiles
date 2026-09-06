@@ -4,47 +4,47 @@ Personal dotfiles for the `workforce` machine, managed with **GNU stow**. This i
 
 ## Project Overview
 
-A stow-managed dotfiles tree for a Debian sid workstation. It covers shell, editor, terminal, window manager, and desktop-shell configuration: zsh + Powerlevel10k, fish + Starship, LazyVim-based Neovim, Ghostty, tmux, Hyprland, Noctalia, and supporting recovery notes.
+A stow-managed dotfiles tree for a Debian testing (rolling `testing` alias, currently forky) workstation. It covers shell, editor, terminal, compositor, and desktop-shell configuration: zsh + Powerlevel10k, LazyVim-based Neovim, Ghostty, tmux, niri, Noctalia, and supporting recovery notes. The `hypr/`, `fish/`, and `starship/` packages are still in the tree but are not used on this machine (compositor is niri, shell is zsh); treat them as historical unless the target changes back.
 
 ## Architecture & Data Flow
 
 - **Install model:** each top-level package directory is stowed into `$HOME`.
 - **Config flow:** edit repo file → `stow` or reload the target app → verify the runtime picks up the change.
-- **Shared theme spine:** Catppuccin Latte / light theme conventions are reused across nvim, ghostty, btop, tmux, Hyprland helper colors, and shell prompts.
+- **Shared theme spine:** Catppuccin Latte / light theme conventions are reused across nvim, ghostty, btop, tmux, niri helper colors (`noctalia.kdl`), and shell prompts.
 - **Shared safety pattern:** kubectl-related helpers wrap or colorize the real `kubectl` command; zsh adds the strongest prod-context guard rails, tmux and prompt config reflect the same context coloring.
-- **Desktop integration:** Hyprland launches and then talks to Noctalia through `qs -c noctalia-shell ipc call ...` endpoints for launcher, lock screen, notifications, media, and settings.
+- **Desktop integration:** the greetd/Noctalia greeter starts niri from `/usr/local/share/wayland-sessions/niri.desktop` (`Exec=niri-session`), and niri then talks to Noctalia through `noctalia msg <verb>` commands (Noctalia 5 IPC) for launcher, lock screen, notifications, media, and settings. Noctalia 4 used `qs -c noctalia-shell ipc call ...`; that interface is gone and `qs` is not installed.
 
 ## Key Directories
 
 | Dir | Purpose |
 |---|---|
 | `zsh/` | zsh shell setup and Powerlevel10k config |
-| `fish/` | fish shell config, plugins, aliases, and prompt bootstrap |
-| `starship/` | helper scripts used by Starship |
 | `nvim/` | LazyVim-based Neovim configuration |
 | `ghostty/` | Ghostty terminal config |
 | `btop/` | btop config and themes |
-| `noctalia/` | Quickshell/desktop-shell settings and plugins |
-| `hypr/` | Hyprland config, launch script, autostart, keybinds, and window rules |
+| `niri/` | niri config: `config.kdl` plus split `binds.kdl` / `autostart.kdl` / `environment.kdl` / `input.kdl` / `layout.kdl` / `outputs.kdl` / `rules.kdl` / `noctalia.kdl` (theming), and `wallpaper.sh` |
+| `noctalia/` | SOPS-encrypted Noctalia 5 config (`settings.sops.toml`). **Not a stow package**: v5 config lives at `~/.local/state/noctalia/`, and the file carries plugin API keys, so it is only ever committed encrypted |
 | `tmux/` | tmux config, theme integration, and custom status scripts |
-| `system/` | Machine-state snapshots and recovery notes; treat as recovery material, not normal app code |
+| `k9s/` | k9s config, aliases, and catppuccin skins |
+| `hypr/` | Hyprland config; retained but unused (compositor is niri) |
+| `fish/`, `starship/` | fish shell + Starship helper scripts; retained but unused (shell is zsh, prompt is Powerlevel10k) |
 
 ## Development Commands
 
 There is no build pipeline. Typical workflow:
 
 ```bash
-# Refresh stowed configs from the repo root
-stow zsh ghostty hypr btop fish
-stow */
+# Refresh stowed configs from the repo root (what this machine actually stows)
+stow ghostty zsh niri nvim tmux    # noctalia is NOT stowed: see Key Directories
 
 # Remove a stow package
 stow -D <pkg>
 
 # Reload the live app after edits
-hyprctl reload
+niri validate                       # check niri config before reload
+niri msg action load-config-file    # or Mod+Shift+R (niri also auto-reloads on write)
+noctalia msg config-reload
 tmux source-file ~/.config/tmux/tmux.conf
-:p10k reload
 :Lazy sync
 
 # Quick checks
@@ -59,7 +59,7 @@ fc-match monospace
 - **Shell conventions:** `nvim` is the editor locally, `vim` over SSH; `kubecolor` is wrapped around `kubectl`; `gro` jumps to the git root; SSH host aliases are mirrored across shells.
 - **Neovim pattern:** `init.lua` bootstraps `config.lazy`; shared settings live in `lua/config/{lazy,options,keymaps,autocmds}.lua`; feature overrides live in `lua/plugins/*.lua`.
 - **Neovim AI stack:** `vim.g.ai_cmp = false` keeps Supermaven as ghost text rather than menu completion; Claude Code uses the `coder/claudecode.nvim` terminal integration.
-- **Shell prompt split:** zsh uses oh-my-zsh + Powerlevel10k; fish uses Starship.
+- **Shell prompt:** zsh uses oh-my-zsh + Powerlevel10k. (The `fish/` + `starship/` packages carry a fish + Starship setup that is not used on this machine.)
 - **Theme consistency:** use the existing light palette and Catppuccin Latte conventions instead of introducing a second theme.
 - **Error handling:** helper scripts are usually best-effort with sensible fallbacks; keep that style unless the runtime requires hard failure.
 
@@ -68,43 +68,46 @@ fc-match monospace
 | File | Role |
 |---|---|
 | `CLAUDE.md` | AI-agent session context, branch policy, known issues, and current implementation notes |
+| `Debian Testing - GNOME Install Runbook.md` | Authoritative reinstall runbook for this machine (Rev 4); mirrored to `~/Obsidian/Runbooks/Debian/debian-testing-gnome-runbook.md` |
 | `README.md` | Minimal repository placeholder |
-| `README.reinstall.md` | Host recovery / reproduction note |
 | `zsh/.p10k.zsh` | Generated Powerlevel10k config |
-| `fish/.config/fish/config.fish` | fish entrypoint and Starship init |
-| `.config/starship.toml` | Starship prompt config used by fish |
 | `nvim/.config/nvim/init.lua` | Neovim entrypoint; bootstraps LazyVim |
 | `nvim/.config/nvim/lua/config/lazy.lua` | lazy.nvim bootstrap and plugin loading |
 | `nvim/.config/nvim/lua/plugins/*.lua` | Neovim plugin overrides and feature specs |
-| `hypr/.config/hypr/hyprland.conf` | Hyprland entrypoint; sources the rest of the compositor config |
-| `hypr/.config/hypr/start-hyprland.sh` | TTY launcher for Hyprland |
+| `niri/.config/niri/config.kdl` | niri entrypoint; `include`s the split config files |
+| `niri/.config/niri/binds.kdl` | niri keybinds, including the Noctalia 5 `noctalia msg` IPC calls |
+| `niri/.config/niri/outputs.kdl` | single `eDP-1` block; 1920x1080 @ scale 1.25. This branch has no dock or external monitors |
+| `niri/.config/niri/environment.kdl` | session env for niri's children; `QT_FONT_DPI` tracks the output scale |
 | `tmux/.config/tmux/tmux.conf` | tmux entrypoint and theme/module wiring |
-| `noctalia/.config/noctalia/settings.json` | Noctalia desktop-shell settings |
+| `noctalia/settings.sops.toml` | Noctalia 5 settings, SOPS/age encrypted. Decrypt to `~/.local/state/noctalia/settings.toml` on a rebuild |
 | `.claude/settings.local.json` | Claude Code permission allowlist |
 
 ## Runtime / Tooling Preferences
 
-- **Base OS:** Debian sid on the current machine.
-- **Package manager:** use `apt` for host tools; there is no project package manager.
-- **Rust:** prefer `rustup` over distro Rust packages.
+- **Base OS:** Debian testing on the current machine, tracked through the rolling `testing` alias (currently forky). See the reinstall runbook for the full build.
+- **Package manager:** `apt` for host tools, Flatpak (system-wide) for sandboxed apps; there is no project package manager.
+- **Rust:** prefer `rustup` over distro Rust packages. Two things are source-built from Rust: `niri` (`/usr/local/bin/niri`) and `awww` (wallpaper daemon).
+- **Source-built, non-Rust:** `adw-gtk3` (meson + standalone dart-sass, installed per-user to `~/.local/share/themes`; clone at `~/adw-gtk3`, update with `git pull && ninja -C build install`).
+- **Theming is two halves:** `environment.kdl` exports `GTK_THEME` / `QT_QPA_PLATFORMTHEME` / `XCURSOR_THEME` to niri's children, and the matching `org.gnome.desktop.interface` gsettings keys (`gtk-theme`, `cursor-theme`, `cursor-size`, `color-scheme`) must be set too. The gsettings half is per-user dconf state, not in this repo, so it does not come back with `stow`.
 - **Neovim:** plugins are managed by `lazy.nvim`, not by npm/pnpm/cargo.
-- **Shell tools:** `oh-my-zsh`, `powerlevel10k`, `fisher`, `starship`, `fzf`, `kubecolor`, `eza`, `bat`, `lazygit`, `ripgrep`, `fd`, and `python3-venv` are part of the expected toolchain.
-- **Current repo notes:** `starship/` provides helper scripts; the Starship TOML lives at the top-level `.config/starship.toml`.
+- **Shell tools:** `oh-my-zsh`, `powerlevel10k`, `fzf`, `kubecolor`, `kubie`, `eza`, `bat`, `lazygit`, `ripgrep`, `fd` are part of the expected toolchain. `k9s` and `sops` are not in the Debian archive and are installed from upstream releases.
+- **Compositor + shell:** `niri` (source build) with `noctalia` (apt, `pkg.noctalia.dev`) as the desktop shell; `greetd` + `noctalia-greeter` is the display manager; GNOME stays installed as a fallback session.
 
 ## Testing & QA
 
 There is no automated test suite. Use the runtime itself as the check:
 
-- `hyprctl reload` after compositor changes.
+- `niri validate` then `niri msg action load-config-file` after compositor changes. Action names drift between niri versions (`reload-config` was renamed to `load-config-file`); check `niri msg action --help` before trusting one copied from another machine.
+- `noctalia msg config-reload` after Noctalia settings edits.
 - `tmux source-file ~/.config/tmux/tmux.conf` after tmux edits.
 - `:Lazy sync` or `:Lazy check` after Neovim plugin changes.
 - `fc-match monospace` after font or prompt/theme changes.
-- Open a new shell and confirm zsh or fish picks up alias, PATH, and prompt changes.
+- Open a new shell and confirm zsh picks up alias, PATH, and prompt changes.
 
 ## Notes for AI Assistants
 
 - Read `CLAUDE.md` first before changing machine-specific behavior.
 - Preserve the existing stow layout; do not flatten package directories.
-- Keep the two shell stacks in sync where they intentionally overlap: kubectl wrappers, SSH aliases, editor choice, and `gro`.
+- zsh is the only shell in use here; if you touch the dormant `fish/` package, keep its kubectl wrappers, SSH aliases, editor choice, and `gro` consistent with zsh anyway.
 - Avoid introducing a second theme system. Extend the existing light palette conventions.
 - If a change affects multiple runtimes, update the corresponding package directories together and verify each runtime separately.
