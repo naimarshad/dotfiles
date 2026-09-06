@@ -2,9 +2,11 @@
 
 ## What this branch is
 
-**Branch:** `machine/workforce` — this machine's dotfiles. ThinkPad T490, **Debian testing** (rolling `testing` alias, currently forky), light theme throughout (Catppuccin Latte).
+**Branch:** `machine/workforce` — this machine's dotfiles. ThinkPad T490, **Arch Linux** (rolling), reinstalled 2026-09-06 from `Arch - niri Install Runbook.md`. Light theme throughout (Catppuccin Latte). Was Debian testing until the reinstall; the old Debian runbooks are in `archived/`.
 
-Desktop: **niri** (Wayland scrolling compositor, built from source) with **Noctalia** as the desktop shell (apt package from `pkg.noctalia.dev`). Display manager is **greetd + noctalia-greeter**. **GNOME stays installed** as a fallback session at the greeter.
+Desktop: **niri** (Wayland scrolling compositor, `extra` repo package, no longer a source build) with **Noctalia 5** as the desktop shell (`extra` repo package, no longer the `pkg.noctalia.dev` apt repo). Display manager is **greetd + noctalia-greeter** (`noctalia-greeter` from the AUR); `/etc/greetd/config.toml` needs `[terminal]` `vt = 1` and runs `noctalia-greeter-session -- --session niri`. **GNOME stays installed** as a fallback session at the greeter (`sudo systemctl disable greetd && sudo systemctl enable gdm && reboot`).
+
+Disk: LUKS2 on `/dev/nvme0n1p2` opened as `cryptroot`, btrfs (`@ @home @log @snapshots`) + snapper + systemd-boot. ESP is 2 GiB at `/boot`. Kernels: `linux` + `linux-lts`, four hand-written loader entries (`arch`, `arch-fallback`, `arch-lts`, `arch-lts-fallback`). Swap is zram only (8 GiB), no disk swap, no hibernation.
 
 Do not merge `main` into this branch. `main` and `machine/workforce` have deliberately diverged (different compositor, shell, and OS assumptions). Cross-pollinate by cherry-picking specific commits only. The other machine branch is `machine/ri-t-0931`; the `niri/` package here was copied from it by hand, not merged.
 
@@ -12,20 +14,23 @@ Git identity is set at `--local`: `Naeem Arshad <naimarshad@gmail.com>` (persona
 
 ## Authoritative reinstall runbook
 
-`Debian Testing - GNOME Install Runbook.md` at the repo root, **Rev 4**. It is a verified record, not a plan: every step was reconciled against `~/.bash_history`, `~/.zsh_history`, and the running system. It is mirrored to `~/Obsidian/Runbooks/Debian/debian-testing-gnome-runbook.md` and the two are kept in sync by hand (edit either, port to the other).
+`Arch - niri Install Runbook.md` at the repo root, **Rev 2**, `status: verified record`. Rev 1 was a plan; the machine was built from it on 2026-09-06 and Rev 2 folds in every correction found on the day. It is mirrored to `~/Obsidian/Runbooks/Arch/arch-niri-runbook.md` and the two are kept in sync by hand (edit either, port to the other).
 
-`Debian Sid — Plasma Install Runbook.md` is the superseded predecessor, kept for history.
+The two Debian runbooks (`Debian Testing - GNOME Install Runbook.md` Rev 4, and `Debian Sid — Plasma Install Runbook.md`) are in `archived/`, kept for history. The Debian mirror at `~/Obsidian/Runbooks/Debian/` is likewise historical.
 
-Steps at a glance: debootstrap + systemd-boot + btrfs/snapper spine (Steps 00-09), minimal GNOME (10-16), niri source build + Noctalia apt repo + awww wallpaper daemon (17), then a dev-tooling layer: shell environment (18), containers/Kubernetes (19), virtualization (20), editors and desktop apps (21), sync/networking (22).
+Steps at a glance: live USB + `pacstrap` + LUKS2 + btrfs/snapper + systemd-boot spine (Steps 00-13), `paru` + AUR lane (14), minimal GNOME (15-18), snapper (19), Zen from AUR (20), dotfiles/stow (21), niri + Noctalia + greeter (22), then the dev-tooling layer: shell environment (23), containers/Kubernetes (24), virtualization (25), editors and apps (26), sync/networking (27), Claude Code memory + hooks (28).
+
+The runbook's "Still to reconcile on the workforce build" section lists two deliberate holds: passwordless sudo via `/etc/sudoers.d/naeem` (runbook prescribes password `%wheel`), and a handful of optional packages not installed (`btop`, `alacritty`, `ttf-hosny-amiri`, `informant`, `bluez-utils`, `kdeconnect`, `seafile-client`, `gsconnect`).
 
 ## Machine facts worth knowing
 
-- **Compositor:** `niri` built from `github.com/niri-wm/niri` to `/usr/local/bin/niri`. Version bump = `git pull && cargo build --release` + re-copy the `resources/` files (runbook Step 17e).
-- **Shell:** `noctalia` binary at `/usr/bin/noctalia`, launched from `niri/.config/niri/autostart.kdl` (`spawn-at-startup "noctalia"`). Noctalia 5 IPC is `noctalia msg <verb>`; Noctalia 4's `qs -c noctalia-shell ipc call ...` is gone and `qs` is not installed. The `binds.kdl` and `autostart.kdl` IPC calls were migrated 4→5 (calendar and now-playing are `control-center` tabs now, not standalone panels).
-- **Wallpaper:** `awww` (LGFae's maintained successor to the archived `swww`), source-built to `/usr/local/bin`. Needed `wayland-protocols` + `cmake` to build; the lz4 packages from the first failed attempt were a red herring.
-- **Not in the Debian archive, installed from upstream:** `ghostty` (ghostty-ubuntu installer script), `mise` (`mise.run`), `k9s` (release `.deb`), `sops` (release binary), `niri` + `awww` (source). Everything else is apt or system-wide Flatpak.
-- **`~/.zshrc` expects:** `kubecolor` (wraps `kubectl`), `kubie` (context isolation), plus the usual oh-my-zsh + Powerlevel10k + mise stack. `starship` has a stow package but is unused (prompt is p10k).
-- **Stow packages actually used here:** `ghostty zsh niri noctalia nvim tmux`. `hypr`, `fish`, `starship` are retained but dormant. `k9s` and `btop` stow once their binaries are in.
+- **Compositor:** `niri` from `extra` (26.04), `/usr/bin/niri`. Version bump = `pacman -Syu`, no source build, no `resources/` copy dance.
+- **Shell:** `noctalia` from `extra` (5.0.1), `/usr/bin/noctalia`, launched from `niri/.config/niri/autostart.kdl` (`spawn-at-startup "noctalia"`). Noctalia 5 IPC is `noctalia msg <verb>`; Noctalia 4's `qs -c noctalia-shell ipc call ...` is gone and `qs` is not installed. The `binds.kdl` and `autostart.kdl` IPC calls were migrated 4→5 (calendar and now-playing are `control-center` tabs now, not standalone panels). The legacy AUR `noctalia-qs` / `noctalia-shell` packages are v4; do not install them.
+- **Wallpaper:** `awww` (LGFae's maintained successor to the archived `swww`) from `extra` (0.12.1), `/usr/bin/awww`. `swww` is also in `extra` but the config calls the `awww` binaries.
+- **From the AUR (`paru -Qm`):** `noctalia-greeter`, `bibata-cursor-theme` (+ `python-clickgen`), `kubecolor`, `claude-desktop`, `zen-browser-bin`, `k0sctl`, `paru`. Everything else is `pacman`. No Flatpak on this machine; Zen is `zen-browser-bin` from the AUR, not a Flatpak.
+- **`~/.zshrc` expects:** `kubecolor` (wraps `kubectl`, from the AUR) and `kubie` (context isolation, from `extra`), plus the usual oh-my-zsh + Powerlevel10k + mise stack (`mise` from `extra` at `/usr/bin/mise`). `starship` has a stow package but is unused (prompt is p10k).
+- **Stow packages actually used here:** `ghostty zsh niri nvim tmux k9s`. `noctalia` is a stow package name but is **not** stowed (SOPS-encrypted, decrypted to `~/.local/state/noctalia/settings.toml`). `hypr`, `fish`, `starship` are retained but dormant. `btop` stows once its binary is in.
+- **Boot recovery nets:** four loader entries, both `linux` and `linux-lts` with standard + fallback initramfs. `mkinitcpio` presets must stay `PRESETS=('default' 'fallback')` or the fallback images stop being built. `snapper` `root` config + `snap-pac` + timeline/cleanup timers; snapshots live on `@snapshots` outside `@`. Rollback is manual (systemd-boot has no snapshot menu).
 
 ## Neovim IDE setup (done)
 
@@ -35,5 +40,7 @@ Known issue, not a config bug: `:Lazy sync` on a large/fresh sync fires many con
 
 ## Open items
 
-- Large uncommitted working-tree diff from the rebuild: `noctalia/` was regenerated from the live `~/.config/noctalia` and `niri/` was added from `machine/ri-t-0931`. Commit per file / logical unit.
-- Optional: backport the IDE setup or the niri/Noctalia config to `main` or `machine/ri-t-0931` if wanted.
+- **Reconcile the two holds** from the runbook's "Still to reconcile" section: passwordless sudo (`/etc/sudoers.d/naeem` → password `%wheel`), and the optional packages list.
+- `AGENTS.md` was rewritten for Arch alongside this file on 2026-09-06; re-check both on the next machine change rather than trusting them blindly.
+- Fixed on 2026-09-06 after the reinstall: missing fallback initramfs images (presets had `fallback` disabled), stray first line in three loader entries, `KEYMAP=us-latin1` failing `systemd-vconsole-setup`, and snapper having no `root` config. All four are documented in the runbook's `[!warning] On the workforce build` callouts.
+- Optional: backport the niri/Noctalia config or the IDE setup to `main` or `machine/ri-t-0931` if wanted.
