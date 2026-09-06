@@ -1,1 +1,13 @@
 .kube/
+
+# Secrets that must never reach this public repo.
+# ~/.config/niri is a stow symlink into niri/.config/niri, so anything written
+# under it lands here. wallpaper.sh now reads the key from ~/.config/secrets/
+# instead, but keep these as a safety net.
+niri/.config/niri/unsplash-key
+**/unsplash-key
+*.key
+*.pem
+
+# Decrypted SOPS output — only the .sops.* files belong in git.
+noctalia/settings.toml
