@@ -1,0 +1,9 @@
+# SOPS rules for this repo.
+#
+# The private key lives at ~/.config/sops/age/keys.txt (mode 600, never committed).
+# ~/.zshrc already exports SOPS_AGE_KEY_FILE to that path, so sops finds it.
+# Back the private key up somewhere outside this repo: without it the encrypted
+# files here are unrecoverable.
+creation_rules:
+  - path_regex: \.sops\.(toml|yaml|json|env)$
+    age: age1mrlgpk8prvn05ac2e6l6g9jg6zpxre74gugfm9ep845vns6edv8swd6ged
