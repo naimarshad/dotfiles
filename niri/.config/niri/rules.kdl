@@ -90,17 +90,17 @@ window-rule {
 window-rule {
     match app-id="^code(-url-handler)?$"
     open-on-workspace "work"
-    default-column-width { proportion 0.66667; }
+    default-column-width { proportion 0.6; }
 }
 window-rule {
     match app-id="^firefox$"
     open-on-workspace "personal"
-    default-column-width { proportion 0.5; }
+    default-column-width { proportion 0.4; }
 }
 window-rule {
     match app-id="^slack$"
     open-on-workspace "social"
-    default-column-width { proportion 1.0; }
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id=r#"^org\.mozilla\.Thunderbird$"#

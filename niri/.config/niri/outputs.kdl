@@ -1,49 +1,60 @@
 // OUTPUTS — ri-t-0931
-// Home layout:   [HDMI-A-1 ultrawide] [DP-1 vertical] [eDP-1 built-in]
-// Office layout:  [eDP-1 built-in] [DP-3/DP-5 P34w-20 ultrawide]
-// DP-1 rotated 270° at 2560x1440 → logical size 1440×2560, so eDP-1 starts at x=4880
+// Home layout:   [HDMI-A-1 LG ultrawide] [DP-1 MSI] [eDP-1 built-in], all landscape
+// Office layout: [eDP-1 built-in] [DP-3/DP-5 P34w-20 ultrawide]
+//
+// Home x-offsets: HDMI-A-1 is 3440 wide, so DP-1 starts at 3440; DP-1 is 2560
+// wide, so eDP-1 starts at 6000. eDP-1 is 1125 logical tall against the
+// externals' 1440, so y=157 centres it on them (at home and at the office).
+//
+// The DP-1 port is bandwidth-limited: every monitor tested on it loses refresh
+// rate. The LG runs 99.997 Hz on HDMI-A-1 but only 49.999 Hz on DP-1, and the
+// MSI runs 99.946 Hz on HDMI-A-1 but only 59.951 Hz on DP-1. Keep the LG on
+// HDMI-A-1 so it gets its full rate. A better DP cable would lift the MSI to
+// 100 Hz; until then 59.951 is the best it advertises here.
 
+// Primary: LG ultrawide. Its preferred mode is already 99.997, but state it
+// explicitly so a silent fallback to a slower mode would be visible.
+// No variable-refresh-rate line: this panel reports VRR as unsupported.
 output "HDMI-A-1" {
-    mode "3440x1440@100.004"
+    mode "3440x1440@99.997"
     position x=0 y=0
     scale 1.0
-    variable-refresh-rate
 }
 
+// Secondary: MSI MP275QPG, landscape.
 output "DP-1" {
     mode "2560x1440@59.951"
     position x=3440 y=0
     scale 1.0
-    transform "270"
 }
 
 output "eDP-1" {
     mode "1920x1200@60.026"
-    position x=4880 y=0
-    scale 1.07
+    position x=6000 y=157
+    scale 1.25
     variable-refresh-rate
 }
 
 // --- Office dock: Lenovo P34w-20 ultrawide, laptop sits to its left ---
 // The dock enumerates this monitor as DP-3 or DP-5 depending on port and MST
 // branch, so both connectors are configured identically. Only one is ever present.
-// eDP-1 spans x=[4880, 6680] (1800px logical), so the ultrawide starts at x=6680.
+// eDP-1 spans x=[6000, 7800] (1800px logical), so the ultrawide starts at x=7800.
 // Both blocks are ignored at home, where neither connector is live.
 output "DP-3" {
     mode "3440x1440@59.973"
-    position x=6680 y=0
+    position x=7800 y=0
     scale 1.0
 }
 
 output "DP-5" {
     mode "3440x1440@59.973"
-    position x=6680 y=0
+    position x=7800 y=0
     scale 1.0
 }
 
 // WORKSPACES
 
-// --- Primary monitor (HDMI-A-1) ---
+// --- Primary monitor (HDMI-A-1, LG ultrawide) ---
 workspace "work"     { open-on-output "HDMI-A-1"; }
 workspace "web"      { open-on-output "HDMI-A-1"; }
 workspace "code"     { open-on-output "HDMI-A-1"; }
@@ -53,7 +64,7 @@ workspace "media"    { open-on-output "HDMI-A-1"; }
 workspace "misc"     { open-on-output "HDMI-A-1"; }
 workspace "misc2"    { open-on-output "HDMI-A-1"; }
 
-// --- Vertical side monitor (DP-1): Slack + Chrome pinned here ---
+// --- Side monitor (DP-1, MSI): Slack + Chrome pinned here ---
 workspace "social"   { open-on-output "DP-1"; }
 
 // --- Built-in laptop panel (eDP-1) ---
