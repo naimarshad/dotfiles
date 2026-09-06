@@ -4,7 +4,7 @@ Personal dotfiles for the `workforce` machine, managed with **GNU stow**. This i
 
 ## Project Overview
 
-A stow-managed dotfiles tree for a Debian testing (rolling `testing` alias, currently forky) workstation. It covers shell, editor, terminal, compositor, and desktop-shell configuration: zsh + Powerlevel10k, LazyVim-based Neovim, Ghostty, tmux, niri, Noctalia, and supporting recovery notes. The `hypr/`, `fish/`, and `starship/` packages are still in the tree but are not used on this machine (compositor is niri, shell is zsh); treat them as historical unless the target changes back.
+A stow-managed dotfiles tree for an Arch Linux (rolling) workstation, reinstalled 2026-09-06 (Debian testing before that). It covers shell, editor, terminal, compositor, and desktop-shell configuration: zsh + Powerlevel10k, LazyVim-based Neovim, Ghostty, tmux, niri, Noctalia, and supporting recovery notes. The `hypr/`, `fish/`, and `starship/` packages are still in the tree but are not used on this machine (compositor is niri, shell is zsh); treat them as historical unless the target changes back.
 
 ## Architecture & Data Flow
 
@@ -12,7 +12,7 @@ A stow-managed dotfiles tree for a Debian testing (rolling `testing` alias, curr
 - **Config flow:** edit repo file → `stow` or reload the target app → verify the runtime picks up the change.
 - **Shared theme spine:** Catppuccin Latte / light theme conventions are reused across nvim, ghostty, btop, tmux, niri helper colors (`noctalia.kdl`), and shell prompts.
 - **Shared safety pattern:** kubectl-related helpers wrap or colorize the real `kubectl` command; zsh adds the strongest prod-context guard rails, tmux and prompt config reflect the same context coloring.
-- **Desktop integration:** the greetd/Noctalia greeter starts niri from `/usr/local/share/wayland-sessions/niri.desktop` (`Exec=niri-session`), and niri then talks to Noctalia through `noctalia msg <verb>` commands (Noctalia 5 IPC) for launcher, lock screen, notifications, media, and settings. Noctalia 4 used `qs -c noctalia-shell ipc call ...`; that interface is gone and `qs` is not installed.
+- **Desktop integration:** the greetd/Noctalia greeter starts niri from `/usr/share/wayland-sessions/niri.desktop` (installed by the `niri` package; greeter runs `noctalia-greeter-session -- --session niri`), and niri then talks to Noctalia through `noctalia msg <verb>` commands (Noctalia 5 IPC) for launcher, lock screen, notifications, media, and settings. Noctalia 4 used `qs -c noctalia-shell ipc call ...`; that interface is gone and `qs` is not installed.
 
 ## Key Directories
 
@@ -68,7 +68,7 @@ fc-match monospace
 | File | Role |
 |---|---|
 | `CLAUDE.md` | AI-agent session context, branch policy, known issues, and current implementation notes |
-| `Debian Testing - GNOME Install Runbook.md` | Authoritative reinstall runbook for this machine (Rev 4); mirrored to `~/Obsidian/Runbooks/Debian/debian-testing-gnome-runbook.md` |
+| `Arch - niri Install Runbook.md` | Authoritative reinstall runbook for this machine (Rev 2, verified record); mirrored to `~/Obsidian/Runbooks/Arch/arch-niri-runbook.md`. The Debian runbooks are in `archived/` |
 | `README.md` | Minimal repository placeholder |
 | `zsh/.p10k.zsh` | Generated Powerlevel10k config |
 | `nvim/.config/nvim/init.lua` | Neovim entrypoint; bootstraps LazyVim |
@@ -84,14 +84,13 @@ fc-match monospace
 
 ## Runtime / Tooling Preferences
 
-- **Base OS:** Debian testing on the current machine, tracked through the rolling `testing` alias (currently forky). See the reinstall runbook for the full build.
-- **Package manager:** `apt` for host tools, Flatpak (system-wide) for sandboxed apps; there is no project package manager.
-- **Rust:** prefer `rustup` over distro Rust packages. Two things are source-built from Rust: `niri` (`/usr/local/bin/niri`) and `awww` (wallpaper daemon).
-- **Source-built, non-Rust:** `adw-gtk3` (meson + standalone dart-sass, installed per-user to `~/.local/share/themes`; clone at `~/adw-gtk3`, update with `git pull && ninja -C build install`).
+- **Base OS:** Arch Linux (rolling) on the current machine, reinstalled 2026-09-06. Read `https://archlinux.org/news/` before `pacman -Syu`; never partial-upgrade. See the reinstall runbook for the full build.
+- **Package manager:** `pacman` for official-repo packages, `paru` for the short AUR tail; no Flatpak on this machine. There is no project package manager.
+- **Nothing is source-built any more.** `niri`, `noctalia`, `awww`, `ghostty`, `k9s`, `mise`, `sops`, `adw-gtk-theme`, `kubie` are all `extra` packages. The AUR set (`paru -Qm`) is `noctalia-greeter`, `bibata-cursor-theme`, `kubecolor`, `claude-desktop`, `zen-browser-bin`, `k0sctl`, `paru`.
 - **Theming is two halves:** `environment.kdl` exports `GTK_THEME` / `QT_QPA_PLATFORMTHEME` / `XCURSOR_THEME` to niri's children, and the matching `org.gnome.desktop.interface` gsettings keys (`gtk-theme`, `cursor-theme`, `cursor-size`, `color-scheme`) must be set too. The gsettings half is per-user dconf state, not in this repo, so it does not come back with `stow`.
 - **Neovim:** plugins are managed by `lazy.nvim`, not by npm/pnpm/cargo.
-- **Shell tools:** `oh-my-zsh`, `powerlevel10k`, `fzf`, `kubecolor`, `kubie`, `eza`, `bat`, `lazygit`, `ripgrep`, `fd` are part of the expected toolchain. `k9s` and `sops` are not in the Debian archive and are installed from upstream releases.
-- **Compositor + shell:** `niri` (source build) with `noctalia` (apt, `pkg.noctalia.dev`) as the desktop shell; `greetd` + `noctalia-greeter` is the display manager; GNOME stays installed as a fallback session.
+- **Shell tools:** `oh-my-zsh`, `powerlevel10k`, `fzf`, `kubecolor` (AUR), `kubie` (`extra`), `eza`, `bat`, `lazygit`, `ripgrep`, `fd` are part of the expected toolchain. `mise` provides the language runtimes (`/usr/bin/mise`, `eval "$(mise activate zsh)"`).
+- **Compositor + shell:** `niri` (`extra`, 26.04) with `noctalia` (`extra`, 5.0.1) as the desktop shell; `greetd` + `noctalia-greeter` (AUR) is the display manager (`/etc/greetd/config.toml` needs `[terminal]` `vt = 1`); GNOME stays installed as a fallback session.
 
 ## Testing & QA
 
