@@ -1,0 +1,15 @@
+// ~/.config/niri/config.kdl  —  machine: ri-t-0931
+// Deploy: stow -d ~/dotfiles -t $HOME niri
+
+prefer-no-csd
+
+include "environment.kdl"
+include "outputs.kdl"
+include "input.kdl"
+include "layout.kdl"
+include "rules.kdl"
+include "autostart.kdl"
+include "binds.kdl"
+
+include "./noctalia.kdl"
+
