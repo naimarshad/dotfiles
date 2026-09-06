@@ -35,7 +35,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 plugins=(alias-finder aliases git docker docker-compose colorize kubectl vscode common-aliases command-not-found fzf \
-  zsh-autosuggestions zsh-history-substring-search 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
+  zsh-autosuggestions 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
   git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd tmux virtualenv eza kind minikube)
 
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
@@ -76,6 +76,7 @@ alias vim="nvim"
 alias fvim='vim $(fzf --preview="bat --color=always {}")'
 alias kk="kubecolor klock"
 alias kgir="kubectl get ingressroutes"
+alias kvs="kubectl view-secret"
 #alias mc="/usr/bin/mcli"
 alias dim="docker images"
 alias pro="cd /home/naeem/projects/"
@@ -200,7 +201,8 @@ helm() {
 # opencode
 export PATH=/home/naeem/.opencode/bin:$PATH
 
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #source /usr/share/zsh/site-functions/zsh-syntax-highlighting.zsh
 
 compdef kubecolor=kubectl
