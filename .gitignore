@@ -1,8 +1,10 @@
 zsh/.kube/config*
 zsh/.kube/configs/
 niri/.config/niri/unsplash-key
-noctalia/.config/noctalia/plugins/github-feed/settings.json
 
 # Claude Code local settings
 .claude/
 **/.claude/
+
+# Decrypted SOPS output - only the .sops.* files belong in git.
+noctalia/settings.toml
