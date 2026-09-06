@@ -1,0 +1,11 @@
+// OUTPUTS — workforce (ThinkPad T490)
+// Single built-in panel. No dock or external monitors on this branch.
+//
+// eDP-1 is a BOE 0x07DB, 1920x1080, 310x170mm. It offers exactly two modes
+// (59.999 and 47.998 Hz) and does not support variable refresh rate, so no
+// vrr line here. At scale 1.25 the logical size is 1536x864.
+
+output "eDP-1" {
+    mode "1920x1080@59.999"
+    scale 1.25
+}

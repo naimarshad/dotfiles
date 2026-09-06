@@ -1,0 +1,49 @@
+layout {
+    gaps 8
+    center-focused-column "never"
+
+    // Widths cycled by Mod+R — tuned for 3-column layout (40/40/20)
+    preset-column-widths {
+        proportion 0.2
+        proportion 0.4
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.4; }
+
+    focus-ring {
+        on
+        width 3
+        active-gradient from="#b4a7d6" to="#8a7fc7" angle=45
+        inactive-color "#3a3a5c"
+    }
+
+    border { off; }
+
+    shadow {
+        on
+        softness 10
+        spread 2
+        offset x=0 y=2
+        draw-behind-window true
+        color "#1a1a1aee"
+    }
+}
+
+animations {
+    // macOS-like: critically damped springs — snappy, no overshoot.
+    window-open     { spring damping-ratio=0.92 stiffness=900 epsilon=0.0001; }
+    window-close    { duration-ms 180; curve "ease-out-cubic"; }
+    window-movement { spring damping-ratio=0.92 stiffness=900 epsilon=0.0001; }
+    window-resize   { spring damping-ratio=0.92 stiffness=900 epsilon=0.0001; }
+
+    // Slightly softer spring for panning/scrolling feel
+    horizontal-view-movement { spring damping-ratio=0.88 stiffness=800 epsilon=0.0001; }
+    workspace-switch         { spring damping-ratio=0.88 stiffness=800 epsilon=0.0001; }
+
+    // UI chrome
+    overview-open-close            { spring damping-ratio=0.88 stiffness=800 epsilon=0.0001; }
+    config-notification-open-close { duration-ms 300; curve "ease-out-expo"; }
+    screenshot-ui-open             { duration-ms 200; curve "ease-out-cubic"; }
+}
