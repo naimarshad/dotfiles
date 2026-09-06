@@ -9,7 +9,7 @@ CASE_SENSITIVE="true"
 COMPLETION_WAITING_DOTS="true"
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/scripts:$HOME/bin:/usr/local/bin:/home/naeem/.local/bin:/home/naeem/go/bin:$PATH
+export PATH=$HOME/scripts:$HOME/bin:/usr/local/bin:/home/naeem/.local/bin:/home/naeem/go/bin:/home/naeem/.docker/sbx/bin:$PATH
 export PATH="$HOME/.krew/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
@@ -133,6 +133,10 @@ alias tiac="cd /home/naeem/ri-work/git-repos/platform/iac/terraform"
 alias hc="cd /home/naeem/ri-work/git-repos/platform/iac/helm_charts/"
 alias hv="cd /home/naeem/ri-work/git-repos/platform/iac/helm_values/"
 alias dev_platform="cd /home/naeem/ri-work/git-repos/platform/iac/terraform/non-prod/pks/natwork/dev-platform/"
+# sops finds the age private key here; it is mode 600 and never committed.
+# Losing it makes every .sops.* file in the dotfiles repo unrecoverable.
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+
 alias spsd='sops decrypt'
 alias spse='sops edit'
 
