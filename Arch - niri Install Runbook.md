@@ -1,6 +1,6 @@
 ---
 title: "Arch Linux + niri Install Runbook"
-aliases: ["Arch Runbook", "T490 Arch Migration Runbook", "Arch niri Rev 1"]
+aliases: ["Arch Runbook", "T490 Arch Migration Runbook", "Arch niri Rev 2"]
 tags: [arch, niri, noctalia, systemd-boot, btrfs, luks, runbook, thinkpad-t490]
 machine: "ThinkPad T490 (20N2004AGE)"
 arch: "x86_64"
@@ -9,9 +9,9 @@ filesystem: "btrfs + snapper on LUKS2"
 desktop: "GNOME (Wayland) first boot, then niri (extra repo) + Noctalia (extra repo)"
 display-manager: "gdm for the GNOME phase, then greetd + noctalia-greeter"
 method: "pacstrap (manual, from the official Arch ISO on a live USB)"
-supersedes-candidate: "Debian Testing - GNOME Install Runbook.md"
-rev: "1"
-status: "plan, not yet executed"
+supersedes: "Debian Testing - GNOME Install Runbook.md (now in archived/)"
+rev: "2"
+status: "verified record"
 ---
 
 # Arch Linux + niri: a rolling binary-native daily driver
@@ -21,11 +21,11 @@ status: "plan, not yet executed"
 > [!info] Legend
 > `[!warning]` = a gotcha to get right · `[!success]` = a win over the Debian build · `[!danger]` = can lock you out / data loss · `[!note]` = info.
 
-> [!danger] This is a plan, not a record
-> Rev 4 of `Debian Testing - GNOME Install Runbook.md` is a *verified record*: every command in it was reconciled against shell history and the running system. This document is the opposite. Nothing here has been executed. Commands are grounded in the Arch Wiki, the official Noctalia docs, and the current package repositories as of September 2026, but package names and versions drift and some are marked "verify at install time". Treat every step as needing confirmation on the day, not as a transcript.
+> [!note] This is a verified record
+> The `workforce` T490 was installed from this runbook on 2026-09-06. Every step below was then reconciled against the running system, `~/.bash_history`, and `~/.zsh_history`, and the corrections found on the day are folded in. Things that broke, were skipped, or drifted on the first pass are called out inline with `[!warning] On the workforce build`. Package names and versions still drift, so the "verify at install time" notes stay.
 
 > [!success] The source-build lane is gone
-> Rev 4 needed a third software lane for the two things Debian could not ship prebuilt: niri and awww, both `cargo build --release` from source, plus a standalone `dart-sass` for the GTK theme. On Arch, `niri`, `ghostty`, `k9s`, and the GTK theme are all in `extra`. Noctalia 5 is in `extra`. What remains outside the official repos is a short AUR tail (`noctalia-greeter`, `awww`, `bibata-cursor-theme`, and a couple of app packages), handled through `paru` with the trust discipline in Step 14. Two lanes carry almost everything: **pacman** (official repos) and **Flatpak**, with **AUR** as a small, audited third.
+> Rev 4 needed a third software lane for the two things Debian could not ship prebuilt: niri and awww, both `cargo build --release` from source, plus a standalone `dart-sass` for the GTK theme. On Arch, `niri`, `ghostty`, `k9s`, `awww`, `kubie`, and the GTK theme are all in `extra`. Noctalia 5 is in `extra`. What remains outside the official repos is a short AUR tail (`noctalia-greeter`, `bibata-cursor-theme`, `kubecolor`, `claude-desktop`, `zen-browser-bin`), handled through `paru` with the trust discipline in Step 14. **Two lanes carry everything: pacman (official repos) and AUR (small, audited).** This build uses no Flatpak at all: see Step 20.
 
 ## Facts
 
@@ -64,32 +64,33 @@ status: "plan, not yet executed"
 | 12 theming | 18 | `adw-gtk-theme` from a repo, no `dart-sass` / `meson` source build; **gsettings must still be set** |
 | 13 third-party `.deb` lane | folded into 14 + inline | Replaced by pacman official repos + the AUR lane |
 | 16 snapper | 19 | Same flat-layout dance and the same verification; `snap-pac` replaces Debian's apt hook |
-| 14 Flatpak | 20 | Identical |
+| 14 Flatpak | 20 | **Dropped:** no Flatpak; Zen browser from AUR (`zen-browser-bin`) |
 | 15 dotfiles + stow | 21 | `ghostty` and `mise` now packaged; same `stow` set |
 | 17 niri + Noctalia | 22 | **Biggest change:** `pacman -S niri noctalia`; Steps 17b-17e (source build) deleted; `noctalia-greeter` from AUR |
-| 18 shell env | 23 | Same, `kubecolor` / `kubie` from repo or AUR |
+| 18 shell env | 23 | Same; `kubie` from `extra`, `kubecolor` from AUR |
 | 19 containers/k8s | 24 | `docker` not `docker-ce`; `kubectl`, `k9s`, `sops` mostly packaged |
 | 20-22 virt / apps / sync | 25-27 | Same tools, `pacman` / AUR instead of apt / installer scripts |
 | 21 `claude-memory-extractor` note | 28 | **Expanded into its own step:** deps before `install.sh`, the per-machine routing config `install.sh` will not restore, the MEMORY.md freeze guard that lives only in your `settings.json` backup |
 
 ---
 
-## 00 · Strategy · rolling, binary-native, three lanes
+## 00 · Strategy · rolling, binary-native, two lanes
 
-Everything installs prebuilt. On Arch you almost never read about compile flags; you read about **which repo a package comes from**. Three lanes carry all software, in order of preference:
+Everything installs prebuilt. On Arch you almost never read about compile flags; you read about **which repo a package comes from**. Two lanes carry all software, in order of preference:
 
-1. **pacman, official repos** (`core`, `extra`, `multilib` if enabled): the Arch archive, huge and prebuilt. This is where `niri`, `noctalia`, `ghostty`, `k9s`, `docker`, `kubectl` now live, all of which were a source build, an installer script, or a downloaded `.deb` on Debian.
-2. **Flatpak**: sandboxed apps kept off the base system (Zen browser, proprietary GUIs).
-3. **AUR** (via `paru`): user-submitted build recipes for the handful of things not in the official repos. Small, audited, and reviewed on every update. Step 14 covers the trust model.
+1. **pacman, official repos** (`core`, `extra`, `multilib` if enabled): the Arch archive, huge and prebuilt. This is where `niri`, `noctalia`, `ghostty`, `k9s`, `awww`, `kubie`, `docker`, `kubectl` now live, all of which were a source build, an installer script, or a downloaded `.deb` on Debian.
+2. **AUR** (via `paru`): user-submitted build recipes for the handful of things not in the official repos. Small, audited, and reviewed on every update. Step 14 covers the trust model.
+
+Rev 4 also ran a system-wide **Flatpak** for the Zen browser. This build drops Flatpak entirely: Zen comes from the AUR (`zen-browser-bin`), so there is no third lane and no `/var/lib/flatpak` to reason about during a snapshot rollback.
 
 > [!warning] Rolling discipline: read the news, never partial-upgrade
 > Arch has no testing/stable split and no migration filter. Updates land when upstream ships them. Two habits replace Debian's `apt-listbugs` skim:
-> 1. **Read `https://archlinux.org/news/` before every `pacman -Syu`.** Manual-intervention notices (a config move, a package split, a keyring bump) are posted there and nowhere else. `informant` (AUR) can block an upgrade until the news is marked read.
+> 1. **Read `https://archlinux.org/news/` before every `pacman -Syu`.** Manual-intervention notices (a config move, a package split, a keyring bump) are posted there and nowhere else. `informant` (`extra`) is installed on this machine in Step 13 and blocks an upgrade until the news is marked read.
 > 2. **Never partial-upgrade.** `pacman -Sy <pkg>` without a full `-Syu` gives you a package built against libraries newer than the ones on disk, and that is the classic way to break a running Arch system. Always `pacman -Syu`, all or nothing.
 > Snapper (Step 19) matters *more* here than on testing, not less: snapshot before every upgrade.
 
 > [!note] Verify names, don't guess
-> Confirm packages with `pacman -Ss <term>` (official) and `paru -Ss <term>` (AUR) before installing. The names most worth checking on the day, because this document assumes them: `mise`, `sops`, `kubecolor`, `kubie`, `adw-gtk-theme`, `awww`, `zed`, `claude-desktop`, `zram-generator`, `snap-pac`. The ones confirmed present as of writing: `niri` (`extra`, 26.04), `ghostty` (`extra`), `k9s` (`extra`), `noctalia` (`extra`), `noctalia-greeter` (AUR).
+> Confirm packages with `pacman -Ss <term>` (official) and `paru -Ss <term>` (AUR) before installing. Confirmed in `extra` on the workforce build (2026-09-06): `niri` 26.04, `noctalia` 5.0.1, `ghostty`, `k9s`, `awww` 0.12.1, `kubie` 0.28, `mise`, `sops`, `age`, `zed`, `zram-generator`, `snap-pac`, `adw-gtk-theme`, `informant`, `btop`, `alacritty`, `bluez-utils`, `kdeconnect`. From the AUR: `noctalia-greeter` 1.3.1, `bibata-cursor-theme`, `kubecolor`, `claude-desktop`, `zen-browser-bin`, `ttf-amiri`, `gnome-shell-extension-gsconnect`, `seafile-client`. `swww` is in `extra` too, but this build uses `awww`.
 
 ## 01 · Live environment & tooling
 *boot the official Arch ISO from a live USB, get network, refresh mirrors*
@@ -234,7 +235,7 @@ sed -i 's/^#\(en_US.UTF-8\|de_DE.UTF-8\)/\1/' /mnt/etc/locale.gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 
 # console keymap (matches Step 01)
-echo "KEYMAP=de-latin1" > /mnt/etc/vconsole.conf   # or us
+echo "KEYMAP=us" > /mnt/etc/vconsole.conf   # or de-latin1
 
 # hostname + hosts
 echo "workforce" > /mnt/etc/hostname
@@ -246,6 +247,12 @@ EOF
 ```
 
 `hwclock` and `locale-gen` run inside the chroot in the next step, where they can see the system clock and the C library.
+
+> [!warning] On the workforce build: an invalid `KEYMAP` fails a boot service every boot
+> The first pass wrote `KEYMAP=us-latin1`, which is not a real keymap (the valid names are `us` and `de-latin1`, not a blend). `systemd-vconsole-setup.service` then failed on every boot with `loadkeys: Unable to open file: us-latin1`, showing "Failed to start Virtual Console Setup" in the boot log. It only affects the text VTs, not the niri session, but it is a red failed unit. Check the value against `localectl list-keymaps` and confirm `systemctl status systemd-vconsole-setup.service` is clean after first boot.
+
+> [!note] Tighten the ESP mount permissions in fstab
+> `genfstab` writes the `/boot` vfat line with `fmask=0022,dmask=0022`, which leaves `/boot` world-readable. `bootctl` then warns on every boot that `/boot/loader/random-seed` is "world accessible, which is a security hole". Edit the `/boot` line in `/mnt/etc/fstab` to `fmask=0077,dmask=0077`, and delete a stale `/boot/loader/random-seed` if one already exists (systemd-boot regenerates it with correct perms).
 
 ## 07 · Enter the chroot
 ```bash
@@ -286,6 +293,12 @@ mkinitcpio -P
 # -P builds every preset: linux, linux-lts, and both fallback images
 ls -l /boot/initramfs-linux*.img /boot/vmlinuz-linux*
 ```
+
+> [!warning] On the workforce build: only two of the four images were built
+> After `mkinitcpio -P` the first pass had `/boot/initramfs-linux.img` and `/boot/initramfs-linux-lts.img` but **not** the two `-fallback.img` files, because both `/etc/mkinitcpio.d/*.preset` files had been trimmed to `PRESETS=('default')` with the `fallback_image` and `fallback_options` lines commented. The two fallback loader entries in Step 09 then pointed at files that did not exist. Fix: set `PRESETS=('default' 'fallback')` and uncomment `fallback_image=` and `fallback_options="-S autodetect"` in both preset files, then `mkinitcpio -P` again. Confirm four images before rebooting:
+> ```bash
+> ls /boot/initramfs-linux.img /boot/initramfs-linux-fallback.img /boot/initramfs-linux-lts.img /boot/initramfs-linux-lts-fallback.img
+> ```
 
 > [!note] No `/etc/crypttab` entry for root
 > Root is unlocked from the initramfs via `sd-encrypt` plus the `rd.luks.name=` cmdline in Step 09. `/etc/crypttab` is only for additional encrypted volumes unlocked *after* boot, of which this machine has none. If you would rather keep the mapping out of the cmdline, write `/etc/crypttab.initramfs` instead (`cryptroot UUID=<container-uuid> none luks,discard`) and rebuild; `sd-encrypt` reads it and the cmdline only needs `root=` and `rootflags=`.
@@ -355,6 +368,9 @@ options  rd.luks.name=CONTAINER_UUID=cryptroot root=/dev/mapper/cryptroot rootfl
 bootctl list        # all four entries must appear, arch.conf as default
 ```
 
+> [!warning] On the workforce build: three loader entries had a stray first line
+> `arch-fallback.conf`, `arch-lts.conf`, and `arch-lts-fallback.conf` were each written with the bare container UUID on line 1 and a blank line 2, above `title` (a copy-paste artifact). `bootctl list` flagged each with `Field '<uuid>' without value, ignoring line`. The entries still booted because the rest parsed, but the fix is to delete the first two lines of each. Only `arch.conf` was clean. After editing, `bootctl list` must print no warnings.
+
 > [!note] `rd.luks.options=discard` is a small, deliberate tradeoff
 > It passes SSD TRIM through the encrypted mapping. That marginally weakens the encryption (an attacker with repeated disk images can see which blocks are unused) in exchange for sustained SSD write performance and endurance. Standard practice on a laptop; drop it if the machine holds data where that leak matters. Pair it with `systemctl enable fstrim.timer` after reboot rather than continuous discard.
 
@@ -370,8 +386,10 @@ passwd                              # root password
 useradd -m -c "Naeem Arshad" -G wheel,audio,video,storage -s /bin/zsh naeem
 passwd naeem
 
-# sudo for the wheel group
-EDITOR=vim visudo                   # uncomment: %wheel ALL=(ALL:ALL) ALL
+# passwordless sudo for the primary user (personal laptop, see the note below)
+echo 'naeem ALL = NOPASSWD: ALL' > /etc/sudoers.d/naeem
+chmod 440 /etc/sudoers.d/naeem
+visudo -c                           # syntax check: must end with "/etc/sudoers.d/naeem: parsed OK"
 
 systemctl enable NetworkManager sshd systemd-timesyncd
 systemctl is-enabled NetworkManager sshd systemd-timesyncd   # expect three 'enabled' lines
@@ -379,6 +397,9 @@ systemctl is-enabled NetworkManager sshd systemd-timesyncd   # expect three 'ena
 
 > [!note] Contrasts with Rev 4 Step 08
 > The sudo group is `wheel`, not `sudo`. The SSH unit is `sshd.service`, not `ssh.service`. `systemd-timesyncd` is part of `systemd` on Arch, so there is no separate package to install, but it still has to be enabled. The `docker` and `libvirt` groups do not exist yet; they are created by those packages in Steps 24 and 25, and `naeem` is added to them there, followed by a re-login. Final group set: `wheel audio video storage docker libvirt`.
+
+> [!note] Passwordless sudo is deliberate on this machine
+> This is Naeem's personal laptop and the remote-finish workflow (SSH in, run the rest in `tmux`) is much smoother without a password prompt on every `sudo`. The tradeoff is real and accepted: anyone with an unlocked session has passwordless root. The stock alternative is to skip the drop-in and `visudo` to uncomment `%wheel ALL=(ALL:ALL) ALL` for password sudo instead. `chmod 440` and `visudo -c` are not optional: a syntactically broken file in `/etc/sudoers.d/` disables `sudo` entirely, and on a passwordless setup with no root password that is a lockout.
 
 ## 11 · Mirrors & pacman.conf
 *persistent mirror ranking and quality-of-life*
@@ -419,7 +440,10 @@ EOF
 Takes effect on the next boot. To start it now without rebooting: `systemctl daemon-reload && systemctl start systemd-zram-setup@zram0.service`, then check with `zramctl` and `swapon --show`.
 
 > [!note] Optional zram-friendly sysctl tuning
-> The Arch Wiki suggests, for a zram-only setup, `/etc/sysctl.d/99-vm-zram.conf` with `vm.swappiness=180`, `vm.watermark_boost_factor=0`, `vm.watermark_scale_factor=125`, `vm.page-cluster=0`. These bias the kernel toward using zram early (cheap) instead of reclaiming file cache. Skip it if the machine feels fine at defaults.
+> The Arch Wiki suggests, for a zram-only setup, `/etc/sysctl.d/99-vm-zram.conf` with `vm.swappiness=180`, `vm.watermark_boost_factor=0`, `vm.watermark_scale_factor=125`, `vm.page-cluster=0`. These bias the kernel toward using zram early (cheap) instead of reclaiming file cache. Skip it if the machine feels fine at defaults. Not applied on the workforce build.
+
+> [!note] On the workforce build
+> `zram-size = min(ram / 2, 8192)` resolved to an 8 GiB device (16 GiB RAM, capped by the `8192` MiB ceiling). `swapon --show` and `zramctl` confirmed `/dev/zram0` active as swap at priority 100.
 
 ## 13 · First reboot
 ```bash
@@ -438,13 +462,21 @@ At the systemd-boot menu you get the four entries. Boot `Arch Linux`, enter the 
 # on the running machine, before anything else
 sudo pacman -Syu                     # read archlinux.org/news first if it is not a fresh ISO day
 sudo systemctl enable --now fstrim.timer
+
+# informant: an Arch News reader + pacman hook that blocks -Syu until the news is read
+sudo pacman -S informant
+sudo informant read                  # clear the backlog once, or the next -Syu aborts
+
 # sanity: confirm the LTS entry boots too, at least once, before you rely on it
 ```
+
+> [!note] `informant` changes how upgrades feel
+> After this, every `pacman -Syu` with unread news aborts in a `PreTransaction` hook until `informant read`. That is the point: it enforces the "read the news first" rule from Step 00 instead of leaving it to habit. `informant` is in `extra`.
 
 ---
 
 ## 14 · paru & the AUR lane
-*the audited third lane: build recipes, not binaries*
+*the audited lane: build recipes, not binaries*
 
 ```bash
 sudo pacman -S --needed base-devel git rust
@@ -467,8 +499,8 @@ paru --version
 > - **Prefer tagged over `-git`.** `-git` packages build from upstream HEAD: more churn, more breakage, useful only when you deliberately want to track development.
 > - **Know what you have.** `paru -Qm` lists every foreign (AUR) package. Keep that list short enough to eyeball. After a large `pacman -Syu`, an AUR package built against an old library ABI can break silently until rebuilt: `paru -Sua` rebuilds them.
 
-> [!note] This machine's expected AUR set
-> To be confirmed on the day with `pacman -Ss` / `paru -Ss`: `noctalia-greeter` (confirmed AUR), `awww` (LGFae's swww fork; `swww` itself is in `extra`), `bibata-cursor-theme`, and possibly `kubie`, `zed`, `claude-desktop`. Everything else in this runbook is expected to come from official repos. That short list is the whole of the "third lane", versus Rev 4 where niri, awww, ghostty, mise, k9s, sops, adw-gtk3, and dart-sass were all outside apt.
+> [!note] This machine's AUR set
+> `paru -Qm` on the workforce build: `noctalia-greeter`, `bibata-cursor-theme` (+ its `python-clickgen` dep), `kubecolor`, `claude-desktop`, `zen-browser-bin`, `ttf-amiri`, `gnome-shell-extension-gsconnect`, `seafile-client`, `k0sctl`, and `paru` itself. Everything else in this runbook comes from official repos, including `awww`, `kubie`, `zed`, `mise`, `sops`, `k9s`, `adw-gtk-theme`, `informant`, all of which were outside apt on Rev 4. Confirm with `pacman -Ss` / `paru -Ss` on the day; things graduate from AUR to `extra` regularly.
 
 ## 15 · Minimal GNOME
 *the fallback desktop, kept installed for the life of the machine*
@@ -489,11 +521,12 @@ sudo systemctl enable gdm
 *keyring, portal, phone integration*
 
 ```bash
-sudo pacman -S gnome-keyring xdg-desktop-portal-gnome
+sudo pacman -S gnome-keyring xdg-desktop-portal-gnome kdeconnect
+paru -S gnome-shell-extension-gsconnect
 ```
 
 > [!note] KDE Connect
-> `sudo pacman -S kdeconnect` works outside Plasma. Under GNOME the tray side is the `gsconnect` shell extension (`gnome-shell-extension-gsconnect` in `extra`); `kdeconnect` itself is the daemon either way. The firewall needs TCP+UDP `1714-1764`. The niri autostart already spawns `kdeconnectd` and `kdeconnect-indicator`, so install this before Step 22 if you want it working in the niri session.
+> `kdeconnect` (`extra`) is the daemon and works outside Plasma; the niri autostart already spawns `kdeconnectd` and `kdeconnect-indicator`, so installing it here means it works in the niri session from Step 22 on. `gnome-shell-extension-gsconnect` (AUR) is only the GNOME Shell tray integration, so it does nothing under niri and only matters in the GNOME fallback session. The firewall needs TCP+UDP `1714-1764` open for either.
 
 ## 17 · Desktop essentials
 *audio, power, portals, fonts*
@@ -502,16 +535,21 @@ sudo pacman -S gnome-keyring xdg-desktop-portal-gnome
 sudo pacman -S \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   power-profiles-daemon \
-  noto-fonts noto-fonts-emoji ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols \
-  ttf-hosny-amiri
+  bluez bluez-utils \
+  noto-fonts noto-fonts-emoji ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols
 
-sudo systemctl enable power-profiles-daemon
+paru -S ttf-amiri                   # Arabic; the Arch AUR name, not Debian's ttf-hosny-amiri
+
+sudo systemctl enable power-profiles-daemon bluetooth
 systemctl --user enable --now pipewire pipewire-pulse wireplumber
 fc-cache -fr
 ```
 
-> [!success] Nerd fonts and the Arabic font are packaged
-> Rev 4 had to `apt-cache search` for a Nerd symbols font and note it "may need manual install". Arch has `ttf-jetbrains-mono-nerd` and `ttf-nerd-fonts-symbols` in `extra`, and `ttf-hosny-amiri` for Arabic. No manual font drops.
+> [!warning] `pipewire-jack` conflicts with `jack2`
+> `pipewire-jack` and `jack2` both provide `jack`. pacman will ask which to keep; answer `pipewire-jack` (`y` to replace) so PipeWire owns the JACK API. On the workforce build this prompt appeared and `pipewire-jack` was the right choice.
+
+> [!success] Nerd fonts are packaged
+> Rev 4 had to `apt-cache search` for a Nerd symbols font and note it "may need manual install". Arch has `ttf-jetbrains-mono-nerd` and `ttf-nerd-fonts-symbols` in `extra`. The Amiri Arabic font is not in the official repos under any name; Debian's `ttf-hosny-amiri` maps to `ttf-amiri` on the AUR.
 
 ## 18 · Theming
 *the light theme the niri session expects, without a source build*
@@ -539,16 +577,19 @@ paru -S bibata-cursor-theme               # AUR; a '-bin' variant usually also e
 ## 19 · Snapper & rolling maintenance
 *rollback net + the weekly upgrade pass*
 
-> [!danger] This step silently failed on the Debian build. Verify it, do not assume it.
-> On the Debian machine `create-config` was run, appeared to work, and months later there was no config, no `/etc/snapper/configs/root`, and an empty `/.snapshots`: the machine had no rollback net while the timers sat green. The cause was the `/.snapshots` entry in fstab conflicting with snapper's own subvolume creation. The same flat layout is used here, so the same trap applies. Run the verification below and do not move on until it prints a config.
+> [!danger] This step failed on both the Debian build and the first Arch pass. Verify it, do not assume it.
+> On the Debian machine `create-config` was run, appeared to work, and months later there was no config, no `/etc/snapper/configs/root`, and an empty `/.snapshots`. On the first Arch pass `create-config` failed outright with `creating btrfs subvolume .snapshots failed since it already exists` followed by `ERROR: Not a Btrfs subvolume: Invalid argument`, because `@snapshots` was still mounted at `/.snapshots` from fstab when `create-config` tried to create its own subvolume there. The `umount` + `rmdir` before `create-config` and the `mkdir` + `mount` after are what make it work: `create-config` needs an empty, non-existent `/.snapshots` to create its throwaway subvolume, which is then deleted and replaced by the real `@snapshots` mount. Run the verification below and do not move on until it prints a `root` config and a test snapshot.
 
 ```bash
 sudo pacman -S snapper snap-pac
 
 sudo umount /.snapshots
+sudo rmdir /.snapshots
 sudo snapper -c root create-config /
 sudo btrfs subvolume delete /.snapshots
+sudo mkdir /.snapshots
 sudo mount /.snapshots
+sudo chmod 750 /.snapshots
 sudo systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
 ```
 
@@ -573,25 +614,26 @@ sudo pacman -Rns $(pacman -Qtdq) 2>/dev/null || true   # remove orphans
 ```
 
 > [!danger] Rollback is manual with systemd-boot
-> The tradeoff of systemd-boot over GRUB + grub-btrfs: no auto-generated "boot into snapshot" menu entries. Recover from a live USB: unlock the disk (`cryptsetup open /dev/nvme0n1p2 cryptroot`), mount the btrfs top level (`mount /dev/mapper/cryptroot /mnt`), `mv /mnt/@ /mnt/@broken`, `btrfs subvolume snapshot /mnt/@snapshots/<N>/snapshot /mnt/@`, reboot. `@home` and `@snapshots` sit outside `@` and survive the swap. System-wide Flatpaks in `/var/lib/flatpak` are on `@` and roll back with it, so re-check them after.
+> The tradeoff of systemd-boot over GRUB + grub-btrfs: no auto-generated "boot into snapshot" menu entries. Recover from a live USB: unlock the disk (`cryptsetup open /dev/nvme0n1p2 cryptroot`), mount the btrfs top level (`mount /dev/mapper/cryptroot /mnt`), `mv /mnt/@ /mnt/@broken`, `btrfs subvolume snapshot /mnt/@snapshots/<N>/snapshot /mnt/@`, reboot. `@home` and `@snapshots` sit outside `@` and survive the swap.
 
-## 20 · Flatpak
-*sandboxed apps, off the base system*
+## 20 · Zen browser
+*from the AUR, no Flatpak*
 
 ```bash
-sudo pacman -S flatpak
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub app.zen_browser.zen
+paru -S zen-browser-bin
 ```
 
-> [!note] System-wide, matching Rev 4
-> This install keeps Flatpak apps system-wide (`flatpak install` without `--user`). Same tradeoff as documented on Debian: a root `@` rollback does not touch `/var/lib/flatpak`, so a system Flatpak added after a snapshot survives the rollback as an orphan. `--user` installs live in `@home` and follow it. `xdg-desktop-portal-gnome` from Step 16 gives Flatpak apps native file dialogs and is also the portal the niri autostart restarts for screencasting.
+> [!success] Rev 4's Flatpak lane is gone
+> Rev 4 installed a system-wide Flatpak solely for the Zen browser, then had to reason about `/var/lib/flatpak` surviving an `@` rollback as an orphan. On Arch, `zen-browser-bin` is in the AUR and installs into the normal package set, so there is no Flatpak, no Flathub remote, and no third lane. `xdg-desktop-portal-gnome` from Step 16 still gives GTK and portal apps native file dialogs and is the portal the niri autostart restarts for screencasting; it does not need Flatpak.
+
+> [!note] If you later want a sandboxed app
+> Nothing here blocks adding Flatpak back for a specific app (`sudo pacman -S flatpak && sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo`). It is just not part of the base build any more.
 
 ## 21 · Dotfiles & tooling
 *pacman lane, then stow*
 
 ```bash
-sudo pacman -S stow tmux neovim ghostty mise fzf eza bat
+sudo pacman -S stow tmux neovim ghostty mise fzf eza bat btop
 
 # dotfiles
 git clone git@github.com:naimarshad/dotfiles ~/dotfiles
@@ -600,15 +642,16 @@ git switch machine/workforce
 git config --local user.name  "Naeem Arshad"
 git config --local user.email "naimarshad@gmail.com"
 
-rm -rf ~/.config/niri              # let stow own it
-stow ghostty zsh niri nvim tmux
+rm -rf ~/.config/niri ~/.config/btop     # let stow own them (both start as stray real dirs)
+stow ghostty zsh niri nvim tmux btop
+# k9s is stowed in Step 24, after its binary is in
 ```
 
 > [!success] `ghostty` and `mise` are in the repos now
 > Rev 4 installed `ghostty` via the `ghostty-ubuntu` community installer (a `curl | sh` that dropped a `.deb`, no auto-update) and `mise` via `curl https://mise.run | sh` into `~/.local/bin`. Both are `pacman -S` on Arch. `mise` from the repo lands at `/usr/bin/mise`; `~/.zshrc` still activates it with `eval "$(mise activate zsh)"`.
 
 > [!warning] The stow set is smaller than the branch package list
-> `machine/workforce` carries `btop fish ghostty hypr k9s niri noctalia nvim starship tmux zsh`. Stow only `ghostty zsh niri nvim tmux`. `hypr` targets Hyprland (unused, the compositor is niri), `fish` is unused (shell is zsh), `starship` is abandoned (prompt is Powerlevel10k, Step 23), `noctalia` is not a stow package (Step 22, it is SOPS-encrypted). Add `stow k9s btop` once those binaries are in (Steps 24 and later).
+> `machine/workforce` carries `btop fish ghostty hypr k9s niri noctalia nvim starship tmux zsh`. Stow `ghostty zsh niri nvim tmux btop` here, then `k9s` in Step 24. `hypr` targets Hyprland (unused, the compositor is niri), `fish` is unused (shell is zsh), `starship` is abandoned (prompt is Powerlevel10k, Step 23), `noctalia` is not a stow package (Step 22, it is SOPS-encrypted).
 
 > [!danger] The `niri` config was copied from another machine and carries its assumptions
 > Same warning as Rev 4 Step 15. `machine/workforce`'s `niri` package was `cp`'d from `machine/ri-t-0931`, not merged, and it silently inherited that machine's hardware and software versions:
@@ -618,17 +661,17 @@ stow ghostty zsh niri nvim tmux
 > `niri validate` passes on all of these because they are runtime lookups, not syntax. Audit against the local hardware and installed versions before trusting the config.
 
 > [!note] Keep `AGENTS.md` and the repo-root `CLAUDE.md` current
-> Both describe a Debian machine right now. Rewrite them for Arch (pacman/AUR, `linux` + `linux-lts`, LUKS, systemd-boot manual entries) once this build is real, and re-check rather than trusting them on the next rebuild.
+> Both were rewritten for this Arch build on 2026-09-06 (pacman/AUR, `linux` + `linux-lts`, LUKS2, systemd-boot manual entries, no Flatpak). Re-check them against reality on the next rebuild rather than trusting them blindly.
 
 ## 22 · niri + Noctalia
 *the daily driver: both from `extra`, the greeter from AUR*
 
 > [!success] This is where the Arch move pays off
-> Rev 4's Step 17 is ~220 lines: a Noctalia apt repo (keyring, deb822 sources, `Signed-By`), niri build dependencies, a Rust toolchain via rustup, `cargo build --release`, copying the binary and five `resources/` files into `/usr/local`, then an awww source build. On Arch that is:
+> Rev 4's Step 17 is ~220 lines: a Noctalia apt repo (keyring, deb822 sources, `Signed-By`), niri build dependencies, a Rust toolchain via rustup, `cargo build --release`, copying the binary and five `resources/` files into `/usr/local`, then an awww source build. On the workforce build that was:
 > ```bash
-> sudo pacman -S niri noctalia awww     # verify 'awww': may be AUR (paru -S awww)
-> paru -S noctalia-greeter
+> sudo pacman -S niri noctalia awww     # all three in extra: niri 26.04, noctalia 5.0.1, awww 0.12.1
 > sudo pacman -S dbus greetd            # greeter dependencies
+> paru -S noctalia-greeter              # 1.3.1, the one AUR package here
 > ```
 > Steps 17b, 17c, 17d, 17e of Rev 4 do not exist here. Version bumps are `pacman -Syu`, with no `cp` dance and no `resources/` re-copy.
 
@@ -664,14 +707,20 @@ sudo pacman -S greetd dbus
 command -v noctalia-greeter-session     # usually /usr/bin/noctalia-greeter-session
 
 sudo tee /etc/greetd/config.toml >/dev/null <<'EOF'
+[terminal]
+vt = 1
+
 [default_session]
-command = "/usr/bin/noctalia-greeter-session"
+command = "/usr/bin/noctalia-greeter-session -- --session niri"
 user = "greeter"
 EOF
 
 sudo systemctl disable gdm
 sudo systemctl enable greetd
 ```
+
+> [!warning] On the workforce build: greetd crash-looped without a `[terminal]` section
+> The first `config.toml` had only `[default_session]`. `greetd` failed on every start with `no terminal specified`, hit the systemd start-limit, and left the machine with no greeter (recover by logging in on a VT and adding the section). `greetd` needs `[terminal]` with `vt = 1`. The `-- --session niri` argument tells `noctalia-greeter-session` which Wayland session to launch after authentication.
 
 > [!note] The greeter is the one genuine AUR package here
 > `noctalia-greeter` is not in `extra`; the Noctalia docs point to the AUR (`noctalia-greeter` stable, `noctalia-greeter-git` for development). It needs `greetd` and D-Bus running on this machine. After enabling `greetd`, `display-manager.service` resolves to it. To fall back to GNOME's login screen: `sudo systemctl disable greetd && sudo systemctl enable gdm && reboot`. The greeter's own optional config is `greeter.toml` (see the Noctalia greeter configuration docs).
@@ -749,8 +798,8 @@ git clone https://github.com/fdellwing/zsh-bat.git \
   "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-bat"
 
 # from the repos: syntax highlighting, and the kubectl wrappers ~/.zshrc expects
-sudo pacman -S zsh-syntax-highlighting kubecolor      # verify 'kubecolor': repo or AUR
-paru -S kubie                                         # verify: may be 'kubie' or 'kubie-bin'
+sudo pacman -S zsh-syntax-highlighting kubie          # kubie is in extra (0.28 on the workforce build)
+paru -S kubecolor                                     # kubecolor was AUR on the workforce build
 ```
 
 > [!note] Loose ends carried from Rev 4
@@ -781,18 +830,21 @@ sudo pacman -S k9s
 *qemu + libvirt for local VMs and Vagrant*
 
 ```bash
-sudo pacman -S qemu-desktop libvirt virt-manager dnsmasq
+sudo pacman -S qemu-desktop libvirt virt-manager dnsmasq dmidecode
 sudo usermod -aG libvirt naeem         # re-login to take effect
 sudo systemctl enable --now libvirtd
 ```
+
+> [!note] On the workforce build: `dmidecode` was missing at first
+> `libvirtd` logged `Cannot find 'dmidecode' in path` twice on every start until it was installed. It is what libvirt uses to read the host's SMBIOS/DMI tables for capability reporting. Not fatal, but it belongs in the package list.
 
 `~/.zshrc` sets `VAGRANT_DEFAULT_PROVIDER=libvirt`, so Vagrant (installed when needed) uses this stack rather than VirtualBox.
 
 ## 26 · Editors & desktop apps
 
 ```bash
-# from the repos where available
-sudo pacman -S zed fuzzel alacritty obsidian fastfetch    # verify 'zed', 'obsidian': repo, AUR, or Flatpak
+# all in extra: zed, fuzzel (niri launcher), alacritty (fallback terminal), obsidian, fastfetch
+sudo pacman -S zed fuzzel alacritty obsidian fastfetch
 
 # Claude Code: upstream installer, into ~/.local/share/claude, symlink in ~/.local/bin
 curl -fsSL https://claude.ai/install.sh | bash
@@ -811,11 +863,12 @@ paru -S claude-desktop                                    # verify exact package
 
 ```bash
 sudo pacman -S syncthing wireguard-tools
+paru -S seafile-client
 systemctl --user enable --now syncthing
 ```
 
-> [!note] Referenced by the niri autostart, install when you reach them
-> `autostart.kdl` spawns `seafile-applet` and `kdeconnectd` + `kdeconnect-indicator`. `seafile-applet` and `kdeconnect` are separate installs (`kdeconnect` in `extra`; firewall still needs TCP+UDP `1714-1764`). Not desktop-critical.
+> [!note] `autostart.kdl` references these
+> `autostart.kdl` spawns `seafile-applet` (from `seafile-client`, AUR) and `kdeconnectd` + `kdeconnect-indicator` (from `kdeconnect`, installed in Step 16). `kdeconnect`'s firewall ports are TCP+UDP `1714-1764`.
 
 ## 28 · Claude Code · memory, hooks, and the freeze guard
 *the `~/.claude` setup: SessionEnd extractor, SessionStart injector, MEMORY.md protection*
@@ -833,8 +886,12 @@ The setup has two parts:
 
 ```bash
 sudo pacman -S --needed jq python go
+sudo pacman -D --asexplicit go jq     # so orphan cleanup cannot remove them
 command -v claude jq python3 go        # all four must resolve
 ```
+
+> [!warning] On the workforce build: `go` was left as an orphan
+> `go` came in as a dependency of an AUR build, not an explicit install, so `pacman -Qtdq` listed it as a removable orphan. A later `pacman -Rns $(pacman -Qtdq)` would have removed the Go toolchain and broken the `session-start` rebuild. `pacman -D --asexplicit go jq` marks them as wanted in their own right. Review `pacman -Qtdq` before any orphan purge regardless: most of its entries are AUR makedepends (`meson`, `nasm`, `cbindgen`, `xorg-server-xvfb`) and safe, but eyeball the list.
 
 > [!warning] Install `go` before running `install.sh` or the SessionStart hook is skipped silently
 > `install.sh` hard-requires `jq` and `python3` and aborts loudly without them. `go` it treats as optional: if `go` is not on PATH it prints one line to stderr (`go not found, skipping the optional SessionStart hook`) and registers only SessionEnd, exit status still 0. The DosDonts injection is wanted on this machine, so `go` has to be present first. On Arch the `python` package provides `/usr/bin/python3` (a symlink to the current `python3.x`), which is what the hook command in `settings.json` calls.
@@ -918,38 +975,38 @@ Then start a real `claude` session in `~/dotfiles`, let it end, and check `~/Obs
 ## Restore checklist
 
 - [ ] booted UEFI (`/sys/firmware/efi/fw_platform_size` is `64`) · correct device confirmed with `lsblk` before `sgdisk --zap-all`
-- [ ] GPT · 2 GiB ESP (`ef00`, vfat) · partition 2 (`8309`) · ESP formatted
+- [ ] GPT · 2 GiB ESP (`ef00`, vfat) · partition 2 (`8309`) · ESP formatted · fstab `/boot` line uses `fmask=0077,dmask=0077`
 - [ ] `cryptsetup luksFormat --type luks2` on p2 · opened as `cryptroot` · LUKS passphrase recorded somewhere safe
 - [ ] btrfs on `/dev/mapper/cryptroot` · `@ @home @log @snapshots` created and mounted · ESP mounted at `/mnt/boot`
 - [ ] `pacstrap -K` incl. `linux linux-lts linux-firmware intel-ucode cryptsetup openssh` · `genfstab -U` written and checked
-- [ ] timezone / locale / `vconsole` / hostname `workforce` / hosts file
-- [ ] `mkinitcpio.conf` HOOKS has `systemd` + `sd-encrypt` (not `udev` + `encrypt`) · `MODULES=(btrfs)` · `mkinitcpio -P` built all four images
+- [ ] timezone / locale / hostname `workforce` / hosts file · `KEYMAP=us` (a valid keymap name) · `systemctl status systemd-vconsole-setup.service` clean after first boot
+- [ ] `mkinitcpio.conf` HOOKS has `systemd` + `sd-encrypt` (not `udev` + `encrypt`) · `MODULES=(btrfs)` · presets are `PRESETS=('default' 'fallback')` · `mkinitcpio -P` built **all four** images (`linux`, `linux-fallback`, `linux-lts`, `linux-lts-fallback`)
 - [ ] `bootctl install` · `systemd-boot-update.service` enabled · `loader.conf` with `editor no`
-- [ ] four loader entries (`arch`, `arch-fallback`, `arch-lts`, `arch-lts-fallback`) with `rd.luks.name=CONTAINER_UUID=cryptroot` · `bootctl list` shows all four
-- [ ] user in `wheel audio video storage` · `%wheel` uncommented in sudoers · `NetworkManager sshd systemd-timesyncd` all `enabled`
+- [ ] four loader entries (`arch`, `arch-fallback`, `arch-lts`, `arch-lts-fallback`), each starting at `title` with no stray first line · `bootctl list` shows all four and prints **no** "without value" warnings
+- [ ] user in `wheel audio video storage` · `/etc/sudoers.d/naeem` (`naeem ALL = NOPASSWD: ALL`, mode 440, `visudo -c` clean) · `NetworkManager sshd systemd-timesyncd` all `enabled`
 - [ ] `reflector.conf` (Germany) + `reflector.timer` enabled · `pacman.conf` Color / ParallelDownloads / VerbosePkgLists
 - [ ] `zram-generator.conf` written · `swapon --show` shows `/dev/zram0` after reboot
-- [ ] first reboot: LUKS prompt appears · logs in · **LTS entry boots too** · `fstrim.timer` enabled
+- [ ] first reboot: LUKS prompt appears · logs in · **LTS entry boots too** · `fstrim.timer` enabled · `informant` installed and `informant read` run once
 - [ ] `paru` built · `paru -Qm` list is short and understood
-- [ ] `gnome-shell` + `gdm` + add-ons + portal + pipewire + fonts · gdm enabled for the GNOME phase
+- [ ] `gnome-shell` + `gdm` + add-ons + portal + `kdeconnect` + `gnome-shell-extension-gsconnect` (AUR) + pipewire + `bluez-utils` (`bluetooth` enabled) + fonts + `ttf-amiri` (AUR) · gdm enabled for the GNOME phase
 - [ ] theming: `adw-gtk-theme` + `qt6ct` from repo · `bibata-cursor-theme` from AUR · **gsettings `gtk-theme` and `cursor-theme` actually set**
-- [ ] snapper: `snapper list-configs` lists `root` and a test snapshot appears (this step silently failed on Debian, verify it) · `snap-pac` installed · timers enabled
-- [ ] Flatpak system-wide · Zen installed
-- [ ] dotfiles cloned · `machine/workforce` checked out · git identity set `--local` · `stow ghostty zsh niri nvim tmux`
+- [ ] snapper: `umount`/`rmdir` before `create-config`, `mkdir`/`mount`/`chmod 750` after · `snapper list-configs` lists `root` · `SNAPPER_CONFIGS="root"` · a test snapshot appears (failed on both Debian and the first Arch pass, verify it) · `snap-pac` installed · timers enabled
+- [ ] Zen browser installed from AUR (`zen-browser-bin`) · no Flatpak on the system
+- [ ] dotfiles cloned · `machine/workforce` checked out · git identity set `--local` · stray `~/.config/{niri,btop}` cleared · `stow ghostty zsh niri nvim tmux btop`
 - [ ] `niri` + `noctalia` from `extra` · `niri --version` >= 26.04 · `noctalia msg --help` confirms v5 IPC
-- [ ] `noctalia-greeter` from AUR · `greetd` + `dbus` · `/etc/greetd/config.toml` points at `noctalia-greeter-session` · `greetd` enabled, gdm disabled
+- [ ] `noctalia-greeter` from AUR · `greetd` + `dbus` · `/etc/greetd/config.toml` has `[terminal] vt = 1` and points at `noctalia-greeter-session -- --session niri` · `greetd` enabled, gdm disabled
 - [ ] `outputs.kdl` mode/scale/VRR matched to `niri msg outputs`, `position` dropped · `QT_FONT_DPI` in step with scale
 - [ ] `awww` installed (repo or AUR) · a real wallpaper set (`awww query` is not `color: 000000`) · Unsplash key at `~/.config/secrets/`, not under stowed `~/.config/niri/`
 - [ ] `noctalia/settings.sops.toml` decrypts to `~/.local/state/noctalia/settings.toml` · age key backed up off-repo · plaintext `settings.toml` gitignored
-- [ ] oh-my-zsh + p10k + plugins · `zsh-syntax-highlighting` + `kubecolor` + `kubie` · `starship` skipped
+- [ ] oh-my-zsh + p10k + plugins · `zsh-syntax-highlighting` + `kubie` (extra) + `kubecolor` (AUR) · `starship` skipped
 - [ ] `docker` (not docker-ce) + `kubectl` + `k9s` + `age`/`sops` from repos · `docker` / `libvirt` groups added · `stow k9s`
 - [ ] `qemu-desktop` + `libvirt` + `virt-manager` · `libvirtd` enabled
 - [ ] Zed / Claude Code / Claude Desktop / Obsidian / fuzzel / alacritty
-- [ ] syncthing user service · `~/Obsidian` synced all the way down before starting Step 28
-- [ ] Step 28: `jq python go` on PATH before `install.sh` · `~/.claude/{CLAUDE.md,settings.json,memory-extractor.json,projects}` restored from the backup · `.memory-unlock` **not** restored · `.credentials.json` restored or `/login`
+- [ ] syncthing user service · `seafile-client` (AUR) installed · `~/Obsidian` synced all the way down before starting Step 28
+- [ ] Step 28: `jq python go` on PATH before `install.sh` · `pacman -D --asexplicit go jq` · `~/.claude/{CLAUDE.md,settings.json,memory-extractor.json,projects}` restored from the backup · `.memory-unlock` **not** restored · `.credentials.json` restored or `/login`
 - [ ] Step 28: extractor cloned to exactly `~/claude-memory-extractor` · `install.sh` run · `~/.claude/hooks/memory_extractor.py` symlink resolves · `~/.claude/hooks/session-start` built and runs
 - [ ] Step 28 verify: `--resolve-vault "$PWD"` prints `~/Obsidian/Claude/claude-memory` · `settings.json` has `PreToolUse` + `SessionEnd` + `SessionStart` · `memory-extractor.json` says `machine: "workforce"`, `routes: []` · a test edit of `~/Obsidian/MEMORY.md` is **denied**
 - [ ] `AGENTS.md` and repo-root `CLAUDE.md` rewritten for Arch and re-checked
 
 ---
-*Arch Linux (rolling) · GNOME first boot, then niri (`extra`) + Noctalia (`extra`) · greetd + noctalia-greeter · systemd-boot · btrfs/snapper on LUKS2 · zram · Claude Code memory + hooks restored in Step 28 · Rev 1, plan*
+*Arch Linux (rolling) · GNOME first boot, then niri (`extra`) + Noctalia (`extra`) · greetd + noctalia-greeter · systemd-boot · btrfs/snapper on LUKS2 · zram · no Flatpak · Claude Code memory + hooks restored in Step 28 · Rev 2, verified record*
