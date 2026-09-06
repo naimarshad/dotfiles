@@ -1,17 +1,20 @@
 binds {
-    // --- Noctalia IPC ---
-    Mod+Space       { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+Shift+W     { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "windows"; }
-    Mod+Shift+E     { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "emoji"; }
-    Mod+B           { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
-    Mod+Shift+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
-    Mod+C           { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "calendar" "toggle"; }
-    Mod+T           { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
-    Mod+N           { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
-    Mod+L           { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
-    Ctrl+Alt+P      { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "toggle"; }
-    Ctrl+Alt+D      { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "notifications" "toggleDND"; }
-    Mod+Shift+P     { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "mediaControls" "toggle"; }
+    // --- Noctalia IPC (v5 `noctalia msg`) ---
+    // v4's `qs -c noctalia-shell ipc call <target> <action>` is gone: v5 is a
+    // standalone binary, not a quickshell config. Calendar and now-playing are
+    // control-center tabs now, not standalone panels.
+    Mod+Space       { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+    Mod+Shift+W     { spawn "noctalia" "msg" "window-switcher"; }
+    Mod+Shift+E     { spawn "noctalia" "msg" "panel-toggle" "launcher" "/emo"; }
+    Mod+B           { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
+    Mod+Shift+Comma { spawn "noctalia" "msg" "settings-toggle"; }
+    Mod+C           { spawn "noctalia" "msg" "panel-toggle" "control-center" "calendar"; }
+    Mod+T           { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
+    Mod+N           { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
+    Mod+L           { spawn "noctalia" "msg" "session" "lock"; }
+    Ctrl+Alt+P      { spawn "noctalia" "msg" "panel-toggle" "session"; }
+    Ctrl+Alt+D      { spawn "noctalia" "msg" "notification-dnd-toggle"; }
+    Mod+Shift+P     { spawn "noctalia" "msg" "panel-toggle" "control-center" "media"; }
 
     // --- Essential ---
     Mod+Return        { spawn "ghostty"; }

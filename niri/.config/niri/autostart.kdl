@@ -2,6 +2,12 @@
 // to niri's screencasting D-Bus service for window + monitor capture.
 spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd --all && systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP && systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gnome.service"
 
+// Secret Service (org.freedesktop.secrets). GNOME starts this via gnome-session;
+// niri does not, so nothing provided it and EDS could not save the Google Calendar
+// OAuth refresh token. Needs PAM to unlock it too: pam_gnome_keyring.so in the
+// greeter's /etc/pam.d entry, otherwise the daemon runs but stays locked.
+spawn-at-startup "gnome-keyring-daemon" "--start" "--components=secrets,ssh"
+
 spawn-at-startup "awww-daemon"
 spawn-at-startup "bash" "-c" "sleep 10 && bash $HOME/.config/niri/wallpaper.sh"
 
@@ -11,8 +17,10 @@ spawn-at-startup "powerprofilesctl" "set" "balanced"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
-// Idle: lock after 10 min, displays off after 3 hours, lock before sleep.
-spawn-at-startup "sh" "-c" "swayidle -w timeout 300 'qs -c noctalia-shell ipc call lockScreen lock' timeout 10800 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'qs -c noctalia-shell ipc call lockScreen lock'"
+// Idle, screen-off and lock-before-sleep are all Noctalia 5's job now, configured
+// under [idle] in ~/.local/state/noctalia/settings.toml. It registers its own
+// systemd sleep inhibitor ("Lock before sleep"), so no swayidle -w is needed;
+// running both double-fired the lock at the 300s timeout.
 
 spawn-at-startup "slack"
 spawn-at-startup "thunderbird"
@@ -21,4 +29,4 @@ spawn-at-startup "obsidian"
 spawn-at-startup "arch-update" "--tray"
 spawn-at-startup "/usr/lib/kdeconnectd"
 spawn-at-startup "/usr/bin/kdeconnect-indicator"
-spawn-at-startup "qs" "-c" "noctalia-shell" "--no-duplicate"
+spawn-at-startup "noctalia"

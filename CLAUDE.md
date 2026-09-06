@@ -63,27 +63,50 @@ The `hypr` package predates the niri migration (commit `a4af0b6`) and is kept fo
 
 ## Noctalia Shell (`noctalia/`)
 
-Noctalia is a Qt/QML desktop shell built on [Quickshell](https://quickshell.outfoxxed.me). Launched from `autostart.kdl` via:
+Noctalia 5 is a standalone desktop shell binary. Launched from `autostart.kdl` via:
 
 ```bash
-qs -c noctalia-shell --no-duplicate
+noctalia
 ```
 
-IPC calls from keybinds use: `qs -c noctalia-shell ipc call <target> <action>`, for example `qs -c noctalia-shell ipc call launcher toggle`.
+IPC calls from keybinds use `noctalia msg <verb>`, for example `noctalia msg panel-toggle launcher`. Verify verbs against `noctalia msg --help` on the installed build; they drifted between v4 and v5.
 
-**Plugin structure**: each plugin under `plugins/` contains:
+**This branch migrated v4 -> v5.** Noctalia 4 was a [Quickshell](https://quickshell.outfoxxed.me) config launched as `qs -c noctalia-shell --no-duplicate`, with IPC as `qs -c noctalia-shell ipc call <target> <action>`. That interface is gone and `qs` is not needed. The legacy AUR `noctalia-qs` / `noctalia-shell` packages are still v4; do not install them. The v4 to v5 bind mapping used here:
 
-- `manifest.json` for id, version, entryPoints, and defaultSettings
-- `BarWidget.qml` for the bar icon or widget
-- `Panel.qml` for the expanded panel UI
-- `Settings.qml` for the settings pane
-- `Main.qml` for service and logic entry
+| v4 | v5 |
+| --- | --- |
+| `launcher toggle` | `panel-toggle launcher` |
+| `launcher windows` | `window-switcher` |
+| `launcher emoji` | `panel-toggle launcher /emo` |
+| `launcher clipboard` | `panel-toggle clipboard` |
+| `settings toggle` | `settings-toggle` |
+| `calendar toggle` | `panel-toggle control-center calendar` |
+| `controlCenter toggle` | `panel-toggle control-center` |
+| `lockScreen lock` | `session lock` |
+| `sessionMenu toggle` | `panel-toggle session` |
+| `notifications toggleDND` | `notification-dnd-toggle` |
+| `mediaControls toggle` | `panel-toggle control-center media` |
 
-Which plugins are enabled is tracked in `plugins.json`, not in the plugin directories.
+Calendar and now-playing are control-center tabs in v5, not standalone panels. The v5 control-center tabs are `home audio bluetooth calendar media monitor network notifications power system weather`; the standalone panels are `launcher clipboard session wallpaper`.
 
-**Colours are generated, not hand-edited.** `settings.json` selects the scheme under `colorSchemes` (`predefinedScheme`, plus `darkMode` choosing the scheme file's `light` or `dark` palette). Noctalia then renders that palette into every app listed in `templates.activeTemplates`, producing `niri/.config/niri/noctalia.kdl`, `gtk/.config/gtk-3.0/noctalia.css`, `gtk/.config/gtk-4.0/noctalia.css`, and `hypr/.config/hypr/noctalia/noctalia-colors.conf`. All of those are committed so a fresh checkout looks right before Noctalia first runs. Change the scheme and let it regenerate; hand-editing a generated file is overwritten on the next render.
+**Idle, screen-off and lock-before-sleep belong to Noctalia 5**, under `[idle]` in `settings.toml` (`behavior_order` plus an `[idle.behavior.<name>]` table each, with `action` and `timeout`). Noctalia registers its own systemd sleep inhibitor, visible as `noctalia ... sleep "Lock before sleep"` in `systemd-inhibit --list`, so the old `swayidle -w` line was removed from `autostart.kdl` in the v5 migration: running both double-fired the lock at the shared 300s timeout. Check `systemd-inhibit --list` before assuming a lock-on-suspend regression is a Noctalia bug.
 
-Ghostty is deliberately outside that system. It is not in `activeTemplates` and pins `theme = "Catppuccin Latte"` in its own config, so terminal colours are changed there by hand.
+**Config location.** v5 keeps its settings at `~/.local/state/noctalia/settings.toml`, not `~/.config/noctalia/`. That means `noctalia` is **not a stow package** any more: the file holds plugin credentials (`api_key`, `api_secret`, `kubeconfig`), and this is a public repo, so it is tracked SOPS/age-encrypted as `noctalia/settings.sops.toml` and decrypted into place on a rebuild:
+
+```bash
+sops --decrypt noctalia/settings.sops.toml > ~/.local/state/noctalia/settings.toml
+noctalia msg config-reload
+```
+
+SOPS has no TOML parser, so it encrypts the whole file as one opaque blob. It round-trips, but diffs on it are not readable. The age private key at `~/.config/sops/age/keys.txt` (mode 600, `SOPS_AGE_KEY_FILE` exported from `.zshrc`) is the only way to read it; back it up outside this repo.
+
+**Plugins** are configured in `settings.toml` under `[plugins] enabled` and `plugin_settings.<id>` tables, and credentials are entered through the GUI (`noctalia msg settings-open-plugin <author/plugin>`), never by hand. The v4 tree of QML plugin directories (`manifest.json` + `BarWidget.qml` / `Panel.qml` / `Settings.qml` / `Main.qml`, with `plugins.json` tracking which were enabled) was removed in the v5 migration; a plugin needs a v5 port to come back. `next-meeting` is the one whose port status is unverified, and its gitlink had no `.gitmodules` entry, so its upstream URL is not recoverable from this repo.
+
+**`noctalia/BAR-LAYOUT-v4.md`** records what every output's bar held under v4 (`HDMI-A-1`, `DP-3`, `DP-5`, `DP-6`, `DP-1`, `eDP-1`), since the v4 `settings.json` is gone. Rebuild the v5 bars from it. It carries no secrets: every credential field was empty in the source.
+
+**Colours are generated, not hand-edited.** The scheme is selected in `settings.toml`, and Noctalia renders that palette into every app in its active-template list, producing `niri/.config/niri/noctalia.kdl`, `gtk/.config/gtk-3.0/noctalia.css`, `gtk/.config/gtk-4.0/noctalia.css`, and `hypr/.config/hypr/noctalia/noctalia-colors.conf`. All of those are committed so a fresh checkout looks right before Noctalia first runs. Change the scheme and let it regenerate; hand-editing a generated file is overwritten on the next render. The `gtk` templates are confirmed working under v5: `gtk-4.0/gtk.css` changed from a symlink into `adw-gtk3` to a real file that `@import`s `noctalia.css`, and both `noctalia.css` files regenerate.
+
+Ghostty is **inside** that system as of the v5 migration: its config sets `theme = noctalia` and Noctalia renders `ghostty/.config/ghostty/themes/noctalia`. It was pinned to `Catppuccin Latte` and hand-managed under v4; `machine/workforce` made the same switch in `5a7403e`.
 
 ## Neovim Config (`nvim/`)
 
@@ -109,20 +132,20 @@ Two shells are configured, with different prompts, so a prompt change usually ne
 - **Cursor theme**: `Bibata-Modern-Classic` at size 24, set in `niri/environment.kdl` (both the `cursor` block and `XCURSOR_THEME`) and in the GTK settings
 - **GTK theme**: `adw-gtk3` with the `Catppuccin-Macchiato` icon theme and `Inter 12`
 - **Screenshots**: niri's built-in actions on the `Print` keys (`screenshot`, `Mod+Print` for screen, `Mod+Shift+Print` for window). There is no `HYPRSHOT_DIR` under niri.
-- **Niri keybind prefix**: `Mod` is the Super key. Noctalia binds spawn `qs -c noctalia-shell ipc call ...` directly, since KDL has no variable expansion.
+- **Niri keybind prefix**: `Mod` is the Super key. Noctalia binds spawn `noctalia msg ...` directly, since KDL has no variable expansion.
 
 ## Known Quirks
 
 Worth knowing before assuming something is a bug you introduced:
 
 - `.config/starship.toml` sits at the repo root instead of in `starship/.config/`, so `stow starship` deploys only `cpu.sh` and `netinfo.sh`.
-- `noctalia/.config/noctalia/plugins-loca/` is a partial duplicate of `plugins/`, and contains a stray `terraform.tfstate` that has nothing to do with the shell.
-- `noctalia/.config/noctalia/plugins/github-feed/cache/events.json` is a runtime cache but is tracked, so it churns in diffs.
 - `ghostty/.config/ghostty/config` sets `background-blur-radius` twice, at 80 and then 60, left over from resolving a merge conflict. Only one value can win. `theme` is set once.
 - `ghostty/.config/ghostty/themes/noctalia` is now dormant, since the config pins `Catppuccin Latte` and ghostty is not in `activeTemplates`.
 - `KUBECOLOR_LIGHT_BACKGROUND=true` is exported twice in `.zshrc`, near the top and again at the bottom.
-- Several files once carried committed merge conflict markers, including `settings.json`, which left it as invalid JSON. Run `jq empty noctalia/.config/noctalia/settings.json` after touching it, and grep for `<<<<<<<` before committing a resolution.
+- Several files have carried committed merge conflict markers in the past. Grep for `<<<<<<<` before committing a resolution. (The worst offender, Noctalia's v4 `settings.json`, is gone with the v5 migration.)
 
 ## Secrets
 
-`.gitignore` keeps kubeconfigs (`zsh/.kube/config*`, `zsh/.kube/configs/`), the Unsplash API key (`niri/.config/niri/unsplash-key`), and the github-feed plugin's personal access token (`noctalia/.config/noctalia/plugins/github-feed/settings.json`) out of the repo. This is a public repo, so check any new config file for tokens before adding it.
+`.gitignore` keeps kubeconfigs (`zsh/.kube/config*`, `zsh/.kube/configs/`) and the Unsplash API key (`niri/.config/niri/unsplash-key`) out of the repo. This is a public repo, so check any new config file for tokens before adding it.
+
+Under Noctalia 5 every plugin credential (the github-feed PAT, `kubeconfigPath`, `icsUrl`, plugin `api_key`/`api_secret`) lives in one file, `~/.local/state/noctalia/settings.toml`. That file is never committed in the clear: `noctalia/settings.toml` is gitignored and only the SOPS-encrypted `noctalia/settings.sops.toml` is tracked. The age private key at `~/.config/sops/age/keys.txt` must be backed up outside this repo, or the encrypted file is unrecoverable.
