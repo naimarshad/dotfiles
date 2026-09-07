@@ -11,3 +11,7 @@ niri/.config/niri/unsplash-key
 
 # Decrypted SOPS output — only the .sops.* files belong in git.
 noctalia/settings.toml
+
+# Vendored tmux plugins (catppuccin/tmux) — cloned manually, has its own .git.
+# See the clone command in tmux/.config/tmux/tmux.conf.
+tmux/.config/tmux/plugins/
