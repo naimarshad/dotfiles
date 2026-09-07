@@ -1,27 +1,15 @@
--- Catppuccin, flavour "latte" (light) to match a light KDE Plasma theme.
--- Switch flavour to "macchiato" | "frappe" | "mocha" for a dark theme.
+-- The colorscheme is driven by Noctalia through matugen, not set here directly.
+-- lua/matugen.lua carries the generated base16 palette and applies it with
+-- base16-nvim (installed in lua/plugins/base16.lua); a SIGUSR1 from matugen
+-- re-applies it live. LazyVim runs `:colorscheme` itself once after startup and
+-- would clobber that palette, so point its colorscheme hook at the same call.
 return {
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    opts = {
-      flavour = "latte",
-      transparent_background = false,
-      term_colors = true,
-      integrations = {
-        cmp = true,
-        gitsigns = true,
-        telescope = true,
-        which_key = true,
-        treesitter = true,
-        indent_blankline = { enabled = true },
-        mini = { enabled = true },
-      },
-    },
-  },
-  {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "catppuccin-latte" },
+    opts = {
+      colorscheme = function()
+        require("matugen").setup()
+      end,
+    },
   },
 }
