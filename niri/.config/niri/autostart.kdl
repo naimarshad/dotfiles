@@ -10,7 +10,7 @@ spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 
 // Idle: lock after 10 min, displays off after 3 hours, lock before sleep.
-spawn-at-startup "sh" "-c" "swayidle -w timeout 300 'noctalia msg session lock' timeout 10800 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'noctalia msg session lock'"
+// spawn-at-startup "sh" "-c" "swayidle -w timeout 300 'noctalia msg session lock' timeout 10800 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'noctalia msg session lock'"
 
 spawn-at-startup "seafile-applet"
 spawn-at-startup "obsidian"
