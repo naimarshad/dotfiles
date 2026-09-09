@@ -16,4 +16,7 @@ spawn-at-startup "seafile-applet"
 spawn-at-startup "obsidian"
 spawn-at-startup "/usr/lib/kdeconnectd"
 spawn-at-startup "/usr/bin/kdeconnect-indicator"
-spawn-at-startup "noctalia"
+
+// Desktop shell: Noctalia by default, DankMaterialShell if the greeter session
+// "Niri (DankMaterialShell)" was picked. See start-shell.sh.
+spawn-at-startup "sh" "-c" "exec \"$HOME/.config/niri/start-shell.sh\""
