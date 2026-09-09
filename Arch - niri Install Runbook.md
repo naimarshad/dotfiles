@@ -642,7 +642,7 @@ git switch machine/workforce
 git config --local user.name  "Naeem Arshad"
 git config --local user.email "naimarshad@gmail.com"
 
-rm -rf ~/.config/niri ~/.config/btop     # let stow own them (both start as stray real dirs)
+rm -rf ~/.config/niri ~/.config/btop ~/.config/arch-update   # let stow own them
 stow ghostty zsh niri nvim tmux btop arch-update
 # k9s is stowed in Step 24, after its binary is in
 
@@ -653,7 +653,8 @@ systemctl --user enable --now arch-update-tray.service
 
 > [!note] `arch-update` update tooling (added 2026-09-09, after the initial build)
 > `arch-update` (AUR, by Antiz) is the CachyOS-style update path: an interactive `arch-update` run that shows Arch news, runs `pacman -Syu` then `paru`, then a maintenance pass (orphan removal, `paccache` cache trim, `.pacnew`/`.pacsave` review, pending-reboot and service-restart checks). `arch-update --check` prints the pending count for scripts.
-> - The `arch-update` stow package carries `~/.config/arch-update/arch-update.conf`: `NoFlatpak`, `NoALHPCheck`, `AURHelper=paru`, `PrivilegeElevationCommand=sudo`, `KeepOldPackages=2`, `DiffProg=nvimdiff`. Because the path is a stow symlink, `arch-update --edit-config` edits the repo file.
+> - The `arch-update` stow package carries `~/.config/arch-update/arch-update.conf`: `NoFlatpak`, `NoALHPCheck`, `AURHelper=paru`, `PrivilegeElevationCommand=sudo`, `KeepOldPackages=2`, `DiffProg=nvim -d`. Because the path is a stow symlink, `arch-update --edit-config` edits the repo file.
+> - `DiffProg` is `nvim -d`, not `nvimdiff`: `arch-update` runs `command -v` on the first word only, and Arch's `neovim` package ships no `nvimdiff` symlink (that comes with the `vim` package). `nvim -d` passes the check and is exported to `pacdiff` as `DIFFPROG`.
 > - Enable **either** `arch-update-tray.service` **or** `arch-update.timer`, never both: each runs its own periodic check and you would get doubled notifications. The tray is chosen here because Noctalia 5's bar already hosts a `tray` widget; the icon shows there with a count, click to update.
 > - `informant` (Step 13) stays as the pacman-level hard gate. `arch-update` calls `pacman -Syu`, so the `informant` `PreTransaction` hook still blocks until `informant read`; `arch-update`'s own news display is on top of that, not a replacement.
 > - Passwordless `sudo` (Step 10) means the tray's update runs never prompt.
