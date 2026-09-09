@@ -816,6 +816,9 @@ exec niri-session
 EOF
 sudo chmod 755 /usr/local/bin/niri-dms-session
 
+# tee does not create parent dirs, and /usr/local/share/wayland-sessions/ does
+# not exist on a fresh Arch install: make it first.
+sudo mkdir -p /usr/local/share/wayland-sessions
 sudo tee /usr/local/share/wayland-sessions/niri-dms.desktop >/dev/null <<'EOF'
 [Desktop Entry]
 Name=Niri (DankMaterialShell)
