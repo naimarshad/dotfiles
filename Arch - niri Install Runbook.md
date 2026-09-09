@@ -799,8 +799,9 @@ dms doctor                              # all green before going further
 ```
 
 **Stowed pieces (in the `niri` package):**
-- `niri/.config/niri/start-shell.sh` picks the shell: it reads a one-shot marker at `$XDG_RUNTIME_DIR/niri-shell.dms`, and `exec dms run` if present, else `exec noctalia`.
+- `niri/.config/niri/start-shell.sh` picks the shell at niri startup: it reads a one-shot marker at `$XDG_RUNTIME_DIR/niri-shell.dms`, and `exec dms run` if present, else `exec noctalia`.
 - `autostart.kdl`'s last line is `spawn-at-startup "sh" "-c" "exec \"$HOME/.config/niri/start-shell.sh\""` instead of `spawn-at-startup "noctalia"`.
+- `niri/.config/niri/shell.sh <action>` routes a shell keybind to whichever shell is running: `pgrep -x noctalia` -> `noctalia msg ...`, else `pgrep -x dms` -> `dms ipc call ...`. `binds.kdl`'s IPC block calls `sh -c "$HOME/.config/niri/shell.sh <action>"` for `launcher clipboard settings control calendar media session lock dnd emoji windows`, so one keymap works in both sessions. A few have no clean DMS equivalent: `emoji` falls back to the plain DMS launcher, `windows` to niri's `toggle-overview`.
 
 An env var would be simpler than a marker file, but it does not reliably survive `niri-session`'s login-shell re-exec and the `niri.service` systemd `--user` unit boundary. `$XDG_RUNTIME_DIR` (tmpfs, wiped on logout) is set for both the session `Exec` process and `niri.service`, so the marker is seen either way.
 
