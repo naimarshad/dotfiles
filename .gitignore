@@ -15,3 +15,9 @@ noctalia/settings.toml
 # Vendored tmux plugins (catppuccin/tmux) — cloned manually, has its own .git.
 # See the clone command in tmux/.config/tmux/tmux.conf.
 tmux/.config/tmux/plugins/
+
+# DankMaterialShell writes auto-generated integration files into the stowed
+# niri/ and ghostty/ trees (runbook Step 22g). DMS owns and regenerates them;
+# the niri + Noctalia session does not include them.
+niri/.config/niri/dms/
+ghostty/.config/ghostty/themes/dankcolors
