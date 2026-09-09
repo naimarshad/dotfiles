@@ -786,6 +786,69 @@ noctalia msg config-reload
 > [!warning] Back the age private key up off-repo
 > `~/.config/sops/age/keys.txt` is the only way to read `noctalia/settings.sops.toml`. Mode 600, outside the repo, and if it is lost the encrypted config is unrecoverable. `.gitignore` also carries `noctalia/settings.toml` so a stray decrypt cannot be committed. SOPS has no TOML parser, so it encrypts the whole file as one opaque blob: it round-trips, but git diffs on it are not readable. Acceptable for a GUI-edited settings file. Plugin credentials are entered through the GUI (`noctalia msg settings-open-plugin <author/plugin>`), never through a shell.
 
+### 22g · DankMaterialShell as an alternative session (added 2026-09-09)
+
+niri + Noctalia stays the default. This adds a second greeter entry, "Niri (DankMaterialShell)", that starts the same niri but brings up DankMaterialShell (DMS) instead of Noctalia. DMS is a Quickshell-based Material 3 shell; it and Noctalia cannot both be on screen at once (both claim layer-shell exclusive zones), so this is a login-time either/or.
+
+```bash
+sudo pacman -S dms-shell-niri dgop matugen
+# dms-shell-niri pulls dms-shell + quickshell + accountsservice.
+# dgop = the system-monitor widgets; matugen = wallpaper-based theming.
+# optional: cava, for the audio-visualiser widget.
+dms doctor                              # all green before going further
+```
+
+**Stowed pieces (in the `niri` package):**
+- `niri/.config/niri/start-shell.sh` picks the shell: it reads a one-shot marker at `$XDG_RUNTIME_DIR/niri-shell.dms`, and `exec dms run` if present, else `exec noctalia`.
+- `autostart.kdl`'s last line is `spawn-at-startup "sh" "-c" "exec \"$HOME/.config/niri/start-shell.sh\""` instead of `spawn-at-startup "noctalia"`.
+
+An env var would be simpler than a marker file, but it does not reliably survive `niri-session`'s login-shell re-exec and the `niri.service` systemd `--user` unit boundary. `$XDG_RUNTIME_DIR` (tmpfs, wiped on logout) is set for both the session `Exec` process and `niri.service`, so the marker is seen either way.
+
+**Two root files (not stowable):**
+
+```bash
+sudo tee /usr/local/bin/niri-dms-session >/dev/null <<'EOF'
+#!/bin/sh
+# "Niri (DankMaterialShell)" greeter session: mark the shell choice, then hand
+# off to the stock niri session wrapper.
+: > "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/niri-shell.dms"
+exec niri-session
+EOF
+sudo chmod 755 /usr/local/bin/niri-dms-session
+
+sudo tee /usr/local/share/wayland-sessions/niri-dms.desktop >/dev/null <<'EOF'
+[Desktop Entry]
+Name=Niri (DankMaterialShell)
+Comment=niri with DankMaterialShell instead of Noctalia
+Exec=niri-dms-session
+Type=Application
+DesktopNames=niri
+EOF
+```
+
+`/usr/local/share/wayland-sessions/` is on `XDG_DATA_DIRS` (`/usr/local/share:/usr/share`) and `noctalia-greeter` scans it, so pacman updates to the `niri` package never touch this entry.
+
+**Verify and use:**
+
+```bash
+noctalia-greeter sessions              # must now list: GNOME, Niri, Niri (DankMaterialShell)
+```
+
+`/etc/greetd/config.toml` is unchanged: `--session niri` keeps "Niri" preselected. Pick "Niri (DankMaterialShell)" from the greeter's session menu to get DMS for that login.
+
+**Switch shells inside a running session** (for a quick look without logging out):
+
+```bash
+pkill -x noctalia && dms run           # Noctalia -> DMS; run dms in a terminal so Ctrl-C stops it
+dms kill && noctalia &                 # DMS -> Noctalia
+```
+
+> [!note] DMS writes into the stowed trees; those files are gitignored
+> On first run DMS scaffolds `niri/.config/niri/dms/*.kdl` (its niri tweaks: gaps, rounded corners, blur layer rule, a float rule for the DMS window) and `ghostty/.config/ghostty/themes/dankcolors` (a Material 3 palette). Both land in stowed packages, both are marked "AUTO-GENERATED, DO NOT EDIT", and both are in `.gitignore`. They are **inert** in the niri + Noctalia session: `config.kdl` includes the `noctalia` set, not `dms/`, and `ghostty/config` has `theme = noctalia`. To let the DMS session use them you would add `include "dms/..."` lines to `config.kdl`, but niri has no per-session includes so that also changes the Noctalia session. Simplest is to leave them unincluded.
+
+> [!note] Theming is the overlap to watch
+> DMS drives the real `matugen` binary with its own templates under `~/.config/matugen/`. The repo's `noctalia`-named theme files (`ghostty`, `btop`, `tmux`, `niri`, and `nvim` via `lua/matugen.lua`) are written by Noctalia's internal generator. If DMS is pointed at those same output paths the two generators fight over them. Keep DMS theming to itself, or commit to one generator. DMS's own config at `~/.config/DankMaterialShell/` is not stowed and not tracked. If a DMS session rewrites a tracked file (`ghostty/config`, `niri/config.kdl`), `git checkout` it.
+
 ---
 
 ## 23 · Shell environment
@@ -1010,6 +1073,7 @@ Then start a real `claude` session in `~/dotfiles`, let it end, and check `~/Obs
 - [ ] `arch-update` + `libnotify` from AUR/`extra` · `arch-update --check` runs · `arch-update-tray.service` enabled `--user` (not the timer) · tray icon visible in Noctalia's `tray` widget
 - [ ] `niri` + `noctalia` from `extra` · `niri --version` >= 26.04 · `noctalia msg --help` confirms v5 IPC
 - [ ] `noctalia-greeter` from AUR · `greetd` + `dbus` · `/etc/greetd/config.toml` has `[terminal] vt = 1` and points at `noctalia-greeter-session -- --session niri` · `greetd` enabled, gdm disabled
+- [ ] Step 22g (optional): `dms-shell-niri` + `dgop` + `matugen` · `/usr/local/bin/niri-dms-session` + `/usr/local/share/wayland-sessions/niri-dms.desktop` · `noctalia-greeter sessions` lists "Niri (DankMaterialShell)" · `start-shell.sh` stowed with the `niri` package
 - [ ] `outputs.kdl` mode/scale/VRR matched to `niri msg outputs`, `position` dropped · `QT_FONT_DPI` in step with scale
 - [ ] `awww` installed (repo or AUR) · a real wallpaper set (`awww query` is not `color: 000000`) · Unsplash key at `~/.config/secrets/`, not under stowed `~/.config/niri/`
 - [ ] `noctalia/settings.sops.toml` decrypts to `~/.local/state/noctalia/settings.toml` · age key backed up off-repo · plaintext `settings.toml` gitignored
