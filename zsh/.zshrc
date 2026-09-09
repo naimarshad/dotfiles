@@ -107,12 +107,12 @@ fi
 
 ### Fuzzy search configurations ###
 #
-export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi \
---color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
---color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
---color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
---color=selected-bg:#BCC0CC \
---color=border:#9CA0B0,label:#4C4F69"
+export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
+#--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
+#--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
+#--color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
+#--color=selected-bg:#BCC0CC \
+#--color=border:#9CA0B0,label:#4C4F69"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
