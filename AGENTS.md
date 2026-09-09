@@ -22,7 +22,7 @@ A stow-managed dotfiles tree for an Arch Linux (rolling) workstation, reinstalle
 | `nvim/` | LazyVim-based Neovim configuration |
 | `ghostty/` | Ghostty terminal config |
 | `btop/` | btop config and themes |
-| `niri/` | niri config: `config.kdl` plus split `binds.kdl` / `autostart.kdl` / `environment.kdl` / `input.kdl` / `layout.kdl` / `outputs.kdl` / `rules.kdl` / `noctalia.kdl` (theming), and `wallpaper.sh` |
+| `niri/` | niri config: `config.kdl` plus split `binds.kdl` / `autostart.kdl` / `environment.kdl` / `input.kdl` / `layout.kdl` / `outputs.kdl` / `rules.kdl` / `noctalia.kdl` (theming), and the scripts `wallpaper.sh`, `start-shell.sh` (picks Noctalia or DMS at startup), `shell.sh` (routes shell keybinds to the running shell) |
 | `noctalia/` | SOPS-encrypted Noctalia 5 config (`settings.sops.toml`). **Not a stow package**: v5 config lives at `~/.local/state/noctalia/`, and the file carries plugin API keys, so it is only ever committed encrypted |
 | `tmux/` | tmux config, theme integration, and custom status scripts |
 | `k9s/` | k9s config, aliases, and catppuccin skins |
@@ -75,7 +75,7 @@ fc-match monospace
 | `nvim/.config/nvim/lua/config/lazy.lua` | lazy.nvim bootstrap and plugin loading |
 | `nvim/.config/nvim/lua/plugins/*.lua` | Neovim plugin overrides and feature specs |
 | `niri/.config/niri/config.kdl` | niri entrypoint; `include`s the split config files |
-| `niri/.config/niri/binds.kdl` | niri keybinds, including the Noctalia 5 `noctalia msg` IPC calls |
+| `niri/.config/niri/binds.kdl` | niri keybinds; the shell IPC keys call `shell.sh <action>`, which routes to `noctalia msg` or `dms ipc call` depending on the running shell |
 | `niri/.config/niri/outputs.kdl` | single `eDP-1` block; 1920x1080 @ scale 1.25. This branch has no dock or external monitors |
 | `niri/.config/niri/environment.kdl` | session env for niri's children; `QT_FONT_DPI` tracks the output scale |
 | `tmux/.config/tmux/tmux.conf` | tmux entrypoint and theme/module wiring |
