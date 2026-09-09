@@ -1,17 +1,17 @@
 binds {
-    // --- Noctalia IPC (v5 `noctalia msg`) ---
-    Mod+Space       { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
-    Mod+Shift+W     { spawn "noctalia" "msg" "window-switcher"; }
-    Mod+Shift+E     { spawn "noctalia" "msg" "panel-toggle" "launcher" "/emo"; }
-    Mod+B           { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
-    Mod+Shift+Comma { spawn "noctalia" "msg" "settings-toggle"; }
-    Mod+C           { spawn "noctalia" "msg" "panel-toggle" "control-center" "calendar"; }
-    Mod+T           { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
-    Mod+N           { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
-    Mod+L           { spawn "noctalia" "msg" "session" "lock"; }
-    Ctrl+Alt+P      { spawn "noctalia" "msg" "panel-toggle" "session"; }
-    Ctrl+Alt+D      { spawn "noctalia" "msg" "notification-dnd-toggle"; }
-    Mod+Shift+P     { spawn "noctalia" "msg" "panel-toggle" "control-center" "media"; }
+    // --- Desktop shell IPC (routed by shell.sh to Noctalia or DMS) ---
+    Mod+Space       { spawn "sh" "-c" "$HOME/.config/niri/shell.sh launcher"; }
+    Mod+Shift+W     { spawn "sh" "-c" "$HOME/.config/niri/shell.sh windows"; }
+    Mod+Shift+E     { spawn "sh" "-c" "$HOME/.config/niri/shell.sh emoji"; }
+    Mod+B           { spawn "sh" "-c" "$HOME/.config/niri/shell.sh clipboard"; }
+    Mod+Shift+Comma { spawn "sh" "-c" "$HOME/.config/niri/shell.sh settings"; }
+    Mod+C           { spawn "sh" "-c" "$HOME/.config/niri/shell.sh calendar"; }
+    Mod+T           { spawn "sh" "-c" "$HOME/.config/niri/shell.sh control"; }
+    Mod+N           { spawn "sh" "-c" "$HOME/.config/niri/shell.sh control"; }
+    Mod+L           { spawn "sh" "-c" "$HOME/.config/niri/shell.sh lock"; }
+    Ctrl+Alt+P      { spawn "sh" "-c" "$HOME/.config/niri/shell.sh session"; }
+    Ctrl+Alt+D      { spawn "sh" "-c" "$HOME/.config/niri/shell.sh dnd"; }
+    Mod+Shift+P     { spawn "sh" "-c" "$HOME/.config/niri/shell.sh media"; }
 
     // --- Essential ---
     Mod+Return        { spawn "ghostty"; }
