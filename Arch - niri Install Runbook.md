@@ -90,7 +90,7 @@ Rev 4 also ran a system-wide **Flatpak** for the Zen browser. This build drops F
 > Snapper (Step 19) matters *more* here than on testing, not less: snapshot before every upgrade.
 
 > [!note] Verify names, don't guess
-> Confirm packages with `pacman -Ss <term>` (official) and `paru -Ss <term>` (AUR) before installing. Confirmed in `extra` on the workforce build (2026-09-06): `niri` 26.04, `noctalia` 5.0.1, `ghostty`, `k9s`, `awww` 0.12.1, `kubie` 0.28, `mise`, `sops`, `age`, `zed`, `zram-generator`, `snap-pac`, `adw-gtk-theme`, `informant`, `btop`, `alacritty`, `bluez-utils`, `kdeconnect`. From the AUR: `noctalia-greeter` 1.3.1, `bibata-cursor-theme`, `kubecolor`, `claude-desktop`, `zen-browser-bin`, `ttf-amiri`, `gnome-shell-extension-gsconnect`, `seafile-client`. `swww` is in `extra` too, but this build uses `awww`.
+> Confirm packages with `pacman -Ss <term>` (official) and `paru -Ss <term>` (AUR) before installing. Confirmed in `extra` on the workforce build (2026-09-06): `niri` 26.04, `noctalia` 5.0.1, `ghostty`, `k9s`, `awww` 0.12.1, `kubie` 0.28, `mise`, `sops`, `age`, `zed`, `zram-generator`, `snap-pac`, `adw-gtk-theme`, `informant`, `btop`, `alacritty`, `bluez-utils`, `kdeconnect`, `libnotify`. From the AUR: `noctalia-greeter` 1.3.1, `bibata-cursor-theme`, `kubecolor`, `claude-desktop`, `zen-browser-bin`, `ttf-amiri`, `gnome-shell-extension-gsconnect`, `seafile-client`, `arch-update`. `swww` is in `extra` too, but this build uses `awww`.
 
 ## 01 · Live environment & tooling
 *boot the official Arch ISO from a live USB, get network, refresh mirrors*
@@ -471,7 +471,7 @@ sudo informant read                  # clear the backlog once, or the next -Syu 
 ```
 
 > [!note] `informant` changes how upgrades feel
-> After this, every `pacman -Syu` with unread news aborts in a `PreTransaction` hook until `informant read`. That is the point: it enforces the "read the news first" rule from Step 00 instead of leaving it to habit. `informant` is in `extra`.
+> After this, every `pacman -Syu` with unread news aborts in a `PreTransaction` hook until `informant read`. That is the point: it enforces the "read the news first" rule from Step 00 instead of leaving it to habit. `informant` is in `extra`. The `arch-update` tooling in Step 21 sits on top of this, not instead of it: it still runs `pacman -Syu` and still hits this gate.
 
 ---
 
@@ -500,7 +500,7 @@ paru --version
 > - **Know what you have.** `paru -Qm` lists every foreign (AUR) package. Keep that list short enough to eyeball. After a large `pacman -Syu`, an AUR package built against an old library ABI can break silently until rebuilt: `paru -Sua` rebuilds them.
 
 > [!note] This machine's AUR set
-> `paru -Qm` on the workforce build: `noctalia-greeter`, `bibata-cursor-theme` (+ its `python-clickgen` dep), `kubecolor`, `claude-desktop`, `zen-browser-bin`, `ttf-amiri`, `gnome-shell-extension-gsconnect`, `seafile-client`, `k0sctl`, and `paru` itself. Everything else in this runbook comes from official repos, including `awww`, `kubie`, `zed`, `mise`, `sops`, `k9s`, `adw-gtk-theme`, `informant`, all of which were outside apt on Rev 4. Confirm with `pacman -Ss` / `paru -Ss` on the day; things graduate from AUR to `extra` regularly.
+> `paru -Qm` on the workforce build: `noctalia-greeter`, `bibata-cursor-theme` (+ its `python-clickgen` dep), `kubecolor`, `claude-desktop`, `zen-browser-bin`, `ttf-amiri`, `gnome-shell-extension-gsconnect`, `seafile-client`, `k0sctl`, `arch-update` (Step 21), and `paru` itself. Everything else in this runbook comes from official repos, including `awww`, `kubie`, `zed`, `mise`, `sops`, `k9s`, `adw-gtk-theme`, `informant`, all of which were outside apt on Rev 4. Confirm with `pacman -Ss` / `paru -Ss` on the day; things graduate from AUR to `extra` regularly.
 
 ## 15 · Minimal GNOME
 *the fallback desktop, kept installed for the life of the machine*
@@ -643,15 +643,26 @@ git config --local user.name  "Naeem Arshad"
 git config --local user.email "naimarshad@gmail.com"
 
 rm -rf ~/.config/niri ~/.config/btop     # let stow own them (both start as stray real dirs)
-stow ghostty zsh niri nvim tmux btop
+stow ghostty zsh niri nvim tmux btop arch-update
 # k9s is stowed in Step 24, after its binary is in
+
+# update tooling: arch-update (AUR) is the notifier + updater + post-update cleanup
+paru -S arch-update libnotify
+systemctl --user enable --now arch-update-tray.service
 ```
+
+> [!note] `arch-update` update tooling (added 2026-09-09, after the initial build)
+> `arch-update` (AUR, by Antiz) is the CachyOS-style update path: an interactive `arch-update` run that shows Arch news, runs `pacman -Syu` then `paru`, then a maintenance pass (orphan removal, `paccache` cache trim, `.pacnew`/`.pacsave` review, pending-reboot and service-restart checks). `arch-update --check` prints the pending count for scripts.
+> - The `arch-update` stow package carries `~/.config/arch-update/arch-update.conf`: `NoFlatpak`, `NoALHPCheck`, `AURHelper=paru`, `PrivilegeElevationCommand=sudo`, `KeepOldPackages=2`, `DiffProg=nvimdiff`. Because the path is a stow symlink, `arch-update --edit-config` edits the repo file.
+> - Enable **either** `arch-update-tray.service` **or** `arch-update.timer`, never both: each runs its own periodic check and you would get doubled notifications. The tray is chosen here because Noctalia 5's bar already hosts a `tray` widget; the icon shows there with a count, click to update.
+> - `informant` (Step 13) stays as the pacman-level hard gate. `arch-update` calls `pacman -Syu`, so the `informant` `PreTransaction` hook still blocks until `informant read`; `arch-update`'s own news display is on top of that, not a replacement.
+> - Passwordless `sudo` (Step 10) means the tray's update runs never prompt.
 
 > [!success] `ghostty` and `mise` are in the repos now
 > Rev 4 installed `ghostty` via the `ghostty-ubuntu` community installer (a `curl | sh` that dropped a `.deb`, no auto-update) and `mise` via `curl https://mise.run | sh` into `~/.local/bin`. Both are `pacman -S` on Arch. `mise` from the repo lands at `/usr/bin/mise`; `~/.zshrc` still activates it with `eval "$(mise activate zsh)"`.
 
 > [!warning] The stow set is smaller than the branch package list
-> `machine/workforce` carries `btop fish ghostty hypr k9s niri noctalia nvim starship tmux zsh`. Stow `ghostty zsh niri nvim tmux btop` here, then `k9s` in Step 24. `hypr` targets Hyprland (unused, the compositor is niri), `fish` is unused (shell is zsh), `starship` is abandoned (prompt is Powerlevel10k, Step 23), `noctalia` is not a stow package (Step 22, it is SOPS-encrypted).
+> `machine/workforce` carries `arch-update btop fish ghostty hypr k9s niri noctalia nvim starship tmux zsh`. Stow `ghostty zsh niri nvim tmux btop arch-update` here, then `k9s` in Step 24. `hypr` targets Hyprland (unused, the compositor is niri), `fish` is unused (shell is zsh), `starship` is abandoned (prompt is Powerlevel10k, Step 23), `noctalia` is not a stow package (Step 22, it is SOPS-encrypted).
 
 > [!danger] The `niri` config was copied from another machine and carries its assumptions
 > Same warning as Rev 4 Step 15. `machine/workforce`'s `niri` package was `cp`'d from `machine/ri-t-0931`, not merged, and it silently inherited that machine's hardware and software versions:
@@ -892,6 +903,8 @@ command -v claude jq python3 go        # all four must resolve
 
 > [!warning] On the workforce build: `go` was left as an orphan
 > `go` came in as a dependency of an AUR build, not an explicit install, so `pacman -Qtdq` listed it as a removable orphan. A later `pacman -Rns $(pacman -Qtdq)` would have removed the Go toolchain and broken the `session-start` rebuild. `pacman -D --asexplicit go jq` marks them as wanted in their own right. Review `pacman -Qtdq` before any orphan purge regardless: most of its entries are AUR makedepends (`meson`, `nasm`, `cbindgen`, `xorg-server-xvfb`) and safe, but eyeball the list.
+>
+> The `arch-update` tooling (Step 21) runs this same orphan check on **every** update and offers to remove what it finds, so `--asexplicit` on `go` and `jq` is what stops it proposing them each time. Answer its orphan prompt with the same care as a manual `pacman -Qtdq` review.
 
 > [!warning] Install `go` before running `install.sh` or the SessionStart hook is skipped silently
 > `install.sh` hard-requires `jq` and `python3` and aborts loudly without them. `go` it treats as optional: if `go` is not on PATH it prints one line to stderr (`go not found, skipping the optional SessionStart hook`) and registers only SessionEnd, exit status still 0. The DosDonts injection is wanted on this machine, so `go` has to be present first. On Arch the `python` package provides `/usr/bin/python3` (a symlink to the current `python3.x`), which is what the hook command in `settings.json` calls.
@@ -992,7 +1005,8 @@ Then start a real `claude` session in `~/dotfiles`, let it end, and check `~/Obs
 - [ ] theming: `adw-gtk-theme` + `qt6ct` from repo · `bibata-cursor-theme` from AUR · **gsettings `gtk-theme` and `cursor-theme` actually set**
 - [ ] snapper: `umount`/`rmdir` before `create-config`, `mkdir`/`mount`/`chmod 750` after · `snapper list-configs` lists `root` · `SNAPPER_CONFIGS="root"` · a test snapshot appears (failed on both Debian and the first Arch pass, verify it) · `snap-pac` installed · timers enabled
 - [ ] Zen browser installed from AUR (`zen-browser-bin`) · no Flatpak on the system
-- [ ] dotfiles cloned · `machine/workforce` checked out · git identity set `--local` · stray `~/.config/{niri,btop}` cleared · `stow ghostty zsh niri nvim tmux btop`
+- [ ] dotfiles cloned · `machine/workforce` checked out · git identity set `--local` · stray `~/.config/{niri,btop}` cleared · `stow ghostty zsh niri nvim tmux btop arch-update`
+- [ ] `arch-update` + `libnotify` from AUR/`extra` · `arch-update --check` runs · `arch-update-tray.service` enabled `--user` (not the timer) · tray icon visible in Noctalia's `tray` widget
 - [ ] `niri` + `noctalia` from `extra` · `niri --version` >= 26.04 · `noctalia msg --help` confirms v5 IPC
 - [ ] `noctalia-greeter` from AUR · `greetd` + `dbus` · `/etc/greetd/config.toml` has `[terminal] vt = 1` and points at `noctalia-greeter-session -- --session niri` · `greetd` enabled, gdm disabled
 - [ ] `outputs.kdl` mode/scale/VRR matched to `niri msg outputs`, `position` dropped · `QT_FONT_DPI` in step with scale
