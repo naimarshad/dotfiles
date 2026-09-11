@@ -1,11 +1,33 @@
 // OUTPUTS — workforce (ThinkPad T490)
-// Single built-in panel. No dock or external monitors on this branch.
+// Docked: two external monitors plus the built-in panel, left to right
+// HDMI-A-2 -> DP-1 -> eDP-1.
+//
+// Positions below are logical (post-scale) pixels: each output's x is the
+// previous output's x plus its logical width. Any gap between two x-ranges
+// is dead space the pointer cannot cross onto the next output, so a wrong
+// width or scale on one output silently breaks movement onto its neighbour.
 //
 // eDP-1 is a BOE 0x07DB, 1920x1080, 310x170mm. It offers exactly two modes
 // (59.999 and 47.998 Hz) and does not support variable refresh rate, so no
 // vrr line here. At scale 1.25 the logical size is 1536x864.
 
+// LG ULTRAWIDE, far left.
+output "HDMI-A-2" {
+    mode "2560x1080@60.000"
+    position x=0 y=0
+    scale 1.0
+}
+
+// Secondary: MSI MP275QPG, landscape.
+output "DP-1" {
+    mode "2560x1440@59.951"
+    position x=2560 y=0
+    scale 1.0
+}
+
 output "eDP-1" {
     mode "1920x1080@59.999"
+    position x=5120 y=157
     scale 1.25
 }
+
