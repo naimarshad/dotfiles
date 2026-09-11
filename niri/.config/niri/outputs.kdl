@@ -13,21 +13,23 @@
 
 // LG ULTRAWIDE, far left.
 output "HDMI-A-2" {
-    mode "2560x1080@60.000"
+    mode "3440x1440@49.953"
     position x=0 y=0
     scale 1.0
 }
 
-// Secondary: MSI MP275QPG, landscape.
+// Secondary: MSI MP275QPG, middle. x = HDMI-A-2's x (0) + its logical
+// width (3440, the ultrawide's native 3440x1440 mode set above).
 output "DP-1" {
     mode "2560x1440@59.951"
-    position x=2560 y=0
+    position x=3440 y=0
     scale 1.0
 }
 
+// x = DP-1's x (3440) + its logical width (2560).
 output "eDP-1" {
     mode "1920x1080@59.999"
-    position x=5120 y=157
+    position x=6000 y=157
     scale 1.25
 }
 
