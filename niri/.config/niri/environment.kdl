@@ -23,4 +23,9 @@ environment {
     XDG_SESSION_TYPE                    "wayland"
     ELECTRON_OZONE_PLATFORM_HINT        "wayland"
     _JAVA_AWT_WM_NONREPARENTING         "1"
+    // Stem darkening off is freetype's default; this turns it on so small
+    // text stays readable instead of thinning out under gamma correction.
+    // /etc/profile.d/freetype2.sh sets FREETYPE_PROPERTIES too, but greetd
+    // doesn't source /etc/profile for this session, so it never reaches niri.
+    FREETYPE_PROPERTIES                 "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0"
 }
