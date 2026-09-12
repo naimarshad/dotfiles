@@ -648,14 +648,15 @@ stow ghostty zsh niri nvim tmux btop arch-update
 
 # update tooling: arch-update (AUR) is the notifier + updater + post-update cleanup
 paru -S arch-update libnotify
-systemctl --user enable --now arch-update-tray.service
+# tray applet is spawned by niri, not a systemd service; see autostart.kdl below
 ```
 
-> [!note] `arch-update` update tooling (added 2026-09-09, after the initial build)
+> [!note] `arch-update` update tooling (added 2026-09-09, after the initial build; tray autostart fixed 2026-09-12)
 > `arch-update` (AUR, by Antiz) is the CachyOS-style update path: an interactive `arch-update` run that shows Arch news, runs `pacman -Syu` then `paru`, then a maintenance pass (orphan removal, `paccache` cache trim, `.pacnew`/`.pacsave` review, pending-reboot and service-restart checks). `arch-update --check` prints the pending count for scripts.
 > - The `arch-update` stow package carries `~/.config/arch-update/arch-update.conf`: `NoFlatpak`, `NoALHPCheck`, `AURHelper=paru`, `PrivilegeElevationCommand=sudo`, `KeepOldPackages=2`, `DiffProg=nvim -d`. Because the path is a stow symlink, `arch-update --edit-config` edits the repo file.
 > - `DiffProg` is `nvim -d`, not `nvimdiff`: `arch-update` runs `command -v` on the first word only, and Arch's `neovim` package ships no `nvimdiff` symlink (that comes with the `vim` package). `nvim -d` passes the check and is exported to `pacdiff` as `DIFFPROG`.
-> - Enable **either** `arch-update-tray.service` **or** `arch-update.timer`, never both: each runs its own periodic check and you would get doubled notifications. The tray is chosen here because Noctalia 5's bar already hosts a `tray` widget; the icon shows there with a count, click to update.
+> - There is no `arch-update-tray.service`. The AUR package ships only `arch-update.service`/`arch-update.timer` (a periodic check, not the tray). The tray applet is a niri `spawn-at-startup` line in `autostart.kdl`, chosen over the timer because Noctalia 5's bar already hosts a `tray` widget; the icon shows there with a count, click to update. Keep it as **either** the tray autostart line **or** `arch-update.timer` enabled, never both, or you get doubled notifications.
+> - The tray line has to wait for Noctalia to be up: `arch-update --tray` registers with `org.kde.StatusNotifierWatcher`, which Noctalia owns, and Noctalia starts later in the same `autostart.kdl` (`start-shell.sh`, near the end of the file). Spawned bare and too early, it finds no watcher and exits silently right after boot, no error, no icon. The fix is a polling wrapper: `spawn-at-startup "sh" "-c" "while ! busctl --user list 2>/dev/null | grep -q org.kde.StatusNotifierWatcher; do sleep 0.5; done; exec arch-update --tray"`. Other tray apps in the same file (`kdeconnect-indicator`, `seafile-applet`) hit the same ordering but survive it, their toolkits retry registration once the watcher appears; `arch-update-tray`'s binary does not, so it needs the explicit wait.
 > - `informant` (Step 13) stays as the pacman-level hard gate. `arch-update` calls `pacman -Syu`, so the `informant` `PreTransaction` hook still blocks until `informant read`; `arch-update`'s own news display is on top of that, not a replacement.
 > - Passwordless `sudo` (Step 10) means the tray's update runs never prompt.
 
@@ -1074,7 +1075,7 @@ Then start a real `claude` session in `~/dotfiles`, let it end, and check `~/Obs
 - [ ] snapper: `umount`/`rmdir` before `create-config`, `mkdir`/`mount`/`chmod 750` after · `snapper list-configs` lists `root` · `SNAPPER_CONFIGS="root"` · a test snapshot appears (failed on both Debian and the first Arch pass, verify it) · `snap-pac` installed · timers enabled
 - [ ] Zen browser installed from AUR (`zen-browser-bin`) · no Flatpak on the system
 - [ ] dotfiles cloned · `machine/workforce` checked out · git identity set `--local` · stray `~/.config/{niri,btop}` cleared · `stow ghostty zsh niri nvim tmux btop arch-update`
-- [ ] `arch-update` + `libnotify` from AUR/`extra` · `arch-update --check` runs · `arch-update-tray.service` enabled `--user` (not the timer) · tray icon visible in Noctalia's `tray` widget
+- [ ] `arch-update` + `libnotify` from AUR/`extra` · `arch-update --check` runs · tray spawned via niri `autostart.kdl` with the `StatusNotifierWatcher` wait wrapper (not a systemd service, not the timer) · tray icon visible in Noctalia's `tray` widget
 - [ ] `niri` + `noctalia` from `extra` · `niri --version` >= 26.04 · `noctalia msg --help` confirms v5 IPC
 - [ ] `noctalia-greeter` from AUR · `greetd` + `dbus` · `/etc/greetd/config.toml` has `[terminal] vt = 1` and points at `noctalia-greeter-session -- --session niri` · `greetd` enabled, gdm disabled
 - [ ] Step 22g (optional): `dms-shell-niri` + `dgop` + `matugen` · `/usr/local/bin/niri-dms-session` + `/usr/local/share/wayland-sessions/niri-dms.desktop` · `noctalia-greeter sessions` lists "Niri (DankMaterialShell)" · `start-shell.sh` stowed with the `niri` package
