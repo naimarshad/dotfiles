@@ -15,7 +15,6 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 export PATH="$HOME/.local/bin:$PATH"
-# export DOCKER_HOST=tcp://192.168.1.10:2375
 export KUBECOLOR_PRESET="light"
 export BAT_THEME=GitHub
 
@@ -54,7 +53,6 @@ export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
 eval "$(omp completions zsh)"
 
-
 source $ZSH/oh-my-zsh.sh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -77,7 +75,6 @@ alias fvim='vim $(fzf --preview="bat --color=always {}")'
 alias kk="kubecolor klock"
 alias kgir="kubectl get ingressroutes"
 alias kvs="kubectl view-secret"
-#alias mc="/usr/bin/mcli"
 alias dim="docker images"
 alias pro="cd /home/naeem/projects/"
 alias vim="nvim"
@@ -100,13 +97,12 @@ alias gro='cd $(git rev-parse --show-toplevel)'
 alias review="gh search prs --review-requested naeem-tipu --state open --review required"
 alias merge="gh search prs --author naeem-tipu --state open --review approved"
 alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
-
+alias kubectl="kubecolor"
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
 fi
 
 ### Fuzzy search configurations ###
-#
 export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
 #--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
 #--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
@@ -120,70 +116,6 @@ export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
 
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
-
-# Destructive verbs that require confirmation
-_PROD_PATTERN="prod|prd|production"
-_DANGEROUS="^(delete|scale|drain|cordon|taint|patch|apply|exec|edit|cp|replace)"
-
-kubectl() {
-  # KUBIE_CTX is set by kubie in its subshell — reliable indicator
-  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
-
-  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-    if echo "$*" | grep -qE "$_DANGEROUS"; then
-
-      # Hard visual break — hard to overlook
-      echo ""
-      echo "  ╔════════════════════════════════════════════════╗"
-      echo "  ║   PRODUCTION CONTEXT: $ctx"                    ║
-      echo "  ╚════════════════════════════════════════════════╝"
-      echo ""
-      echo "  Namespace : ${KUBIE_NS:-$(command kubectl config view --minify -o jsonpath='{..namespace}')}"
-      echo "  Command   : kubectl $*"
-      echo ""
-      printf "  Type context name to confirm (%s): " "$ctx"
-      read -r _confirm
-
-      if [ "$_confirm" != "$ctx" ]; then
-        echo ""
-        echo "  ✓ Aborted — no changes made."
-        echo ""
-        return 1
-      fi
-      echo ""
-    fi
-  fi
-
-  command kubecolor "$@"
-}
-
-# Helm destructive verbs
-_HELM_DANGEROUS="^(upgrade|uninstall|rollback|delete)"
-
-helm() {
-  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
-
-  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-    if echo "$*" | grep -qE "$_HELM_DANGEROUS"; then
-      echo ""
-      echo "  ╔════════════════════════════════════════════════╗"
-      echo "  ║   PRODUCTION HELM: $ctx"                       ║
-      echo "  ╚════════════════════════════════════════════════╝"
-      echo ""
-      echo "  Command : helm $*"
-      echo ""
-      printf "  Type context name to confirm (%s): " "$ctx"
-      read -r _confirm
-
-      if [ "$_confirm" != "$ctx" ]; then
-        echo "  ✓ Aborted."
-        return 1
-      fi
-    fi
-  fi
-
-  command helm "$@"
-}
 
 # Add these lines to the file:
 #export OPENROUTER_API_KEY=""
@@ -204,6 +136,7 @@ export PATH=/home/naeem/.opencode/bin:$PATH
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #source /usr/share/zsh/site-functions/zsh-syntax-highlighting.zsh
+
 
 compdef kubecolor=kubectl
 
