@@ -1,0 +1,219 @@
+{
+  "$schema": "https://zed.dev/schema/icon_themes/v0.2.0.json",
+  "name": "Noctalia Icons",
+  "author": "Naeem Arshad",
+  "themes": [
+    {
+      "name": "Noctalia Icons",
+      "appearance": "light",
+      "directory_icons": {
+        "collapsed": "./icons/folder.svg",
+        "expanded": "./icons/folder-open.svg"
+      },
+      "chevron_icons": {
+        "collapsed": "./icons/chevron-right.svg",
+        "expanded": "./icons/chevron-down.svg"
+      },
+      "named_directory_icons": {
+        ".git": {
+          "collapsed": "./icons/folder-git.svg",
+          "expanded": "./icons/folder-git-open.svg"
+        },
+        ".github": {
+          "collapsed": "./icons/folder-git.svg",
+          "expanded": "./icons/folder-git-open.svg"
+        }
+      },
+      "file_stems": {
+        "Dockerfile": "docker",
+        "dockerfile": "docker",
+        "Containerfile": "docker",
+        ".dockerignore": "docker",
+        "docker-compose.yml": "docker",
+        "docker-compose.yaml": "docker",
+        "compose.yml": "docker",
+        "compose.yaml": "docker",
+
+        "Chart.yaml": "helm",
+        "Chart.lock": "helm",
+        "values.yaml": "helm",
+        "values.yml": "helm",
+        "helmfile.yaml": "helm",
+        ".helmignore": "helm",
+
+        "go.mod": "go",
+        "go.sum": "go",
+        "go.work": "go",
+        "go.work.sum": "go",
+        ".golangci.yml": "go",
+        ".golangci.yaml": "go",
+        ".golangci.toml": "go",
+
+        "Cargo.toml": "rust",
+        "Cargo.lock": "rust",
+        "rust-toolchain.toml": "rust",
+        "rustfmt.toml": "rust",
+        "clippy.toml": "rust",
+
+        ".terraform.lock.hcl": "terraform",
+        ".terraformignore": "terraform",
+        ".tflint.hcl": "terraform",
+
+        "ansible.cfg": "ansible",
+        "playbook.yml": "ansible",
+        "playbook.yaml": "ansible",
+        "site.yml": "ansible",
+        "site.yaml": "ansible",
+        "requirements.yml": "ansible",
+        ".ansible-lint": "ansible",
+
+        ".gitignore": "git",
+        ".gitattributes": "git",
+        ".gitmodules": "git",
+        ".gitconfig": "git",
+        ".mailmap": "git",
+
+        ".zshrc": "shell",
+        ".zshenv": "shell",
+        ".zprofile": "shell",
+        ".bashrc": "shell",
+        ".bash_profile": "shell",
+        ".profile": "shell",
+        ".p10k.zsh": "shell",
+        ".envrc": "shell",
+
+        ".sops.yaml": "lock",
+        ".sops.yml": "lock",
+        "secrets.yaml": "lock",
+        "secrets.yml": "lock",
+
+        ".yamllint": "yaml",
+        ".yamllint.yaml": "yaml",
+        ".yamllint.yml": "yaml",
+
+        ".markdownlint.yaml": "markdown",
+        ".markdownlint-cli2.yaml": "markdown",
+
+        "Makefile": "config",
+        "makefile": "config",
+        "GNUmakefile": "config",
+        "Justfile": "config",
+        "justfile": "config",
+        "Taskfile.yml": "config",
+        ".editorconfig": "config",
+        "stylua.toml": "config",
+        ".stylua.toml": "config",
+        "tmux.conf": "config",
+        ".tmux.conf": "config",
+
+        "LICENSE": "license",
+        "LICENCE": "license",
+        "LICENSE.md": "license",
+        "COPYING": "license",
+        "NOTICE": "license"
+      },
+      "file_suffixes": {
+        "go": "go",
+        "rs": "rust",
+
+        "sh": "shell",
+        "bash": "shell",
+        "zsh": "shell",
+        "fish": "fish",
+
+        "yaml": "yaml",
+        "yml": "yaml",
+        "json": "json",
+        "jsonc": "json",
+        "json5": "json",
+        "jsonl": "json",
+        "toml": "toml",
+        "kdl": "kdl",
+        "lua": "lua",
+
+        "md": "markdown",
+        "mdx": "markdown",
+        "markdown": "markdown",
+
+        "tf": "terraform",
+        "tfvars": "terraform",
+        "tftpl": "terraform",
+        "hcl": "terraform",
+        "tpl": "helm",
+
+        "conf": "config",
+        "cfg": "config",
+        "ini": "config",
+        "rules": "config",
+        "desktop": "config",
+        "service": "config",
+        "timer": "config",
+        "socket": "config",
+        "target": "config",
+        "mount": "config",
+        "network": "config",
+        "netdev": "config",
+
+        "txt": "text",
+        "log": "text",
+        "out": "text",
+
+        "env": "lock",
+        "age": "lock",
+        "gpg": "lock",
+        "asc": "lock",
+        "pem": "lock",
+        "key": "lock",
+        "crt": "lock",
+        "cert": "lock",
+        "pub": "lock",
+        "p12": "lock",
+        "kdbx": "lock",
+
+        "png": "image",
+        "jpg": "image",
+        "jpeg": "image",
+        "gif": "image",
+        "svg": "image",
+        "webp": "image",
+        "avif": "image",
+        "ico": "image",
+        "bmp": "image",
+
+        "zip": "archive",
+        "tar": "archive",
+        "gz": "archive",
+        "tgz": "archive",
+        "xz": "archive",
+        "zst": "archive",
+        "bz2": "archive",
+        "7z": "archive",
+        "rar": "archive"
+      },
+      "file_icons": {
+        "default": { "path": "./icons/default.svg" },
+        "text": { "path": "./icons/text.svg" },
+        "go": { "path": "./icons/go.svg" },
+        "rust": { "path": "./icons/rust.svg" },
+        "shell": { "path": "./icons/shell.svg" },
+        "fish": { "path": "./icons/fish.svg" },
+        "yaml": { "path": "./icons/yaml.svg" },
+        "json": { "path": "./icons/json.svg" },
+        "toml": { "path": "./icons/toml.svg" },
+        "kdl": { "path": "./icons/kdl.svg" },
+        "lua": { "path": "./icons/lua.svg" },
+        "markdown": { "path": "./icons/markdown.svg" },
+        "docker": { "path": "./icons/docker.svg" },
+        "helm": { "path": "./icons/helm.svg" },
+        "terraform": { "path": "./icons/terraform.svg" },
+        "ansible": { "path": "./icons/ansible.svg" },
+        "git": { "path": "./icons/git.svg" },
+        "lock": { "path": "./icons/lock.svg" },
+        "image": { "path": "./icons/image.svg" },
+        "archive": { "path": "./icons/archive.svg" },
+        "config": { "path": "./icons/config.svg" },
+        "license": { "path": "./icons/license.svg" }
+      }
+    }
+  ]
+}
