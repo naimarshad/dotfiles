@@ -1,0 +1,310 @@
+// Zed settings. Counterpart of the LazyVim setup in nvim/.config/nvim: same
+// languages, formatters, git workflow and Claude Code, mapped onto Zed's
+// built-in equivalents. See README.md in this directory for the mapping and
+// for the tools that must be on PATH.
+//
+// Comments are full-line only, so `grep -v '^\s*//' settings.json | jq .`
+// validates the file.
+{
+  // Theme: Noctalia generates ~/.config/zed/themes/noctalia.json from the
+  // desktop palette (community template "zed"). That file is not stowed,
+  // the same as the ghostty and tmux noctalia themes.
+  "theme": {
+    "mode": "light",
+    "light": "Noctalia Light",
+    "dark": "Noctalia Dark"
+  },
+  // File icons drawn in the Noctalia palette. They come from the dev
+  // extension in zed-noctalia-icons/ at the repo root, which has to be
+  // installed once per machine: Extensions -> Install Dev Extension.
+  // Until then Zed falls back to its own icon theme.
+  "icon_theme": "Noctalia Icons",
+  "ui_font_size": 16,
+  // Same face and OpenType features as ghostty/.config/ghostty/config.
+  // The UI keeps Zed's bundled sans font.
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_size": 16,
+  "buffer_font_features": {
+    "calt": true,
+    "liga": true,
+    "ss01": true
+  },
+  "terminal": {
+    "font_family": "JetBrainsMono Nerd Font",
+    "font_features": {
+      "calt": true,
+      "liga": true,
+      "ss01": true
+    }
+  },
+
+  // Vim mode, with the system clipboard as the default register
+  // (LazyVim's clipboard=unnamedplus).
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "always"
+  },
+  // vim.opt.confirm = true in options.lua
+  "confirm_quit": true,
+  "tab_size": 2,
+
+  // LazyVim enables inlay hints; Zed has them off by default.
+  "inlay_hints": {
+    "enabled": true
+  },
+  // gopls "run test" / "run benchmark" links above test functions. Stands in
+  // for Neotest's run-nearest.
+  "code_lens": "on",
+  // Diagnostics as virtual text at the end of the line, like LazyVim.
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
+  // Indent guides are built in; there is no extension for them. Colouring
+  // each indent level differently and thickening the active guide makes
+  // YAML nesting readable, and boundary whitespace shows leading spaces so
+  // a wrong indent is visible before yamllint reports it.
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 1,
+    "active_line_width": 2,
+    "coloring": "indent_aware",
+    "background_coloring": "disabled"
+  },
+  "show_whitespaces": "boundary",
+
+  // Panels. Explorer left and auto-open (autocmds.lua), Claude on the
+  // right (claude.lua split_side = "right"), git panel next to the explorer.
+  "project_panel": {
+    "dock": "left",
+    "starts_open": true
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "agent": {
+    "dock": "right"
+  },
+
+  "git": {
+    "inline_blame": {
+      "enabled": true,
+      "delay_ms": 600
+    }
+  },
+
+  // Claude Code over ACP. Auth lives inside the thread: run /login there.
+  "agent_servers": {
+    "claude-acp": {
+      "default_config_options": {
+        "mode": "acceptEdits"
+      },
+      "type": "registry"
+    }
+  },
+
+  // Edit prediction. Supermaven is not a Zed provider any more, so this is
+  // Zed's own Zeta model in eager mode (inline ghost text, Tab accepts),
+  // the closest match to vim.g.ai_cmp = false. The default disabled_globs
+  // are repeated here because the list is replaced, not merged, and the
+  // SOPS and age patterns are added on top.
+  "edit_predictions": {
+    "provider": "zed",
+    "mode": "eager",
+    "disabled_globs": [
+      "**/.env*",
+      "**/*.pem",
+      "**/*.key",
+      "**/*.cert",
+      "**/*.crt",
+      "**/.dev.vars",
+      "**/secrets.yml",
+      "**/.zed/settings.json",
+      "/**/zed/settings.json",
+      "/**/zed/keymap.json",
+      "**/*.enc.*",
+      "**/*.sops.*",
+      "**/.sops.yaml",
+      "**/*.age",
+      "**/secrets/**"
+    ]
+  },
+
+  // No crash reports or usage metrics.
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+
+  // Extensions Zed installs on startup. Go, Rust, Bash, YAML, JSON, TOML,
+  // Markdown and diff are built in. golangci-lint, tflint and markdownlint
+  // run as language servers here, replacing the nvim-lint entries.
+  "auto_install_extensions": {
+    "html": true,
+    "dockerfile": true,
+    "docker-compose": true,
+    "helm": true,
+    "terraform": true,
+    "ansible": true,
+    "fish": true,
+    "git-firefly": true,
+    "golangci-lint": true,
+    "tflint": true,
+    "markdownlint": true,
+    "github-actions": true,
+    "tombi": true
+  },
+
+  // LazyVim's autoformat = true.
+  "format_on_save": "on",
+
+  "languages": {
+    "Go": {
+      "formatter": "language_server",
+      // goimports equivalent: gopls organises imports on format.
+      "code_actions_on_format": {
+        "source.organizeImports": true
+      }
+    },
+    "Rust": {
+      "formatter": "language_server"
+    },
+    "Shell Script": {
+      "formatter": {
+        "external": {
+          "command": "shfmt",
+          "arguments": ["--filename", "{buffer_path}"]
+        }
+      }
+    },
+    "Fish": {
+      "formatter": {
+        "external": {
+          "command": "fish_indent"
+        }
+      }
+    },
+    "YAML": {
+      // Zed defaults YAML to Prettier; yaml-language-server matches yamlls.
+      "formatter": "language_server"
+    },
+    "Terraform": {
+      "formatter": "language_server"
+    },
+    "Markdown": {
+      // LazyVim's wrap_spell autocmd wraps Markdown.
+      "soft_wrap": "editor_width",
+      "format_on_save": "on"
+    }
+  },
+
+  // Language names for the extension-provided languages. The Helm list
+  // deliberately omits **/values*.yaml so values files stay with
+  // yaml-language-server and its schemas.
+  "file_types": {
+    "Helm": [
+      "**/templates/**/*.tpl",
+      "**/templates/**/*.yaml",
+      "**/templates/**/*.yml",
+      "**/helmfile.d/**/*.yaml",
+      "**/helmfile.d/**/*.yml"
+    ],
+    "Ansible": [
+      "**.ansible.yml",
+      "**.ansible.yaml",
+      "**/defaults/*.yml",
+      "**/defaults/*.yaml",
+      "**/meta/*.yml",
+      "**/meta/*.yaml",
+      "**/tasks/*.yml",
+      "**/tasks/*.yaml",
+      "**/handlers/*.yml",
+      "**/handlers/*.yaml",
+      "**/group_vars/*.yml",
+      "**/group_vars/*.yaml",
+      "**/host_vars/*.yml",
+      "**/host_vars/*.yaml",
+      "**/playbooks/*.yml",
+      "**/playbooks/*.yaml",
+      "**playbook*.yml",
+      "**playbook*.yaml"
+    ]
+  },
+
+  "lsp": {
+    // Same gopls options LazyVim's lang.go extra sets.
+    "gopls": {
+      "initialization_options": {
+        "gofumpt": true,
+        "staticcheck": true,
+        "usePlaceholders": true,
+        "completeUnimported": true,
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true
+        }
+      }
+    },
+    // golangci-lint v2 output flags, from the extension README.
+    "golangci-lint": {
+      "initialization_options": {
+        "command": [
+          "golangci-lint",
+          "run",
+          "--output.json.path",
+          "stdout",
+          "--show-stats=false",
+          "--output.text.path="
+        ]
+      }
+    },
+    // clippy instead of plain cargo check on save.
+    "rust-analyzer": {
+      "initialization_options": {
+        "check": {
+          "command": "clippy"
+        }
+      }
+    },
+    // keyOrdering = false as in LazyVim's lang.yaml extra. SchemaStore
+    // lookup is on by default.
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "keyOrdering": false,
+          "format": {
+            "enable": true
+          }
+        }
+      }
+    },
+    "ansible-language-server": {
+      "settings": {
+        "validation": {
+          "lint": {
+            "enabled": true,
+            "path": "ansible-lint"
+          }
+        }
+      }
+    },
+    // terraform-ls shells out to a binary named `terraform`;
+    // ~/.local/bin/terraform -> tofu covers that, as for Neovim.
+    "terraform-ls": {
+      "initialization_options": {
+        "experimentalFeatures": {
+          "prefillRequiredFields": true
+        }
+      }
+    }
+  }
+}

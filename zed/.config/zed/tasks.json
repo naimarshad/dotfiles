@@ -1,0 +1,49 @@
+// Global Zed tasks (task: spawn, or <space>tt in vim mode). These cover the
+// tools the Neovim setup runs through nvim-lint that have no language server
+// in Zed's registry, plus lazygit for <space>gg.
+//
+// Comments are full-line only, so `grep -v '^\s*//' tasks.json | jq .`
+// validates the file.
+[
+  {
+    "label": "lazygit",
+    "command": "lazygit",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always",
+    "hide": "on_success",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "hadolint: current file",
+    "command": "hadolint",
+    "args": ["$ZED_FILE"],
+    "reveal": "always"
+  },
+  {
+    "label": "yamllint: current file",
+    "command": "yamllint",
+    "args": ["$ZED_FILE"],
+    "reveal": "always"
+  },
+  {
+    "label": "actionlint: workflows",
+    "command": "actionlint",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "go test: current package",
+    "command": "go",
+    "args": ["test", "."],
+    "cwd": "$ZED_DIRNAME",
+    "reveal": "always"
+  },
+  {
+    "label": "go test: all packages",
+    "command": "go",
+    "args": ["test", "./..."],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  }
+]

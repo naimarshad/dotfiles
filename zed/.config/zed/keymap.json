@@ -1,0 +1,103 @@
+// Space-leader chords for vim mode, mirroring the LazyVim keymaps documented
+// in nvim/.config/nvim/README.md wherever Zed has an equivalent action. Zed
+// has no leader concept, so each chord is spelled out. Stock Zed vim mode
+// already covers gd, gD, gy, gI (g shift-i), gr (g r r), K, gc, ]c/[c and
+// ctrl-p (file finder), so those are not repeated here.
+//
+// Comments are full-line only, so `grep -v '^\s*//' keymap.json | jq .`
+// validates the file.
+[
+  {
+    "context": "vim_mode == normal && !menu",
+    "bindings": {
+      // Files, explorer, outline
+      "space space": "file_finder::Toggle",
+      "space f f": "file_finder::Toggle",
+      "space f r": "file_finder::Toggle",
+      "space f b": "tab_switcher::Toggle",
+      "space ,": "tab_switcher::Toggle",
+      "space e": "project_panel::ToggleFocus",
+      "space c s": "outline_panel::ToggleFocus",
+      "space f t": "terminal_panel::Toggle",
+      "space :": "command_palette::Toggle",
+
+      // Search
+      "space /": "pane::DeploySearch",
+      "space s g": "pane::DeploySearch",
+      "space s s": "outline::Toggle",
+      "space s shift-s": "project_symbols::Toggle",
+      "space s d": "diagnostics::Deploy",
+
+      // LSP
+      "space c a": "editor::ToggleCodeActions",
+      "space c r": "editor::Rename",
+      "space c f": "editor::Format",
+      "space c c": "editor::ToggleCodeLens",
+      "space u h": "editor::ToggleInlayHints",
+
+      // Diagnostics
+      "] d": "editor::GoToDiagnostic",
+      "[ d": "editor::GoToPreviousDiagnostic",
+      "space x x": "diagnostics::Deploy",
+      "space c d": "editor::Hover",
+
+      // Git. <leader>gg runs lazygit through tasks.json.
+      "space g g": ["task::Spawn", { "task_name": "lazygit" }],
+      "space g s": "git_panel::ToggleFocus",
+      "space g d": "git::Diff",
+      "space g b": "editor::ToggleGitBlameInline",
+      "space g h b": "git::Blame",
+      "space g h s": "git::StageAndNext",
+      "space g h u": "git::UnstageAndNext",
+      "space g h r": "git::Restore",
+      "space g h p": "editor::ToggleSelectedDiffHunks",
+      "space g h d": "editor::ExpandAllDiffHunks",
+      "] h": "editor::GoToHunk",
+      "[ h": "editor::GoToPreviousHunk",
+
+      // Debugging (Delve for Go, CodeLLDB for Rust, both via debugger::Start)
+      "space d b": "editor::ToggleBreakpoint",
+      "space d c": "debugger::Start",
+      "space d r": "debugger::Rerun",
+      "space d i": "debugger::StepInto",
+      "space d o": "debugger::StepOver",
+      "space d shift-o": "debugger::StepOut",
+      "space d t": "debugger::Stop",
+
+      // Tasks stand in for Neotest: runnables and tasks.json entries.
+      "space t t": "task::Spawn",
+      "space t l": "task::Rerun",
+
+      // AI: Claude Code over ACP
+      "space a c": "agent::ToggleFocus",
+      "space a n": ["agent::NewExternalAgentThread", { "agent": "claude-acp" }],
+      "space a b": "agent::AddSelectionToThread",
+      "space a r": "agent::OpenAgentDiff",
+      "space a a": "agent::Keep",
+      "space a d": "agent::Reject",
+
+      // Windows
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "space -": "pane::SplitDown",
+      "space |": "pane::SplitRight",
+      "space w m": "workspace::ToggleZoom"
+    }
+  },
+  {
+    "context": "vim_mode == visual && !menu",
+    "bindings": {
+      "space c a": "editor::ToggleCodeActions",
+      "space c f": "editor::Format",
+      "space a s": "agent::AddSelectionToThread"
+    }
+  },
+  {
+    "context": "vim_mode == normal && extension == md",
+    "bindings": {
+      "space c p": "markdown::OpenPreviewToTheSide"
+    }
+  }
+]
