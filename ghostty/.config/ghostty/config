@@ -5,7 +5,8 @@ window-theme = auto
 window-padding-x = 10
 window-padding-y = 3
 window-padding-balance = true
-background-opacity = 1
+background-opacity = 0.95
+background-opacity-cells = true
 background-blur-radius = 60
 theme = noctalia
 
