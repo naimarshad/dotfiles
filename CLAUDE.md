@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a personal dotfiles repo using a **Stow-compatible directory structure**: each top-level package folder mirrors the target path from `$HOME`. For example, `niri/.config/niri/` symlinks to `~/.config/niri/`.
 
-Packages on this branch: `btop`, `fish`, `fontconfig`, `ghostty`, `gtk`, `hypr`, `niri`, `noctalia`, `nvim`, `starship`, `zsh`.
+Packages on this branch: `bat`, `btop`, `fish`, `fontconfig`, `ghostty`, `gtk`, `k9s`, `niri`, `noctalia`, `nvim`, `starship`, `zsh`, plus `hypr` (legacy).
 
 To deploy a package: `stow -d ~/dotfiles -t "$HOME" <package>`
 
@@ -130,7 +130,11 @@ Two shells are configured, with different prompts, so a prompt change usually ne
 
 - **Terminal**: Ghostty (`com.mitchellh.ghostty`), theme pinned to `Gruvbox Dark`, font `JetBrainsMono NF Regular`
 - **Editor theme**: Neovim uses `ellisonleao/gruvbox.nvim` at default contrast, matched deliberately to Ghostty's `Gruvbox Dark`. Both backgrounds are `#282828`. Change one and change the other.
-- **The light desktop and the dark terminal are deliberate.** Ghostty and Neovim are gruvbox dark; Noctalia renders gruvbox *light* into niri, btop and both GTK themes. The mismatch is intended, so do not "fix" it by switching the Noctalia scheme to dark. Only the terminal and what runs inside it are dark.
+- **The light desktop and the dark terminal are deliberate.** Everything that runs *inside* the terminal is gruvbox dark at `#282828` / `#ebdbb2`: Ghostty, Neovim, `bat`, `btop` and `k9s`. Noctalia renders gruvbox *light* into niri, GTK and the shell itself. The mismatch is intended, so do not "fix" it by switching the Noctalia scheme to dark.
+- **Terminal theme settings, one per tool.** `bat` uses its built-in `gruvbox-dark` (`bat/.config/bat/config`); `btop` uses `color_theme = "gruvbox_dark_v2"`; `k9s` uses `skin: gruvbox-dark`, a local skin at `k9s/.config/k9s/skins/gruvbox-dark.yaml`. Changing the terminal palette means changing all five places.
+- **`btop`'s theme names are misleading.** `gruvbox_dark.theme` is the *hard* variant at `#1d2021`. The one matching Ghostty's `Gruvbox Dark` is `gruvbox_dark_v2.theme` at `#282828`. Do not "correct" the `_v2` suffix.
+- **`bat` emits no background.** It writes only `38;2;...` foreground sequences, so it inherits Ghostty's background and its theme choice only affects syntax colours. `k9s` and `btop` both paint their own background and therefore had to be matched explicitly.
+- **The `k9s` gruvbox skin is a local edit.** `gruvbox-dark.yaml` is `gruvbox-dark-hard.yaml` with the `background` anchor lifted from `#1d2021` to `#282828`; every other anchor was already correct. The hard variant is kept alongside it.
 - **Cursor theme**: `Bibata-Modern-Classic` at size 24, set in `niri/environment.kdl` (both the `cursor` block and `XCURSOR_THEME`) and in the GTK settings
 - **GTK theme**: `adw-gtk3` with the `Catppuccin-Macchiato` icon theme and `Inter 12`
 - **Screenshots**: niri's built-in actions on the `Print` keys (`screenshot`, `Mod+Print` for screen, `Mod+Shift+Print` for window). There is no `HYPRSHOT_DIR` under niri.
@@ -143,6 +147,7 @@ Worth knowing before assuming something is a bug you introduced:
 - `.config/starship.toml` sits at the repo root instead of in `starship/.config/`, so `stow starship` deploys only `cpu.sh` and `netinfo.sh`.
 - `ghostty/.config/ghostty/config` sets `background-blur-radius` twice, at 80 and then 60, left over from resolving a merge conflict. Only one value can win. `theme` is set once.
 - `ghostty/.config/ghostty/themes/noctalia` has been deleted, since the config pins `Gruvbox Dark` by hand. If ghostty is still in Noctalia's `activeTemplates`, that file will reappear on the next render and be ignored.
+- `bat` and `btop` have also left the Noctalia palette system, the same way ghostty did. `bat/.config/bat/themes/noctalia.tmTheme` and `btop/.config/btop/themes/noctalia.theme` are still tracked and still regenerated on each render, but nothing reads them any more: both configs name a static gruvbox dark theme instead. The stale catppuccin `.tmTheme` and `.theme` files in those same directories are likewise unused.
 - `KUBECOLOR_LIGHT_BACKGROUND=true` is exported twice in `.zshrc`, near the top and again at the bottom.
 - Several files have carried committed merge conflict markers in the past. Grep for `<<<<<<<` before committing a resolution. (The worst offender, Noctalia's v4 `settings.json`, is gone with the v5 migration.)
 
