@@ -114,20 +114,30 @@ LazyVim-based. `lua/config/` holds `autocmds.lua`, `keymaps.lua`, `lazy.lua`, an
 
 ## tmux (`tmux/`)
 
-`tmux/.config/tmux/tmux.conf` is the whole tracked config. Plugins are TPM-managed and live in `~/.config/tmux/plugins/`, which is gitignored: restore them on a new machine with `prefix + I`.
+`tmux/.config/tmux/tmux.conf` plus `tmux/.config/tmux/scripts/` are tracked. Plugins are TPM-managed and live in `~/.config/tmux/plugins/`, which is gitignored: restore them on a new machine with `prefix + I`.
 
-`TMUX_PLUGIN_MANAGER_PATH` is set to `~/.config/tmux/plugins/` in the config. Without it TPM installs to `~/.tmux/plugins/` instead, which is how this config previously ended up with plugins split across two directories and two `run` lines pointing at a path that did not exist, silently rendering the cpu, battery and uptime status modules as empty strings.
+`TMUX_PLUGIN_MANAGER_PATH` is set to `~/.config/tmux/plugins/` in the config. Without it TPM installs to `~/.tmux/plugins/` instead, which is how this config once ended up with plugins split across two directories and `run` lines pointing at a path that did not exist, silently rendering status modules as empty strings.
 
-Theming is `egel/tmux-gruvbox`. Two things about it are load-bearing:
+**The status line is hand-rolled, not themed by a plugin.** An earlier version used `egel/tmux-gruvbox`, which was dropped because it owns `status-left` and `status-right` outright and exposes only four fixed slots, which is not enough for kube, git, cpu, battery, clock and host together.
 
-- `set -g @tmux-gruvbox 'dark'` is required. The plugin defaults to `dark256`, which approximates the palette in 256 colours instead of the true-colour hex that matches Ghostty.
-- The plugin owns `status-left` and `status-right` and exposes only four slots: `@tmux-gruvbox-left-status-a`, and `-right-status-x` / `-y` / `-z`. Anything you want in the status bar goes in those, not in `set -g status-right`, which the plugin overwrites.
+The palette lives in `@gb_*` user options and is identical to Ghostty's `Gruvbox Dark`. It is defined in exactly one place: the scripts read colours back with `tmux show -gqv @gb_<name>` rather than hardcoding hex, so changing a colour in `tmux.conf` changes it everywhere.
 
-Plugin order in the config matters: the theme sets `status-right` first, then `tmux-cpu` and `tmux-battery` substitute their `#{cpu_percentage}` and `#{battery_*}` placeholders into it. Declaring them before the theme leaves the placeholders unreplaced, and tmux renders unknown format variables as empty strings rather than erroring.
+Three things here are load-bearing and easy to break:
 
-The status bar is gruvbox `bg1` (`#3c3836`), deliberately one step lighter than the `#282828` pane background so it reads as a bar. Set `@tmux-gruvbox-statusbar-alpha 'true'` to make it transparent and inherit Ghostty's background exactly.
+- **`status-left` and `status-right` are deliberately set without `-F`.** They contain `#{pane_current_path}`, and `-F` would expand it once at parse time instead of per render, permanently freezing `git.sh` to whatever directory the server started in. That is also why those two lines write hex literally while every `*-style` option above them uses `-F` with `@gb_*`.
+- **Plugin order matters.** `tmux-cpu` supplies `#{cpu_percentage}` by rewriting `status-right` when it loads, so the plugin list must come after the status line is defined.
+- **`git.sh` takes the pane's directory as an argument.** The tmux server's own working directory is wherever it was started, so a script reading `$PWD` reports the wrong repository. Dirtiness uses `git status --porcelain -uno`; skipping untracked files keeps it off the status-interval critical path in large trees.
 
-Note on verifying status modules: `tmux display -p '#{E:status-right}'` does **not** execute `#()` jobs and always shows them blank, even for `#(echo hello)`. To check what actually renders, attach a client under `script` and read the captured output.
+`scripts/kube.sh` shows `context:namespace` from `kubectl config view --minify`, chosen over parsing `~/.kube/config` so a multi-file `KUBECONFIG` merges correctly. It is offline and never contacts the cluster. A context matching `prod|prd|production` turns the whole segment red, the same guard rail as the `.zshrc` wrappers. Caveat worth remembering: the tmux server has its own environment, so this reflects the kubeconfig's selected context and **not** a kubie subshell's per-shell `KUBECONFIG`.
+
+`scripts/battery.sh` reads sysfs directly, replacing the `tmux-battery` plugin. It treats the ACPI state `Not charging` (on AC, holding at a charge limit) as plugged in, because the naive reading shows a draining icon while the machine is on mains.
+
+`tmux-resurrect` and `tmux-continuum` save every 15 minutes with `@continuum-restore 'off'`: an automatic restore on server start is startling when you wanted a clean session. Restore by hand with `prefix + Ctrl-r`. `tmux-yank` uses `wl-copy`, since no `xclip` or `xsel` is installed.
+
+**Verifying status modules is harder than it looks**, and two separate traps have already cost time here:
+
+- `tmux display -p '#{E:status-right}'` does **not** execute `#()` jobs and always shows them blank, even for `#(echo hello)`.
+- Attaching a client under `script` does render them, but tmux repaints only the segments that changed, so grepping the tail of the capture shows a partial line and makes working modules look missing. Grep the whole capture for the value you expect instead of reading the last line.
 
 ## Shells
 
@@ -148,7 +158,7 @@ Two shells are configured, with different prompts, so a prompt change usually ne
 - **Terminal**: Ghostty (`com.mitchellh.ghostty`), theme pinned to `Gruvbox Dark`, font `JetBrainsMono NF Regular`
 - **Editor theme**: Neovim uses `ellisonleao/gruvbox.nvim` at default contrast, matched deliberately to Ghostty's `Gruvbox Dark`. Both backgrounds are `#282828`. Change one and change the other.
 - **The light desktop and the dark terminal are deliberate.** Everything that runs *inside* the terminal is gruvbox dark at `#282828` / `#ebdbb2`: Ghostty, Neovim, `bat`, `btop`, `k9s` and `tmux`. Noctalia renders gruvbox *light* into niri, GTK and the shell itself. The mismatch is intended, so do not "fix" it by switching the Noctalia scheme to dark.
-- **Terminal theme settings, one per tool.** `bat` uses its built-in `gruvbox-dark` (`bat/.config/bat/config`); `btop` uses `color_theme = "gruvbox_dark_v2"`; `k9s` uses `skin: gruvbox-dark`, a local skin at `k9s/.config/k9s/skins/gruvbox-dark.yaml`; `tmux` uses the `egel/tmux-gruvbox` plugin with `set -g @tmux-gruvbox 'dark'`. Changing the terminal palette means changing all six places.
+- **Terminal theme settings, one per tool.** `bat` uses its built-in `gruvbox-dark` (`bat/.config/bat/config`); `btop` uses `color_theme = "gruvbox_dark_v2"`; `k9s` uses `skin: gruvbox-dark`, a local skin at `k9s/.config/k9s/skins/gruvbox-dark.yaml`; `tmux` defines the palette itself in `@gb_*` options in `tmux/.config/tmux/tmux.conf`. Changing the terminal palette means changing all six places.
 - **`btop`'s theme names are misleading.** `gruvbox_dark.theme` is the *hard* variant at `#1d2021`. The one matching Ghostty's `Gruvbox Dark` is `gruvbox_dark_v2.theme` at `#282828`. Do not "correct" the `_v2` suffix.
 - **`bat` emits no background.** It writes only `38;2;...` foreground sequences, so it inherits Ghostty's background and its theme choice only affects syntax colours. `k9s` and `btop` both paint their own background and therefore had to be matched explicitly.
 - **The `k9s` gruvbox skin is a local edit.** `gruvbox-dark.yaml` is `gruvbox-dark-hard.yaml` with the `background` anchor lifted from `#1d2021` to `#282828`; every other anchor was already correct. The hard variant is kept alongside it.
