@@ -1,0 +1,122 @@
+k9s:
+  body:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    logoColor: "#61afef"
+  frame:
+    bgColor: "#282c34"
+    fgColor: "#abb2bf"
+    borderColor: "#636d83"
+    menu:
+      fgColor: "#abb2bf"
+      bgColor: "#282c34"
+      keyColor: "#e06c75"
+    tabs:
+      bgColor: "#282c34"
+      fgColor: "#abb2bf"
+      activeBgColor: "#636d83"
+      activeFgColor: "#e06c75"
+      activeColor: "#e06c75"
+  head:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    borderColor: "#636d83"
+    nav:
+      fgColor: "#abb2bf"
+      keyColor: "#e06c75"
+    crumbs:
+      fgColor: "#abb2bf"
+      bgColor: "#282c34"
+      dfltFgColor: "#abb2bf"
+    status:
+      newResourceFgColor: "#56b6c2"
+      modifiedResourceFgColor: "#e5c07b"
+      deletedResourceFgColor: "#e06c75"
+      fgColor: "#abb2bf"
+      bgColor: "#282c34"
+      inSyncFgColor: "#98c379"
+      noSyncFgColor: "#e06c75"
+    logo:
+      fgColor: "#61afef"
+  # Table colors
+  table:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    cursorFgColor: "#282c34"
+    cursorBgColor: "#61afef"
+    cursorBlinking: false
+    # Header colors
+    headerFgColor: "#abb2bf"
+    headerBgColor: "#282c34"
+    headerSortColor: "#56b6c2"
+  # Charts colors
+  chart:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    defaultFgColor: "#abb2bf"
+    # Chart colors
+    colors:
+      - "#61afef"
+      - "#98c379"
+      - "#e06c75"
+      - "#e5c07b"
+      - "#56b6c2"
+      - "#c678dd"
+  # Logs colors
+  logs:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    indicator:
+      fgColor: "#abb2bf"
+      bgColor: "#282c34"
+  # Containers colors
+  container:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    # Status colors
+    readyColor: "#98c379"
+    notReadyColor: "#e06c75"
+    # CPU/MEM colors
+    cpuColor: "#61afef"
+    memColor: "#56b6c2"
+  # Diagnostics colors
+  diagnostics:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    # Severity colors
+    infoColor: "#56b6c2"
+    warnColor: "#e5c07b"
+    errorColor: "#e06c75"
+  # Xray colors
+  xray:
+    fgColor: "#abb2bf"
+    bgColor: "#282c34"
+    # Node colors
+    node:
+      fgColor: "#abb2bf"
+      bgColor: "#282c34"
+      # Colors
+      colors:
+        - "#61afef"
+        - "#98c379"
+        - "#e06c75"
+        - "#e5c07b"
+        - "#56b6c2"
+        - "#c678dd"
+  # YAML colors
+  yaml:
+    keyColor: "#61afef"
+    color: "#abb2bf"
+    # Indicator colors
+    indicatorColor: "#c678dd"
+    # String colors
+    stringColor: "#98c379"
+    # Scalar colors
+    scalarColor: "#e5c07b"
+    # Boolean colors
+    boolColor: "#e06c75"
+  # Clusters colors
+  cluster:
+    fgColor: "#e06c75"
+    bgColor: "#282c34"
+
