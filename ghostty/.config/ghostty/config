@@ -7,15 +7,15 @@ window-padding-y = 3
 window-padding-balance = true
 background-opacity = 1
 background-blur-radius = 80
-theme = noctalia
 background-blur-radius = 60
+theme = Gruvbox Dark
 
 # Font
 font-family = "JetBrainsMono NF Regular"
 font-family-bold = "JetBrainsMono NF Regular"
 font-family-italic = "JetBrainsMono NF Regular"
 font-family-bold-italic = "JetBrainsMono NF Regular"
-font-size = 12
+font-size = 14
 font-feature = +calt
 font-feature = +liga
 font-feature = +ss01
