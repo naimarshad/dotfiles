@@ -15,7 +15,7 @@ To deploy a package: `stow -d ~/dotfiles -t "$HOME" <package>`
 Shared config lives on `main`. Each machine gets its own long-lived branch, and the package sets themselves diverge, not just a few files:
 
 - `main` is the shared Hyprland-era base, and has no `niri` or `gtk` package.
-- `machine/ri-t-0931` is the primary work machine: niri compositor, light Catppuccin Latte theme, three outputs at home (HDMI-A-1 ultrawide, DP-1 rotated vertical, eDP-1 laptop panel) plus a Lenovo P34w-20 ultrawide at the office.
+- `machine/ri-t-0931` is the primary work machine: niri compositor, dark Gruvbox theme, three outputs at home (HDMI-A-1 ultrawide, DP-1 rotated vertical, eDP-1 laptop panel) plus a Lenovo P34w-20 ultrawide at the office.
 - `machine/workforce` is Debian Sid with Plasma, and carries `k9s` and `tmux` packages the others do not.
 
 Share code between branches by cherry-picking specific commits. Do not merge `main` into a machine branch, since it drags in an unrelated package set.
@@ -106,7 +106,7 @@ SOPS has no TOML parser, so it encrypts the whole file as one opaque blob. It ro
 
 **Colours are generated, not hand-edited.** The scheme is selected in `settings.toml`, and Noctalia renders that palette into every app in its active-template list, producing `niri/.config/niri/noctalia.kdl`, `gtk/.config/gtk-3.0/noctalia.css`, `gtk/.config/gtk-4.0/noctalia.css`, and `hypr/.config/hypr/noctalia/noctalia-colors.conf`. All of those are committed so a fresh checkout looks right before Noctalia first runs. Change the scheme and let it regenerate; hand-editing a generated file is overwritten on the next render. The `gtk` templates are confirmed working under v5: `gtk-4.0/gtk.css` changed from a symlink into `adw-gtk3` to a real file that `@import`s `noctalia.css`, and both `noctalia.css` files regenerate.
 
-Ghostty is **inside** that system as of the v5 migration: its config sets `theme = noctalia` and Noctalia renders `ghostty/.config/ghostty/themes/noctalia`. It was pinned to `Catppuccin Latte` and hand-managed under v4; `machine/workforce` made the same switch in `5a7403e`.
+Ghostty was brought **inside** that system in the v5 migration (`theme = noctalia`, with Noctalia rendering `ghostty/.config/ghostty/themes/noctalia`), and `machine/workforce` made the same switch in `5a7403e`. This branch has since left it again: the config pins `theme = Gruvbox Dark` by hand and the rendered `themes/noctalia` file is deleted, so Ghostty no longer tracks the Noctalia palette here.
 
 ## Neovim Config (`nvim/`)
 
@@ -128,7 +128,8 @@ Two shells are configured, with different prompts, so a prompt change usually ne
 
 ## Key Environment Details
 
-- **Terminal**: Ghostty (`com.mitchellh.ghostty`), theme pinned to `Catppuccin Latte`, font `JetBrainsMono NF Regular`
+- **Terminal**: Ghostty (`com.mitchellh.ghostty`), theme pinned to `Gruvbox Dark`, font `JetBrainsMono NF Regular`
+- **Editor theme**: Neovim uses `ellisonleao/gruvbox.nvim` at default contrast, matched deliberately to Ghostty's `Gruvbox Dark`. Both backgrounds are `#282828`. Change one and change the other.
 - **Cursor theme**: `Bibata-Modern-Classic` at size 24, set in `niri/environment.kdl` (both the `cursor` block and `XCURSOR_THEME`) and in the GTK settings
 - **GTK theme**: `adw-gtk3` with the `Catppuccin-Macchiato` icon theme and `Inter 12`
 - **Screenshots**: niri's built-in actions on the `Print` keys (`screenshot`, `Mod+Print` for screen, `Mod+Shift+Print` for window). There is no `HYPRSHOT_DIR` under niri.
@@ -140,7 +141,7 @@ Worth knowing before assuming something is a bug you introduced:
 
 - `.config/starship.toml` sits at the repo root instead of in `starship/.config/`, so `stow starship` deploys only `cpu.sh` and `netinfo.sh`.
 - `ghostty/.config/ghostty/config` sets `background-blur-radius` twice, at 80 and then 60, left over from resolving a merge conflict. Only one value can win. `theme` is set once.
-- `ghostty/.config/ghostty/themes/noctalia` is now dormant, since the config pins `Catppuccin Latte` and ghostty is not in `activeTemplates`.
+- `ghostty/.config/ghostty/themes/noctalia` has been deleted, since the config pins `Gruvbox Dark` by hand. If ghostty is still in Noctalia's `activeTemplates`, that file will reappear on the next render and be ignored.
 - `KUBECOLOR_LIGHT_BACKGROUND=true` is exported twice in `.zshrc`, near the top and again at the bottom.
 - Several files have carried committed merge conflict markers in the past. Grep for `<<<<<<<` before committing a resolution. (The worst offender, Noctalia's v4 `settings.json`, is gone with the v5 migration.)
 
