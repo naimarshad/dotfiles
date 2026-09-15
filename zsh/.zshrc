@@ -14,12 +14,6 @@ export PATH="$HOME/.krew/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
-# export KUBECOLOR_PRESET="dark"
-export BAT_THEME="Catppuccin Latte"
-# export DOCKER_HOST=tcp://192.168.1.10:2375
-export KUBECOLOR_LIGHT_BACKGROUND=true
-export KUBECOLOR_PRESET="light"
-#export BAT_THEME=GitHub
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
@@ -32,7 +26,6 @@ export KUBECTL_KYAML=true
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
-#ZSH_THEME="robbyrussell"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 plugins=(alias-finder aliases direnv git docker docker-compose colorize kubectl vscode common-aliases command-not-found zsh-syntax-highlighting \
@@ -52,9 +45,7 @@ zstyle ':omz:plugins:eza' 'icons' yes
 autoload -Uz compinit && compinit -i
 
 source $ZSH/oh-my-zsh.sh
-#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
-# source ~/.zsh/catppuccin_macchiato-zsh-syntax-highlighting.zsh
+# source ~/.zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -85,7 +76,6 @@ alias pro="cd /home/naeem/projects/"
 
 ## Personal Aliases
 alias vim="nvim"
-alias fvim='nvim $(fzf --preview="bat --color=always {}")'
 alias kcx='kubectl-ctx'
 alias kns='kubectl-ns'
 alias osbox='ssh opnsense'
@@ -108,12 +98,12 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
 fi
 
 ### Fuzzy search configurations ###
-export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi \
---color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
---color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
---color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
---color=selected-bg:#BCC0CC \
---color=border:#9CA0B0,label:#4C4F69"
+export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi"
+#--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
+#--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
+#--color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
+#--color=selected-bg:#BCC0CC \
+#--color=border:#9CA0B0,label:#4C4F69"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -133,10 +123,10 @@ alias tiac="cd /home/naeem/ri-work/git-repos/platform/iac/terraform"
 alias hc="cd /home/naeem/ri-work/git-repos/platform/iac/helm_charts/"
 alias hv="cd /home/naeem/ri-work/git-repos/platform/iac/helm_values/"
 alias dev_platform="cd /home/naeem/ri-work/git-repos/platform/iac/terraform/non-prod/pks/natwork/dev-platform/"
+
 # sops finds the age private key here; it is mode 600 and never committed.
 # Losing it makes every .sops.* file in the dotfiles repo unrecoverable.
 export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
-
 alias spsd='sops decrypt'
 alias spse='sops edit'
 
@@ -146,6 +136,7 @@ alias tprod-deviceident='cd /home/naeem/ri-work/git-repos/platform/iac/terraform
 alias tprod-skreditpartner='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-skreditpartner/'
 alias tprod-frida2='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-frida2/'
 alias tprod-database='cd /home/naeem/ri-work/git-repos/platform/iac/terraform/prod/pks/iphh/prod-database/'
+alias kubectl=kubecolor
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -161,108 +152,105 @@ bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 # Destructive verbs that require confirmation. Exported because the shell
 # snapshot used by external tooling captures functions but not plain variables.
 # Matched against the subcommand alone, so no anchors here.
-export _PROD_PATTERN="prod|prd|production"
-export _DANGEROUS="delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set"
-export _READONLY="get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff"
+#export _PROD_PATTERN="prod|prd|production"
+#export _DANGEROUS="delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set"
+#export _READONLY="get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff"
 
-kubectl() {
-  # KUBIE_CTX is set by kubie in its subshell — reliable indicator
-  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
-
-  # An unset pattern would leave grep testing an empty regex, which matches
-  # everything, so never rely on the values above being in scope.
-  : "${_PROD_PATTERN:=prod|prd|production}"
-  : "${_DANGEROUS:=delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set}"
-  : "${_READONLY:=get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff}"
-
-  # Decide on the first argument that names a subcommand, whichever list it
-  # lands in. Taking the first non-flag token instead lets
-  # "kubectl -n default delete pod" through, because "default" is neither a
-  # flag nor a verb.
-  local a _verdict="safe"
-  for a in "$@"; do
-    [[ $a == -* ]] && continue
-    if echo "$a" | grep -qxE "$_READONLY"; then _verdict="safe"; break; fi
-    if echo "$a" | grep -qxE "$_DANGEROUS"; then _verdict="danger"; break; fi
-  done  
-
-  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-    if [ "$_verdict" = danger ]; then
-
-      # Hard visual break — hard to overlook
-      echo ""
-      echo "  ╔══════════════════════════════════════╗"
-      echo "  ║   PRODUCTION CONTEXT: $ctx"
-      echo "  ╚══════════════════════════════════════╝"
-      echo ""
-      echo "  Namespace : ${KUBIE_NS:-$(command kubectl config view --minify -o jsonpath='{..namespace}')}"
-      echo "  Command   : kubectl $*"
-      echo ""
-      printf "  Type context name to confirm (%s): " "$ctx"
-      read -r _confirm
-
-      if [ "$_confirm" != "$ctx" ]; then
-        echo ""
-        echo "  ✓ Aborted — no changes made."
-        echo ""
-        return 1
-      fi
-      echo ""
-    fi
-  fi
-
-  command kubecolor "$@"
-}
+#kubectl() {
+#  # KUBIE_CTX is set by kubie in its subshell — reliable indicator
+#  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
+#
+#  # An unset pattern would leave grep testing an empty regex, which matches
+#  # everything, so never rely on the values above being in scope.
+#  : "${_PROD_PATTERN:=prod|prd|production}"
+#  : "${_DANGEROUS:=delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set}"
+#  : "${_READONLY:=get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff}"
+#
+#  # Decide on the first argument that names a subcommand, whichever list it
+#  # lands in. Taking the first non-flag token instead lets
+#  # "kubectl -n default delete pod" through, because "default" is neither a
+#  # flag nor a verb.
+#  local a _verdict="safe"
+#  for a in "$@"; do
+#    [[ $a == -* ]] && continue
+#    if echo "$a" | grep -qxE "$_READONLY"; then _verdict="safe"; break; fi
+#    if echo "$a" | grep -qxE "$_DANGEROUS"; then _verdict="danger"; break; fi
+#  done  
+#
+#  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
+#    if [ "$_verdict" = danger ]; then
+#
+#      # Hard visual break — hard to overlook
+#      echo ""
+#      echo "  ╔══════════════════════════════════════╗"
+#      echo "  ║   PRODUCTION CONTEXT: $ctx"
+#      echo "  ╚══════════════════════════════════════╝"
+#      echo ""
+#      echo "  Namespace : ${KUBIE_NS:-$(command kubectl config view --minify -o jsonpath='{..namespace}')}"
+#      echo "  Command   : kubectl $*"
+#      echo ""
+#      printf "  Type context name to confirm (%s): " "$ctx"
+#      read -r _confirm
+#
+#      if [ "$_confirm" != "$ctx" ]; then
+#        echo ""
+#        echo "  ✓ Aborted — no changes made."
+#        echo ""
+#        return 1
+#      fi
+#      echo ""
+#    fi
+#  fi
+#
+#  command kubecolor "$@"
+#}
 
 # Helm destructive verbs. Exported because the shell snapshot used by external
 # tooling captures functions but not plain variables. Matched against the
 # subcommand alone, so no anchors here.
-export _HELM_DANGEROUS="install|upgrade|uninstall|rollback|delete"
-export _HELM_READONLY="diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion"
+# export _HELM_DANGEROUS="install|upgrade|uninstall|rollback|delete"
+# export _HELM_READONLY="diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion"
 
-helm() {
-  # An unset pattern would leave grep testing an empty regex, which matches
-  # everything, so never rely on the values above being in scope.
-  : "${_PROD_PATTERN:=prod|prd|production}"
-  : "${_HELM_DANGEROUS:=install|upgrade|uninstall|rollback|delete}"
-  : "${_HELM_READONLY:=diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion}"
-
-  # Decide on the first argument that names a subcommand, whichever list it
-  # lands in. Taking the first non-flag token instead lets
-  # "helm --namespace x upgrade" through, because "x" is neither a flag nor a
-  # verb. Checking read-only first is what keeps "helm diff upgrade" quiet.
-  local a _verdict="safe"
-  for a in "$@"; do
-    [[ $a == -* ]] && continue
-    if echo "$a" | grep -qxE "$_HELM_READONLY"; then _verdict="safe"; break; fi
-    if echo "$a" | grep -qxE "$_HELM_DANGEROUS"; then _verdict="danger"; break; fi
-  done
-  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
-
-  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-    if [ "$_verdict" = danger ]; then
-      echo ""
-      echo "  ╔══════════════════════════════════════╗"
-      echo "  ║   PRODUCTION HELM: $ctx"
-      echo "  ╚══════════════════════════════════════╝"
-      echo ""
-      echo "  Command : helm $*"
-      echo ""
-      printf "  Type context name to confirm (%s): " "$ctx"
-      read -r _confirm
-
-      if [ "$_confirm" != "$ctx" ]; then
-        echo "  ✓ Aborted."
-        return 1
-      fi
-    fi
-  fi
-
-  command helm "$@"
-}
+#helm() {
+#  # An unset pattern would leave grep testing an empty regex, which matches
+#  # everything, so never rely on the values above being in scope.
+#  : "${_PROD_PATTERN:=prod|prd|production}"
+#  : "${_HELM_DANGEROUS:=install|upgrade|uninstall|rollback|delete}"
+#  : "${_HELM_READONLY:=diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion}"
+#
+#  # Decide on the first argument that names a subcommand, whichever list it
+#  # lands in. Taking the first non-flag token instead lets
+#  # "helm --namespace x upgrade" through, because "x" is neither a flag nor a
+#  # verb. Checking read-only first is what keeps "helm diff upgrade" quiet.
+#  local a _verdict="safe"
+#  for a in "$@"; do
+#    [[ $a == -* ]] && continue
+#    if echo "$a" | grep -qxE "$_HELM_READONLY"; then _verdict="safe"; break; fi
+#    if echo "$a" | grep -qxE "$_HELM_DANGEROUS"; then _verdict="danger"; break; fi
+#  done
+#  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
+#
+#  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
+#    if [ "$_verdict" = danger ]; then
+#      echo ""
+#      echo "  ╔══════════════════════════════════════╗"
+#      echo "  ║   PRODUCTION HELM: $ctx"
+#      echo "  ╚══════════════════════════════════════╝"
+#      echo ""
+#      echo "  Command : helm $*"
+#      echo ""
+#      printf "  Type context name to confirm (%s): " "$ctx"
+#      read -r _confirm
+#
+#      if [ "$_confirm" != "$ctx" ]; then
+#        echo "  ✓ Aborted."
+#        return 1
+#      fi
+#    fi
+#  fi
+#
+#  command helm "$@"
+#}
 
 eval "$(/home/naeem/.local/bin/mise activate zsh)"
-
-
-export KUBECOLOR_LIGHT_BACKGROUND=true
 compdef kubecolor=kubectl
