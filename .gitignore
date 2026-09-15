@@ -8,3 +8,9 @@ niri/.config/niri/unsplash-key
 
 # Decrypted SOPS output - only the .sops.* files belong in git.
 noctalia/settings.toml
+
+# tmux plugins are TPM-managed git clones, and themes/ holds Noctalia-generated
+# output that nothing sources any more. Both paths appear inside the package
+# when stow folds ~/.config/tmux into a symlink on a fresh checkout.
+tmux/.config/tmux/plugins/
+tmux/.config/tmux/themes/
