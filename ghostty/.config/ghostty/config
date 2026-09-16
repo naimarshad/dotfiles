@@ -11,14 +11,36 @@ background-blur-radius = 60
 theme = noctalia
 
 # Font
-font-family = "JetBrainsMono NF Regular"
-font-family-bold = "JetBrainsMono NF Regular"
-font-family-italic = "JetBrainsMono NF Regular"
-font-family-bold-italic = "JetBrainsMono NF Regular"
-font-size = 12
+# Upstream Monaspace variable fonts (ttf-monaspace-variable). Nerd Font icons
+# come from the mono symbols font (ttf-nerd-fonts-symbols-mono): each family
+# key is repeated, first the face, then the fallback for missing codepoints.
+font-family = "Monaspace Neon Var"
+font-family = "Symbols Nerd Font Mono"
+font-family-bold = "Monaspace Neon Var"
+font-family-bold = "Symbols Nerd Font Mono"
+font-family-italic = "Monaspace Radon Var"
+font-family-italic = "Symbols Nerd Font Mono"
+font-family-bold-italic = "Monaspace Radon Var"
+font-family-bold-italic = "Symbols Nerd Font Mono"
+# Variable axes. wght runs 200-800; ital=1 selects the true italic that
+# lives in the same file, so nothing is synthesised.
+font-variation = wght=450
+font-variation-bold = wght=700
+font-variation-italic = wght=450
+font-variation-italic = ital=1
+font-variation-bold-italic = wght=700
+font-variation-bold-italic = ital=1
+font-size = 13
 font-feature = +calt
 font-feature = +liga
+# 2 = slashed zero; try 3 or 4 if you prefer dotted/cut-out
+font-feature = cv01=2
+font-feature = +cv02
 font-feature = +ss01
+font-feature = +ss02
+font-feature = +ss03
+font-feature = +ss07
+font-feature = +ss09
 freetype-load-flags = hinting
 font-thicken = false
 font-synthetic-style = false
@@ -43,11 +65,11 @@ scrollback-limit = 100000000
 shell-integration-features = no-cursor,sudo,no-title
 
 # Padding (important on large LG screens)
-window-padding-x = 6
-window-padding-y = 4
-window-padding-balance = true
-window-save-state = always
-window-colorspace = "display-p3"
+# window-padding-x = 6
+# window-padding-y = 4
+# window-padding-balance = true
+# window-save-state = always
+# window-colorspace = "display-p3"
 
 # keybindings
 keybind = alt+s>r=reload_config
@@ -76,4 +98,4 @@ keybind = alt+s>z=toggle_split_zoom
 keybind = alt+s>e=equalize_splits
 
 
-shell-integration = none
+# shell-integration = none
