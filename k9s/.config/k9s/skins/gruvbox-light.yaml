@@ -1,0 +1,106 @@
+# -----------------------------------------------------------------------------
+# K9s Gruvbox Light Skin (medium background, matches Noctalia's Gruvbox Light
+# render in ghostty/themes/noctalia). Noctalia has no k9s template, so this is
+# kept by hand: change it alongside the scheme.
+# -----------------------------------------------------------------------------
+
+# Styles...
+foreground: &foreground "#3c3836"
+background: &background "#fbf1c7"
+current_line: &current_line "#d5c4a1"
+selection: &selection "#bdae93"
+comment: &comment "#7c6f64"
+cyan: &cyan "#427b58"
+green: &green "#79740e"
+orange: &orange "#b57614"
+magenta: &magenta "#8f3f71"
+blue: &blue "#076678"
+red: &red "#9d0006"
+
+k9s:
+  body:
+    fgColor: *foreground
+    bgColor: *background
+    logoColor: *blue
+  prompt:
+    fgColor: *foreground
+    bgColor: *background
+    suggestColor: *orange
+  info:
+    fgColor: *magenta
+    sectionColor: *foreground
+  help:
+    fgColor: *foreground
+    bgColor: *background
+    keyColor: *magenta
+    numKeyColor: *blue
+    sectionColor: *green
+  dialog:
+    fgColor: *foreground
+    bgColor: *background
+    buttonFgColor: *background
+    buttonBgColor: *magenta
+    buttonFocusFgColor: *background
+    buttonFocusBgColor: *cyan
+    labelFgColor: *orange
+    fieldFgColor: *foreground
+  frame:
+    border:
+      fgColor: *selection
+      focusColor: *comment
+    menu:
+      fgColor: *foreground
+      keyColor: *magenta
+      numKeyColor: *magenta
+    crumbs:
+      fgColor: *background
+      bgColor: *comment
+      activeColor: *blue
+    status:
+      newColor: *cyan
+      modifyColor: *blue
+      addColor: *green
+      errorColor: *red
+      highlightColor: *orange
+      killColor: *comment
+      completedColor: *comment
+    title:
+      fgColor: *foreground
+      bgColor: *background
+      highlightColor: *orange
+      counterColor: *blue
+      filterColor: *magenta
+  views:
+    charts:
+      bgColor: background
+      defaultDialColors:
+        - *blue
+        - *red
+      defaultChartColors:
+        - *blue
+        - *red
+    table:
+      fgColor: *foreground
+      bgColor: *background
+      cursorFgColor: *foreground
+      cursorBgColor: *current_line
+      header:
+        fgColor: *foreground
+        bgColor: *background
+        sorterColor: *blue
+    xray:
+      fgColor: *foreground
+      bgColor: *background
+      cursorColor: *current_line
+      graphicColor: *blue
+      showIcons: false
+    yaml:
+      keyColor: *magenta
+      colonColor: *blue
+      valueColor: *foreground
+    logs:
+      fgColor: *foreground
+      bgColor: *background
+      indicator:
+        fgColor: *foreground
+        bgColor: *background

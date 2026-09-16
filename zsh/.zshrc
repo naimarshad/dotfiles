@@ -98,12 +98,17 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
 fi
 
 ### Fuzzy search configurations ###
-export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi"
-#--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
-#--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
-#--color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
-#--color=selected-bg:#BCC0CC \
-#--color=border:#9CA0B0,label:#4C4F69"
+# Gruvbox light, the same hex Noctalia renders into ghostty/themes/noctalia.
+export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi \
+--color=bg+:#ebdbb2,bg:#fbf1c7,spinner:#af3a03,hl:#9d0006 \
+--color=fg:#3c3836,header:#9d0006,info:#8f3f71,pointer:#af3a03 \
+--color=marker:#076678,fg+:#3c3836,prompt:#8f3f71,hl+:#9d0006 \
+--color=selected-bg:#d5c4a1 \
+--color=border:#bdae93,label:#3c3836"
+
+# kubecolor's real palette is ~/.kube/color.yaml (deployed by `stow zsh`); this
+# only keeps the built-in light preset as the fallback before that file exists.
+export KUBECOLOR_PRESET=light
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
