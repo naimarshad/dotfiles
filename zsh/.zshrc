@@ -15,8 +15,7 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 export PATH="$HOME/.local/bin:$PATH"
-export KUBECOLOR_PRESET="light"
-export BAT_THEME=GitHub
+# export BAT_THEME=GitHub
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
@@ -30,7 +29,6 @@ export SOPS_AGE_KEY_FILE="/home/naeem/.config/sops/age/keys.txt"
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
-#ZSH_THEME="robbyrussell"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 plugins=(alias-finder aliases git docker docker-compose colorize kubectl vscode common-aliases command-not-found fzf \
@@ -98,17 +96,14 @@ alias review="gh search prs --review-requested naeem-tipu --state open --review 
 alias merge="gh search prs --author naeem-tipu --state open --review approved"
 alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
 alias kubectl="kubecolor"
+alias k0s-dev='export KUBECONFIG=/home/naeem/.kube/k0s-dev.config'
+alias k0s-prod='export KUBECONFIG=/home/naeem/.kube/k0s-prod.config'
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
 fi
 
 ### Fuzzy search configurations ###
 export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
-#--color=bg+:#CCD0DA,bg:#EFF1F5,spinner:#DC8A78,hl:#D20F39 \
-#--color=fg:#4C4F69,header:#D20F39,info:#8839EF,pointer:#DC8A78 \
-#--color=marker:#7287FD,fg+:#4C4F69,prompt:#8839EF,hl+:#D20F39 \
-#--color=selected-bg:#BCC0CC \
-#--color=border:#9CA0B0,label:#4C4F69"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
