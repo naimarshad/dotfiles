@@ -257,5 +257,5 @@ bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 #  command helm "$@"
 #}
 
-eval "$(/home/naeem/.local/bin/mise activate zsh)"
+eval "$(cd /home/naeem/ri-work/git-repos/platform/iac/ && /home/naeem/.local/bin/mise activate zsh)"
 compdef kubecolor=kubectl
