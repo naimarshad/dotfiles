@@ -11,9 +11,9 @@ Managed with GNU Stow. Every top-level directory is a Stow package whose content
 | `niri` | `~/.config/niri/` | Compositor config, split across KDL includes, plus the wallpaper and workspace helper scripts |
 | `noctalia` | `~/.config/noctalia/` | Quickshell-based desktop shell: bar, launcher, control centre, colorschemes, plugins |
 | `hypr` | `~/.config/hypr/` | Previous Hyprland setup, kept for reference after the niri migration |
-| `ghostty` | `~/.config/ghostty/` | Terminal config and keybinds, with the colour theme pinned by hand |
+| `ghostty` | `~/.config/ghostty/` | Terminal config and keybinds, with the colour theme rendered by Noctalia |
 | `nvim` | `~/.config/nvim/` | LazyVim-based Neovim config with a pinned `lazy-lock.json` |
-| `zsh` | `~/.zshrc`, `~/.p10k.zsh`, `~/.kube/kubie.yaml` | Oh My Zsh with Powerlevel10k, plus the kubie context switcher config |
+| `zsh` | `~/.zshrc`, `~/.p10k.zsh`, `~/.kube/kubie.yaml`, `~/.kube/color.yaml` | Oh My Zsh with Powerlevel10k, plus the kubie context switcher and kubecolor theme |
 | `fish` | `~/.config/fish/` | Fish shell with Starship, fzf bindings, gitnow, and kubecolor wrappers |
 | `starship` | `~/.config/starship/` | Helper scripts (`cpu.sh`, `netinfo.sh`) used by custom prompt modules |
 | `btop` | `~/.config/btop/` | Resource monitor and its Catppuccin and Noctalia themes |
@@ -42,18 +42,18 @@ Use `stow -n -v` first for a dry run, and `stow -D` to remove a package's symlin
 Machines differ by more than a couple of files, so each one gets its own long-lived branch rather than a set of conditional includes.
 
 - `main` is the shared Hyprland-era base.
-- `machine/ri-t-0931` is the primary work machine: niri, a light Catppuccin Latte theme, and a three-output desk at home (HDMI-A-1 ultrawide, DP-1 rotated vertical, eDP-1 laptop panel), plus a Lenovo P34w-20 ultrawide at the office that the dock enumerates as either DP-3 or DP-5.
+- `machine/ri-t-0931` is the primary work machine: niri, Noctalia's Gruvbox Light palette everywhere, and a three-output desk at home (HDMI-A-1 ultrawide, DP-1 rotated vertical, eDP-1 laptop panel), plus a Lenovo P34w-20 ultrawide at the office that the dock enumerates as either DP-3 or DP-5.
 - `machine/workforce` is a Debian Sid and Plasma machine, and carries `k9s` and `tmux` packages that the other branches do not.
 
 Because the package sets themselves diverge, share code between branches by cherry-picking specific commits rather than merging `main` in wholesale.
 
 ## Theming
 
-Noctalia's colorscheme engine is the single source of truth for colours. The active scheme is set in `noctalia/.config/noctalia/settings.json` (`colorSchemes.predefinedScheme`, currently Catppuccin Frappe Blue with `darkMode` off, which selects the scheme's light palette).
+Noctalia's colorscheme engine is the single source of truth for colours. The active scheme is set in `~/.local/state/noctalia/settings.toml` (tracked SOPS-encrypted as `noctalia/settings.sops.toml`), currently Gruvbox Light.
 
-From there, Noctalia renders colour templates into the apps listed under `templates.activeTemplates`, which is how `niri/.config/niri/noctalia.kdl`, `gtk/.config/gtk-3.0/noctalia.css`, and `gtk/.config/gtk-4.0/noctalia.css` get their values. Those generated files are committed so a fresh checkout looks right before Noctalia has run once. Edit the scheme, not the generated files.
+From there, Noctalia renders colour templates into its active apps, which is how `niri/.config/niri/noctalia.kdl`, the two `gtk/.config/gtk-*/noctalia.css` files, `ghostty/.config/ghostty/themes/noctalia`, `bat/.config/bat/themes/noctalia.tmTheme`, `btop/.config/btop/themes/noctalia.theme` and `nvim/.config/nvim/lua/matugen.lua` get their values. Those generated files are committed so a fresh checkout looks right before Noctalia has run once. Edit the scheme, not the generated files.
 
-Ghostty is the exception: it is deliberately not in `activeTemplates`, and pins `theme = "Catppuccin Latte"` in its own config instead. Change the terminal colours there, not through Noctalia.
+`tmux`, `k9s`, kubecolor and fzf have no Noctalia template, so they carry the same Gruvbox Light hex by hand (`@gb_*` in `tmux.conf`, `k9s/.config/k9s/skins/gruvbox-light.yaml`, `zsh/.kube/color.yaml`, and `FZF_DEFAULT_OPTS` in both shells). Change those alongside the scheme.
 
 ## Local-only files
 

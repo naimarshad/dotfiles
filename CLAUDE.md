@@ -104,13 +104,15 @@ SOPS has no TOML parser, so it encrypts the whole file as one opaque blob. It ro
 
 **`noctalia/BAR-LAYOUT-v4.md`** records what every output's bar held under v4 (`HDMI-A-1`, `DP-3`, `DP-5`, `DP-6`, `DP-1`, `eDP-1`), since the v4 `settings.json` is gone. Rebuild the v5 bars from it. It carries no secrets: every credential field was empty in the source.
 
-**Colours are generated, not hand-edited.** The scheme is selected in `settings.toml`, and Noctalia renders that palette into every app in its active-template list, producing `niri/.config/niri/noctalia.kdl`, `gtk/.config/gtk-3.0/noctalia.css`, `gtk/.config/gtk-4.0/noctalia.css`, and `hypr/.config/hypr/noctalia/noctalia-colors.conf`. All of those are committed so a fresh checkout looks right before Noctalia first runs. Change the scheme and let it regenerate; hand-editing a generated file is overwritten on the next render. The `gtk` templates are confirmed working under v5: `gtk-4.0/gtk.css` changed from a symlink into `adw-gtk3` to a real file that `@import`s `noctalia.css`, and both `noctalia.css` files regenerate.
+**Colours are generated, not hand-edited.** The scheme is selected in `settings.toml`, and Noctalia renders that palette into every app in its active-template list, producing `niri/.config/niri/noctalia.kdl`, `gtk/.config/gtk-3.0/noctalia.css`, `gtk/.config/gtk-4.0/noctalia.css`, `ghostty/.config/ghostty/themes/noctalia`, `bat/.config/bat/themes/noctalia.tmTheme`, `btop/.config/btop/themes/noctalia.theme` and `nvim/.config/nvim/lua/matugen.lua`. (`hypr/.config/hypr/noctalia/noctalia-colors.conf` is a stale v4 Catppuccin render: hyprland is no longer an active template.) All of those are committed so a fresh checkout looks right before Noctalia first runs. Change the scheme and let it regenerate; hand-editing a generated file is overwritten on the next render. The `gtk` templates are confirmed working under v5: `gtk-4.0/gtk.css` changed from a symlink into `adw-gtk3` to a real file that `@import`s `noctalia.css`, and both `noctalia.css` files regenerate.
 
-Ghostty was brought **inside** that system in the v5 migration (`theme = noctalia`, with Noctalia rendering `ghostty/.config/ghostty/themes/noctalia`), and `machine/workforce` made the same switch in `5a7403e`. This branch has since left it again: the config pins `theme = Gruvbox Dark` by hand and the rendered `themes/noctalia` file is deleted, so Ghostty no longer tracks the Noctalia palette here.
+Ghostty was brought **inside** that system in the v5 migration (`theme = noctalia`, with Noctalia rendering `ghostty/.config/ghostty/themes/noctalia`), and `machine/workforce` made the same switch in `5a7403e`. This branch briefly left it for a hand-pinned `Gruvbox Dark` terminal (`253959d` through `331bdf6`) and then came back: Ghostty, `bat`, `btop` and Neovim all read the Noctalia render again, and the two tools Noctalia has no template for, `tmux` and `k9s`, carry the same Gruvbox Light hex by hand. See "Key Environment Details" for the per-tool list.
 
 ## Neovim Config (`nvim/`)
 
 LazyVim-based. `lua/config/` holds `autocmds.lua`, `keymaps.lua`, `lazy.lua`, and `options.lua`. `lua/plugins/` holds the overrides, including `colorscheme.lua`. Plugin versions are pinned in `lazy-lock.json`.
+
+There is no colorscheme plugin in the usual sense. `colorscheme.lua` loads `RRethy/base16-nvim` and hands LazyVim a `colorscheme` *function* that sets `background=light` and calls `require("matugen").setup()`. `lua/matugen.lua` is Noctalia's nvim render: a base16 palette for the active scheme plus a `SIGUSR1` handler, which Noctalia signals after every re-render so open editors re-theme live. Do not hand-edit `matugen.lua`, and do not add a second colorscheme plugin, since LazyVim would apply it on top.
 
 ## tmux (`tmux/`)
 
@@ -120,7 +122,7 @@ LazyVim-based. `lua/config/` holds `autocmds.lua`, `keymaps.lua`, `lazy.lua`, an
 
 **The status line is hand-rolled, not themed by a plugin.** An earlier version used `egel/tmux-gruvbox`, which was dropped because it owns `status-left` and `status-right` outright and exposes only four fixed slots, which is not enough for kube, git, cpu, battery, clock and host together.
 
-The palette lives in `@gb_*` user options and is identical to Ghostty's `Gruvbox Dark`. It is defined in exactly one place: the scripts read colours back with `tmux show -gqv @gb_<name>` rather than hardcoding hex, so changing a colour in `tmux.conf` changes it everywhere.
+The palette lives in `@gb_*` user options and is the Gruvbox Light hex Noctalia renders into `ghostty/themes/noctalia` (background, foreground and palette slots 9-14), copied by hand because Noctalia has no tmux template. It is defined in exactly one place: the scripts read colours back with `tmux show -gqv @gb_<name>` rather than hardcoding hex, so changing a colour in `tmux.conf` changes it everywhere.
 
 Three things here are load-bearing and easy to break:
 
@@ -148,6 +150,7 @@ Two shells are configured, with different prompts, so a prompt change usually ne
 - `.zshrc` for the plugin list, exports, and aliases
 - `.p10k.zsh` for the prompt config, shared across machines
 - `.kube/kubie.yaml` for the kubie context switcher
+- `.kube/color.yaml` for kubecolor's theme (see "Key Environment Details")
 
 `.zshrc` also carries production guards wrapping `kubectl` and `helm`, which are the most delicate thing in the file. **They are currently commented out** (as of `4b113d5`), with a plain `alias kubectl=kubecolor` in their place, so no confirmation prompt fires today. The description below is of the code as written, kept because re-enabling it is a matter of uncommenting. When the current context matches `_PROD_PATTERN`, a destructive subcommand prompts for confirmation before running. The verb is decided by walking the arguments, skipping anything starting with `-`, and taking the first token that appears in either the read-only or the dangerous list, so `kubectl -n default delete pod` is caught and `helm diff upgrade` is not a false alarm. Read-only is checked first for exactly that reason. Each function re-asserts its patterns with `: "${VAR:=default}"`, because an unset pattern would leave `grep -E` testing an empty regex, which matches everything and would make every command look dangerous. Keep both properties if you touch these.
 
@@ -155,13 +158,14 @@ Two shells are configured, with different prompts, so a prompt change usually ne
 
 ## Key Environment Details
 
-- **Terminal**: Ghostty (`com.mitchellh.ghostty`), theme pinned to `Gruvbox Dark`, font `JetBrainsMono NF Regular`
-- **Editor theme**: Neovim uses `ellisonleao/gruvbox.nvim` at default contrast, matched deliberately to Ghostty's `Gruvbox Dark`. Both backgrounds are `#282828`. Change one and change the other.
-- **The light desktop and the dark terminal are deliberate.** Everything that runs *inside* the terminal is gruvbox dark at `#282828` / `#ebdbb2`: Ghostty, Neovim, `bat`, `btop`, `k9s` and `tmux`. Noctalia renders gruvbox *light* into niri, GTK and the shell itself. The mismatch is intended, so do not "fix" it by switching the Noctalia scheme to dark.
-- **Terminal theme settings, one per tool.** `bat` uses its built-in `gruvbox-dark` (`bat/.config/bat/config`); `btop` uses `color_theme = "gruvbox_dark_v2"`; `k9s` uses `skin: gruvbox-dark`, a local skin at `k9s/.config/k9s/skins/gruvbox-dark.yaml`; `tmux` defines the palette itself in `@gb_*` options in `tmux/.config/tmux/tmux.conf`. Changing the terminal palette means changing all six places.
-- **`btop`'s theme names are misleading.** `gruvbox_dark.theme` is the *hard* variant at `#1d2021`. The one matching Ghostty's `Gruvbox Dark` is `gruvbox_dark_v2.theme` at `#282828`. Do not "correct" the `_v2` suffix.
-- **`bat` emits no background.** It writes only `38;2;...` foreground sequences, so it inherits Ghostty's background and its theme choice only affects syntax colours. `k9s` and `btop` both paint their own background and therefore had to be matched explicitly.
-- **The `k9s` gruvbox skin is a local edit.** `gruvbox-dark.yaml` is `gruvbox-dark-hard.yaml` with the `background` anchor lifted from `#1d2021` to `#282828`; every other anchor was already correct. The hard variant is kept alongside it.
+- **Terminal**: Ghostty (`com.mitchellh.ghostty`), `theme = noctalia` (the Noctalia render at `ghostty/.config/ghostty/themes/noctalia`), font `JetBrainsMono NF Regular`
+- **One palette everywhere: Noctalia's Gruvbox Light.** Background `#fbf1c7`, foreground `#3c3836`. The scheme chosen in Noctalia is the single source of truth, for the desktop (niri, GTK, the shell) and for everything inside the terminal alike. Tools with a Noctalia template read the render directly; the rest carry the same hex by hand and must be updated when the scheme changes:
+  - rendered by Noctalia: Ghostty (`theme = noctalia`), `bat` (`--theme=noctalia`), `btop` (`color_theme = "noctalia"`), Neovim (`lua/matugen.lua` via base16)
+  - hand-copied from the Ghostty render: `tmux` (`@gb_*` options in `tmux.conf`), `k9s` (`skin: gruvbox-light`, `k9s/.config/k9s/skins/gruvbox-light.yaml`), fzf (`FZF_DEFAULT_OPTS` in both `.zshrc` and `config.fish`), and `kubecolor` (`zsh/.kube/color.yaml`, deployed to `~/.kube/color.yaml`)
+- **`kubecolor` must use explicit hex, never its presets.** The built-in `light` preset is written in ANSI names (`info: black`, `muted: gray`, `string: yellow`), and Gruvbox remaps those slots: ANSI black is `#fbf1c7`, the background, so default text vanished. `color.yaml` sets every `theme.base.*` colour as hex from the Ghostty render. `KUBECOLOR_PRESET=light` in both shells is only the fallback before that file is stowed; `KUBECOLOR_LIGHT_BACKGROUND` was dropped because it forces the same preset and nothing else.
+- **`bat` needs its cache rebuilt** after `themes/noctalia.tmTheme` changes: `bat cache --build`. Otherwise `--theme=noctalia` keeps using the previously compiled copy, or errors if there never was one.
+- **`bat` emits no background.** It writes only `38;2;...` foreground sequences, so it inherits Ghostty's background and its theme choice only affects syntax colours. `k9s`, `btop` and `tmux` all paint their own background and therefore have to be matched explicitly.
+- **The dark-era files are kept, not deleted.** `k9s/.config/k9s/skins/gruvbox-dark.yaml` (a local edit of `gruvbox-dark-hard.yaml` with the background lifted to `#282828`) and `btop`'s bundled `gruvbox_dark_v2.theme` (the `#282828` variant; `gruvbox_dark.theme` is the hard `#1d2021` one, so the `_v2` suffix is not a typo) are the ones to reach for if the terminal ever goes dark again.
 - **Cursor theme**: `Bibata-Modern-Classic` at size 24, set in `niri/environment.kdl` (both the `cursor` block and `XCURSOR_THEME`) and in the GTK settings
 - **GTK theme**: `adw-gtk3` with the `Catppuccin-Macchiato` icon theme and `Inter 12`
 - **Screenshots**: niri's built-in actions on the `Print` keys (`screenshot`, `Mod+Print` for screen, `Mod+Shift+Print` for window). There is no `HYPRSHOT_DIR` under niri.
@@ -173,9 +177,9 @@ Worth knowing before assuming something is a bug you introduced:
 
 - `.config/starship.toml` sits at the repo root instead of in `starship/.config/`, so `stow starship` deploys only `cpu.sh` and `netinfo.sh`.
 - `ghostty/.config/ghostty/config` sets `background-blur-radius` twice, at 80 and then 60, left over from resolving a merge conflict. Only one value can win. `theme` is set once.
-- `ghostty/.config/ghostty/themes/noctalia` has been deleted, since the config pins `Gruvbox Dark` by hand. If ghostty is still in Noctalia's `activeTemplates`, that file will reappear on the next render and be ignored.
-- `bat`, `btop` and `tmux` have also left the Noctalia palette system, the same way ghostty did. `tmux/.config/tmux/themes/noctalia.conf` is no longer sourced (it used to be the last line of `tmux.conf`, which meant it silently overrode catppuccin) and is now gitignored rather than tracked. `bat/.config/bat/themes/noctalia.tmTheme` and `btop/.config/btop/themes/noctalia.theme` are still tracked and still regenerated on each render, but nothing reads them any more: both configs name a static gruvbox dark theme instead. The stale catppuccin `.tmTheme` and `.theme` files in those same directories are likewise unused.
-- `KUBECOLOR_LIGHT_BACKGROUND=true` is exported twice in `.zshrc`, near the top and again at the bottom.
+- `tmux/.config/tmux/themes/noctalia.conf` is gitignored and not sourced. It used to be the last line of `tmux.conf`, silently overriding whatever the status line had set, and Noctalia does not currently render anything there anyway. The tmux palette is the hand-copied `@gb_*` block instead.
+- The Catppuccin `.tmTheme`, `.theme` and k9s skin files that sit next to the Noctalia renders are unused leftovers, kept only because they are harmless.
+- `hypr/.config/hypr/noctalia/noctalia-colors.conf` still holds Catppuccin Latte from v4. Hyprland is legacy and not an active template, so Noctalia never regenerates it.
 - Several files have carried committed merge conflict markers in the past. Grep for `<<<<<<<` before committing a resolution. (The worst offender, Noctalia's v4 `settings.json`, is gone with the v5 migration.)
 
 ## Secrets
