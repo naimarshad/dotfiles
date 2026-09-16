@@ -536,7 +536,8 @@ sudo pacman -S \
   pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber \
   power-profiles-daemon \
   bluez bluez-utils \
-  noto-fonts noto-fonts-emoji ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols
+  noto-fonts noto-fonts-emoji \
+  ttf-monaspace-variable otf-monaspace ttf-nerd-fonts-symbols-mono ttf-nerd-fonts-symbols
 
 paru -S ttf-amiri                   # Arabic; the Arch AUR name, not Debian's ttf-hosny-amiri
 
@@ -549,7 +550,10 @@ fc-cache -fr
 > `pipewire-jack` and `jack2` both provide `jack`. pacman will ask which to keep; answer `pipewire-jack` (`y` to replace) so PipeWire owns the JACK API. On the workforce build this prompt appeared and `pipewire-jack` was the right choice.
 
 > [!success] Nerd fonts are packaged
-> Rev 4 had to `apt-cache search` for a Nerd symbols font and note it "may need manual install". Arch has `ttf-jetbrains-mono-nerd` and `ttf-nerd-fonts-symbols` in `extra`. The Amiri Arabic font is not in the official repos under any name; Debian's `ttf-hosny-amiri` maps to `ttf-amiri` on the AUR.
+> Rev 4 had to `apt-cache search` for a Nerd symbols font and note it "may need manual install". Arch has every piece in `extra`. The Amiri Arabic font is not in the official repos under any name; Debian's `ttf-hosny-amiri` maps to `ttf-amiri` on the AUR.
+
+> [!note] Monaspace, unpatched, with the Nerd icons as a fallback font
+> The code font is GitHub's Monaspace (`Neon` upright, `Radon` for italics) straight from upstream, not the Nerd Fonts patched "Monaspice" build. Icons for p10k, eza, tmux and the editors' terminal panels come from `ttf-nerd-fonts-symbols-mono`, which every consumer lists as a fallback family (`Symbols Nerd Font Mono`) after the code font. Two builds of the same font are installed on purpose. `ttf-monaspace-variable` (9 MiB, one file per family with `wght`, `wdth`, `slnt` and `ital` axes) is what Ghostty uses: it drives the axes itself through `font-variation`, so `ghostty/.config/ghostty/config` asks for `Monaspace Neon Var` at `wght=450` and gets a true Radon italic with `ital=1`. `otf-monaspace` (76 MiB, static faces) is what Zed uses: Zed's Linux text system picks a face by weight and style and never sets variable axes, so the variable file gives it exactly one upright face and italic comments silently vanish. `zed/.config/zed/settings.json` therefore asks for the static `Monaspace Neon` at weight 500, the Medium face. Verified on the workforce build on 2026-09-16 with `printf '   \n'` in Ghostty and in Zed's terminal panel (four one-cell icons), `printf 'mmmm iiii\n'` (texture healing even spacing), and italic comments in both editors. Do not install `otf-monaspace-nerd` alongside: nothing references its `Monaspice*` family names any more.
 
 ## 18 · Theming
 *the light theme the niri session expects, without a source build*
@@ -934,6 +938,9 @@ paru -S claude-desktop                                    # verify exact package
 
 > [!note] `fuzzel` is the niri launcher
 > niri binds expect `fuzzel`; `alacritty` is a fallback terminal to `ghostty`. Neither matters under GNOME, both matter after Step 22.
+
+> [!note] Zed expects the static Monaspace build, Ghostty the variable one
+> Both come from Step 17. The stowed `zed` package sets `Monaspace Neon` with `Symbols Nerd Font Mono` as the fallback and weight 500; if Zed shows upright comments or default-looking glyphs, `otf-monaspace` is missing, not the config. The file icons are the `zed-noctalia-icons/` dev extension at the repo root, installed once per machine through Extensions, then **Install Dev Extension**.
 
 > [!note] Claude Code here is just the binary
 > The `curl | bash` above installs the CLI and nothing else. The memory extractor, the SessionStart injector, the `~/Obsidian/MEMORY.md` freeze guard, and the per-machine routing config are all Step 28, deliberately after syncthing (Step 27) so the Obsidian vault the extractor writes to actually exists.
