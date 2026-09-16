@@ -1,6 +1,6 @@
 id = "noctalia-icons"
 name = "Noctalia Icons"
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
 authors = ["Naeem Arshad <naimarshad@gmail.com>"]
 description = "File icons drawn in the Noctalia light palette."

@@ -22,7 +22,7 @@ There is no build step. Icon themes need no Rust and no compilation, so editing 
 |---|---|
 | `extension.toml` | Extension manifest. `schema_version = 1`. |
 | `icon_themes/noctalia.json` | The icon theme: filename and suffix mappings, and the icon list. |
-| `icons/*.svg` | 28 glyphs, 16x16 viewBox, 1.25 stroke, round caps and joins. |
+| `icons/*.svg` | 56 glyphs, 16x16 viewBox, 1.25 stroke, round caps and joins. The Go lettermark is the one exception at 1.5. |
 
 ## Palette
 
@@ -30,17 +30,19 @@ Taken from the Noctalia Light theme Noctalia generates at `~/.config/zed/themes/
 
 | Colour | Used for |
 |---|---|
-| `#1f52ad` bright blue | Go |
-| `#c84053` red | Rust, Ansible, Git |
-| `#6f894e` green | Shell, images |
-| `#527e1b` leaf green | Fish, Helm |
-| `#1b3e7e` deep blue | YAML, Lua |
-| `#4d699b` blue | Docker |
-| `#77713f` olive | TOML, Terraform, KDL, config |
-| `#ad9e1f` gold | JSON, secrets and keys |
-| `#545464` foreground | Markdown, text |
+| `#1f52ad` bright blue | Go, TypeScript, Kubernetes, Arch |
+| `#c84053` red | Rust, Ansible, Git, HTML, Ruby, PDF |
+| `#6f894e` green | Shell, bash, tmux, Node, tables, images |
+| `#527e1b` leaf green | zsh, fish, Vim, Helm |
+| `#1b3e7e` deep blue | YAML, Lua, C++, PHP, audio, video |
+| `#4d699b` blue | Docker, Python, C, CSS, Nix |
+| `#77713f` olive | TOML, Terraform, KDL, Java, databases, config, systemd, agent files |
+| `#ad9e1f` gold | JSON, JavaScript, secrets, ssh keys |
+| `#545464` foreground | Markdown, text, fonts |
 | `#918661` dim | Folders, archives, licences, the default file |
-| `#8a8980` muted | Chevrons |
+| `#8a8980` muted | Chevrons, binaries |
+
+Eleven colours across fifty file types means several share a hue. That is deliberate: the shape carries the identity and the colour keeps the panel calm, which is the point of drawing to one palette instead of borrowing every brand's own.
 
 The colours are written into each SVG, so this is a hand-maintained copy of the palette, exactly like `lua/matugen.lua` is for Neovim. Noctalia has no icon template, so **a desktop theme change does not update these icons**. Re-colouring means editing the SVGs. That is the known cost of the approach.
 
@@ -50,7 +52,11 @@ The set is drawn for a light background and `appearance` is declared `light`. On
 
 Exact filenames are matched before extensions, so `Chart.yaml`, `go.mod`, `docker-compose.yml`, `.zshrc`, `.sops.yaml` and `LICENSE` get their own icons rather than the generic YAML or shell one. Anything unmapped falls back to Zed's own icon theme for that type, so partial coverage degrades quietly instead of showing blanks.
 
-Mapped groups: Go, Rust, shell, fish, YAML, JSON, TOML, KDL, Lua, Markdown, Docker, Helm, Terraform and OpenTofu, Ansible, git metadata, secrets and keys, images, archives, config and unit files, licences, plain text. Folders get a generic pair plus a git-marked pair for `.git` and `.github`.
+Mapped groups: Go, Rust, Python, JavaScript, TypeScript, C, C++, Java, Ruby, PHP, Nix, Lua, KDL, HTML and XML, CSS, YAML, JSON, TOML, Markdown, plain text, Docker, Helm, Terraform and OpenTofu, Ansible, git metadata, Node and its lockfiles, databases, tables, PDF, fonts, audio, video, binaries, secrets, images, archives, config files, licences. Folders get a generic pair plus a git-marked pair for `.git` and `.github`.
+
+The shell and Linux side gets its own family, drawn from what `zsh/.zshrc` and the rest of the dotfiles actually touch: generic `sh` and PowerShell keep the `>_` terminal, bash gets the same frame with a `$`, zsh the same frame with a `%` (covering `.zshrc`, `.p10k.zsh`, `.zsh_history` and oh-my-zsh themes), fish stays a fish. tmux is a window split into panes. Kubernetes is the heptagon, for `kubeconfig`, `kubie.yaml`, `kustomization.yaml` and `k0sctl.yaml`. ssh identities, `authorized_keys`, `known_hosts` and the age `keys.txt` get a key rather than the padlock, which stays for encrypted and certificate files. systemd units, `.service` through `.nspawn`, get a power symbol. `PKGBUILD`, `.SRCINFO`, `pacman.conf` and `arch-update.conf` get the Arch peak. Vim covers `.vimrc`, `init.vim`, `lazy-lock.json` and `lazyvim.json`. `CLAUDE.md`, `AGENTS.md`, `.mcp.json` and the other agent instruction files get a robot head so they stand apart from ordinary Markdown.
+
+The Go glyph is the "GO" wordmark drawn as two paths, a G with its crossbar and an O, in a slightly heavier 1.5 stroke so the letters hold at 16px. It is a geometric rendering of the mark, not the trademarked artwork.
 
 ## Editing
 
