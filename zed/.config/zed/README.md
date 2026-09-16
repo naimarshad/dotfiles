@@ -14,7 +14,7 @@ File icons come from `zed-noctalia-icons/` at the repo root, a Zed extension rat
 | `keymap.json` | Space-leader chords for vim mode, grouped like the Neovim README. |
 | `tasks.json` | Global tasks: lazygit, and the linters that have no Zed language server (hadolint, yamllint, actionlint), plus `go test`. |
 
-Fonts follow ghostty: JetBrainsMono Nerd Font with `calt`, `liga` and `ss01`, in the editor and the built-in terminal. Editor text is 16, the UI is 16 on Zed's bundled sans font. Indent guides are on with per-level colouring and a thicker active guide, and `show_whitespaces` is `boundary`, which together make YAML nesting and stray leading spaces visible before a linter runs.
+Fonts follow ghostty: upstream Monaspace Neon with `calt`, `liga`, `cv01=2`, `cv02` and the `ss01`, `ss02`, `ss03`, `ss07`, `ss09` ligature sets, in the editor and the built-in terminal, with `Symbols Nerd Font Mono` as the fallback for icons. One deliberate difference from ghostty: Zed asks for the static build (`otf-monaspace`, family `Monaspace Neon`, weight 500 for the Medium face) while ghostty uses the variable build, because Zed's Linux text system matches static faces by weight and style and never sets variable axes, so the variable file would give it upright text only. Zed also cannot switch font family per syntax token, so comments are Neon's own italic rather than ghostty's Radon. Editor text is 16, the UI is 16 on Zed's bundled sans font. Indent guides are on with per-level colouring and a thicker active guide, and `show_whitespaces` is `boundary`, which together make YAML nesting and stray leading spaces visible before a linter runs.
 
 ## Tools that must be on PATH
 
