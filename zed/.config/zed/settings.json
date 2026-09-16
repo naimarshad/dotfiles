@@ -9,10 +9,37 @@
   // Theme: Noctalia generates ~/.config/zed/themes/noctalia.json from the
   // desktop palette (community template "zed"). That file is not stowed,
   // the same as the ghostty and tmux noctalia themes.
+  "agent_ui_font_family": "Monaspace Neon",
+  "agent_buffer_font_family": "Monaspace Neon",
+  "markdown_preview_code_font_family": "Monaspace Neon",
   "theme": {
     "mode": "light",
     "light": "Noctalia Light",
-    "dark": "Noctalia Dark"
+    "dark": "Gruvbox Dark Hard"
+  },
+  // Italic comments in both themes. Zed can't switch family per style,
+  // so this is Neon's italic; Radon cursive only shows up in Ghostty.
+  "theme_overrides": {
+    "Gruvbox Dark Hard": {
+      "syntax": {
+        "comment": {
+          "font_style": "italic"
+        },
+        "comment.doc": {
+          "font_style": "italic"
+        }
+      }
+    },
+    "Noctalia Light": {
+      "syntax": {
+        "comment": {
+          "font_style": "italic"
+        },
+        "comment.doc": {
+          "font_style": "italic"
+        }
+      }
+    }
   },
   // File icons drawn in the Noctalia palette. They come from the dev
   // extension in zed-noctalia-icons/ at the repo root, which has to be
@@ -22,22 +49,42 @@
   "ui_font_size": 16,
   // Same face and OpenType features as ghostty/.config/ghostty/config.
   // The UI keeps Zed's bundled sans font.
-  "buffer_font_family": "JetBrainsMono Nerd Font",
   "buffer_font_size": 16,
+  // Upstream Monaspace, the static build (otf-monaspace) rather than the
+  // variable one Ghostty uses: Zed picks a face by weight and style and never
+  // sets variable axes, so the variable file would give upright text only.
+  // Weight 500 is the Medium face. Nerd Font icons via the mono symbols
+  // fallback, the same pairing as ghostty/.config/ghostty/config.
+  "buffer_font_family": "Monaspace Neon",
+  "buffer_font_fallbacks": ["Symbols Nerd Font Mono"],
+  "buffer_font_weight": 500,
   "buffer_font_features": {
     "calt": true,
     "liga": true,
-    "ss01": true
+    "cv01": 2,
+    "cv02": true,
+    "ss01": true,
+    "ss02": true,
+    "ss03": true,
+    "ss07": true,
+    "ss09": true
   },
   "terminal": {
-    "font_family": "JetBrainsMono Nerd Font",
+    "font_family": "Monaspace Neon",
+    "font_fallbacks": ["Symbols Nerd Font Mono"],
+    "font_weight": 500,
     "font_features": {
       "calt": true,
       "liga": true,
-      "ss01": true
+      "cv01": 2,
+      "cv02": true,
+      "ss01": true,
+      "ss02": true,
+      "ss03": true,
+      "ss07": true,
+      "ss09": true
     }
   },
-
   // Vim mode, with the system clipboard as the default register
   // (LazyVim's clipboard=unnamedplus).
   "vim_mode": true,
@@ -47,7 +94,6 @@
   // vim.opt.confirm = true in options.lua
   "confirm_quit": true,
   "tab_size": 2,
-
   // LazyVim enables inlay hints; Zed has them off by default.
   "inlay_hints": {
     "enabled": true
@@ -73,7 +119,6 @@
     "background_coloring": "disabled"
   },
   "show_whitespaces": "boundary",
-
   // Panels. Explorer left and auto-open (autocmds.lua), Claude on the
   // right (claude.lua split_side = "right"), git panel next to the explorer.
   "project_panel": {
@@ -89,14 +134,12 @@
   "agent": {
     "dock": "right"
   },
-
   "git": {
     "inline_blame": {
       "enabled": true,
       "delay_ms": 600
     }
   },
-
   // Claude Code over ACP. Auth lives inside the thread: run /login there.
   "agent_servers": {
     "claude-acp": {
@@ -106,7 +149,6 @@
       "type": "registry"
     }
   },
-
   // Edit prediction. Supermaven is not a Zed provider any more, so this is
   // Zed's own Zeta model in eager mode (inline ghost text, Tab accepts),
   // the closest match to vim.g.ai_cmp = false. The default disabled_globs
@@ -133,13 +175,11 @@
       "**/secrets/**"
     ]
   },
-
   // No crash reports or usage metrics.
   "telemetry": {
     "diagnostics": false,
     "metrics": false
   },
-
   // Extensions Zed installs on startup. Go, Rust, Bash, YAML, JSON, TOML,
   // Markdown and diff are built in. golangci-lint, tflint and markdownlint
   // run as language servers here, replacing the nvim-lint entries.
@@ -158,10 +198,8 @@
     "github-actions": true,
     "tombi": true
   },
-
   // LazyVim's autoformat = true.
   "format_on_save": "on",
-
   "languages": {
     "Go": {
       "formatter": "language_server",
@@ -177,7 +215,10 @@
       "formatter": {
         "external": {
           "command": "shfmt",
-          "arguments": ["--filename", "{buffer_path}"]
+          "arguments": [
+            "--filename",
+            "{buffer_path}"
+          ]
         }
       }
     },
@@ -201,7 +242,6 @@
       "format_on_save": "on"
     }
   },
-
   // Language names for the extension-provided languages. The Helm list
   // deliberately omits **/values*.yaml so values files stay with
   // yaml-language-server and its schemas.
@@ -234,7 +274,6 @@
       "**playbook*.yaml"
     ]
   },
-
   "lsp": {
     // Same gopls options LazyVim's lang.go extra sets.
     "gopls": {
