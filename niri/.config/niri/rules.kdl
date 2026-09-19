@@ -11,7 +11,7 @@
 window-rule {
     geometry-corner-radius 10
     clip-to-geometry true
-    opacity 0.95
+    opacity 1.0
     background-effect {
         xray true
         blur true
@@ -27,7 +27,7 @@ window-rule {
 // Explicitly lock both focus states to identical opacity
 window-rule {
     match is-active=true
-    opacity 0.95
+    opacity 1.0
 }
 window-rule {
     match is-active=false
@@ -85,12 +85,12 @@ window-rule {
 window-rule {
     match app-id=r#"^zen.*"#
     open-on-workspace "work"
-    default-column-width { proportion 0.4; }
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id="^code(-url-handler)?$"
     open-on-workspace "work"
-    default-column-width { proportion 0.66667; }
+    default-column-width { proportion 0.6; }
 }
 window-rule {
     match app-id="^firefox$"
