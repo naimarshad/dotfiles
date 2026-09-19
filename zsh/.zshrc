@@ -135,3 +135,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 compdef kubecolor=kubectl
 
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
