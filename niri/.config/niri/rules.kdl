@@ -9,7 +9,7 @@
 //
 // Requires niri v26.04+. Check with: niri --version
 window-rule {
-    geometry-corner-radius 10
+    geometry-corner-radius 6
     clip-to-geometry true
     opacity 1.0
     background-effect {
@@ -80,7 +80,7 @@ window-rule {
 window-rule {
     match app-id="^obsidian$"
     open-on-workspace "work"
-    default-column-width { proportion 0.4; }
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id=r#"^zen.*"#
@@ -90,7 +90,7 @@ window-rule {
 window-rule {
     match app-id="^code(-url-handler)?$"
     open-on-workspace "work"
-    default-column-width { proportion 0.6; }
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id="^firefox$"

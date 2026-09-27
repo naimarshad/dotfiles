@@ -13,9 +13,9 @@
   "agent_buffer_font_family": "Monaspace Neon",
   "markdown_preview_code_font_family": "Monaspace Neon",
   "theme": {
-    "mode": "light",
+    "mode": "dark",
     "light": "Noctalia Light",
-    "dark": "Gruvbox Dark Hard"
+    "dark": "Noctalia Dark"
   },
   // Italic comments in both themes. Zed can't switch family per style,
   // so this is Neon's italic; Radon cursive only shows up in Ghostty.

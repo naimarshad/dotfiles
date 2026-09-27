@@ -1,5 +1,5 @@
 layout {
-    gaps 12
+    gaps 8
     center-focused-column "never"
 
     // Widths cycled by Mod+R — tuned for 3-column layout (40/40/20)
@@ -10,7 +10,7 @@ layout {
         proportion 0.5
     }
 
-    default-column-width { proportion 0.4; }
+    default-column-width { proportion 0.5; }
 
     focus-ring {
         on
@@ -20,7 +20,7 @@ layout {
     }
 
     border {
-        on
+        off
         width 1
         active-color "#1a1a1aee"
         inactive-color "#3a3a5c"

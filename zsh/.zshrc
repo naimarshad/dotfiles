@@ -69,7 +69,6 @@ fi
 
 ###### General Use Alaises #####
 alias vim="nvim"
-alias fvim='vim $(fzf --preview="bat --color=always {}")'
 alias kk="kubecolor klock"
 alias kgir="kubectl get ingressroutes"
 alias kvs="kubectl view-secret"
@@ -87,7 +86,7 @@ alias jellyfinpc='ssh jellyfinpc'
 alias ri-worklap='ssh ri-worklap'
 alias wifirouter='ssh wifirouter'
 alias mm='ssh mattermost'
-alias jellyfinstation='ssh jellyfinstation'
+alias jellyfinstation='ssh root@10.8.9.1'
 alias jellyfinpc='ssh jellyfinpc'
 alias pvewol='wakeonlan 64:00:6a:8a:db:d5'
 alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
@@ -136,6 +135,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 compdef kubecolor=kubectl
 
 
-. "$HOME/.atuin/bin/env"
+# . "$HOME/.atuin/bin/env"
+# eval "$(atuin init zsh)"
 
-eval "$(atuin init zsh)"
+# eval "$(suv init zsh)"
+
+eval "$(mcfly init zsh)"
