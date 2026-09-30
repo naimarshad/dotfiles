@@ -57,7 +57,6 @@ output "DP-5" {
 // --- Primary monitor (HDMI-A-1, LG ultrawide) ---
 workspace "work"     { open-on-output "HDMI-A-1"; }
 workspace "web"      { open-on-output "HDMI-A-1"; }
-workspace "code"     { open-on-output "HDMI-A-1"; }
 workspace "personal" { open-on-output "HDMI-A-1"; }
 workspace "files"    { open-on-output "HDMI-A-1"; }
 workspace "media"    { open-on-output "HDMI-A-1"; }
@@ -65,7 +64,7 @@ workspace "misc"     { open-on-output "HDMI-A-1"; }
 workspace "misc2"    { open-on-output "HDMI-A-1"; }
 
 // --- Side monitor (DP-1, MSI): Slack + Chrome pinned here ---
-workspace "social"   { open-on-output "DP-1"; }
+workspace "work2"   { open-on-output "DP-1"; }
 
 // --- Built-in laptop panel (eDP-1) ---
 workspace "laptop"   { open-on-output "eDP-1"; }

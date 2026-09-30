@@ -11,7 +11,7 @@
 window-rule {
     geometry-corner-radius 10
     clip-to-geometry true
-    opacity 0.90
+    opacity 1.00
     background-effect {
         xray true
         blur true
@@ -27,11 +27,11 @@ window-rule {
 // Explicitly lock both focus states to identical opacity
 window-rule {
     match is-active=true
-    opacity 0.90
+    opacity 1.00
 }
 window-rule {
     match is-active=false
-    opacity 0.90
+    opacity 1.00
 }
 
 // Floating + workspace assignments
@@ -78,9 +78,9 @@ window-rule {
 
 // Workspace assignments
 window-rule {
-    match app-id="^obsidian$"
-    open-on-workspace "work"
-    default-column-width { proportion 0.4; }
+    match app-id="md.obsidian.Obsidian$"
+    open-on-workspace "work2"
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id=r#"^zen.*"#
@@ -88,18 +88,23 @@ window-rule {
     default-column-width { proportion 0.4; }
 }
 window-rule {
+    match app-id="com.anthropic.Claude$"
+    open-on-workspace "work"
+    default-column-width { proportion 0.4; }
+}
+window-rule {
     match app-id="^code(-url-handler)?$"
     open-on-workspace "work"
-    default-column-width { proportion 0.6; }
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id="^firefox$"
     open-on-workspace "personal"
-    default-column-width { proportion 0.4; }
+    default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id="^slack$"
-    open-on-workspace "social"
+    open-on-workspace "work2"
     default-column-width { proportion 0.5; }
 }
 window-rule {
@@ -107,3 +112,4 @@ window-rule {
     open-on-workspace "laptop"
     default-column-width { proportion 1.0; }
 }
+

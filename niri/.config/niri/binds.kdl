@@ -17,13 +17,13 @@ binds {
     Mod+Shift+P     { spawn "noctalia" "msg" "panel-toggle" "control-center" "media"; }
 
     // --- Essential ---
-    Mod+Return        { spawn "ghostty"; }
-    Mod+E             { spawn "nemo"; }
+    Mod+Return            { spawn "ghostty"; }
+    Mod+E                 { spawn "nautilus"; }
     Mod+Q cooldown-ms=500 { close-window; }
-    Mod+Shift+R       { spawn "niri" "msg" "action" "reload-config"; }
-    Mod+Slash         { show-hotkey-overlay; }
-    Mod+Shift+Escape  { quit skip-confirmation=true; }
-    Mod+O             { toggle-overview; }
+    Mod+Shift+R           { spawn "niri" "msg" "action" "reload-config"; }
+    Mod+Slash             { show-hotkey-overlay; }
+    Mod+Shift+Escape      { quit skip-confirmation=true; }
+    Mod+O                 { toggle-overview; }
 
     // --- Focus (Mod+L reserved for lockScreen) ---
     Mod+Left  { focus-column-left; }
