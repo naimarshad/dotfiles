@@ -1,0 +1,21 @@
+/* Remove GTK3's own menu transparency so niri's blur shows through cleanly */
+
+menu,
+.menu,
+.context-menu,
+.dropdown,
+.popup {
+    background-color: @theme_bg_color;
+    background-image: none;
+}
+
+/* Only the menu body (contents) gets a solid fill. The bare `popover`
+   element must stay transparent — filling it paints the shadow/margin
+   area and produces a hard dark box around the menu. */
+popover > contents,
+.popover > contents {
+    background-color: @theme_bg_color;
+    background-image: none;
+}
+
+@import url("noctalia.css");
