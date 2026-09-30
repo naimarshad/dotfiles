@@ -98,6 +98,7 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
 fi
 
 ### Fuzzy search configurations ###
+
 # Colours come from ~/.config/fzf/colors (`stow fzf`), a symlink to
 # gruvbox-light or gruvbox-dark that niri/.config/niri/theme-sync.sh flips with
 # Noctalia's theme mode. fzf reads the file on every run, before
@@ -114,7 +115,8 @@ export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border --multi"
 # [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 # RI Sepcfic aliases & environment variables
-alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
+#alias dialin="sudo openfortivpn dialin.risk-ident.com:8443 -u naeem.tipu --trusted-cert 9e8cd6c7a1fb2df59bdd56f29dea1fb2777c201ea1b8505e92e0cd9346fa73b5"
+alias dialin='(sudo /usr/bin/cat /root/.vpn-creds; /usr/bin/cat) | sudo openconnect --protocol=fortinet -u naeem.tipu --passwd-on-stdin --servercert pin-sha256:d9Cj+U8nIqWq1jT/PR7rVEwdImWHroELqpdmn/M3yek= dialin.risk-ident.com:8443'
 alias gro='cd $(git rev-parse --show-toplevel)'
 alias review="gh search prs --review-requested naeem-tipu --state open --review required"
 alias merge="gh search prs --author naeem-tipu --state open --review approved"
@@ -153,108 +155,17 @@ export ANSIBLE_REMOTE_USER=naeemtipu
 zle -N kube-toggle
 bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 
-# Destructive verbs that require confirmation. Exported because the shell
-# snapshot used by external tooling captures functions but not plain variables.
-# Matched against the subcommand alone, so no anchors here.
-#export _PROD_PATTERN="prod|prd|production"
-#export _DANGEROUS="delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set"
-#export _READONLY="get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff"
-
-#kubectl() {
-#  # KUBIE_CTX is set by kubie in its subshell — reliable indicator
-#  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
-#
-#  # An unset pattern would leave grep testing an empty regex, which matches
-#  # everything, so never rely on the values above being in scope.
-#  : "${_PROD_PATTERN:=prod|prd|production}"
-#  : "${_DANGEROUS:=delete|scale|drain|cordon|uncordon|taint|patch|apply|create|replace|edit|exec|cp|rollout|annotate|label|set}"
-#  : "${_READONLY:=get|describe|logs|top|explain|api-resources|api-versions|config|version|cluster-info|auth|wait|port-forward|proxy|events|diff}"
-#
-#  # Decide on the first argument that names a subcommand, whichever list it
-#  # lands in. Taking the first non-flag token instead lets
-#  # "kubectl -n default delete pod" through, because "default" is neither a
-#  # flag nor a verb.
-#  local a _verdict="safe"
-#  for a in "$@"; do
-#    [[ $a == -* ]] && continue
-#    if echo "$a" | grep -qxE "$_READONLY"; then _verdict="safe"; break; fi
-#    if echo "$a" | grep -qxE "$_DANGEROUS"; then _verdict="danger"; break; fi
-#  done  
-#
-#  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-#    if [ "$_verdict" = danger ]; then
-#
-#      # Hard visual break — hard to overlook
-#      echo ""
-#      echo "  ╔══════════════════════════════════════╗"
-#      echo "  ║   PRODUCTION CONTEXT: $ctx"
-#      echo "  ╚══════════════════════════════════════╝"
-#      echo ""
-#      echo "  Namespace : ${KUBIE_NS:-$(command kubectl config view --minify -o jsonpath='{..namespace}')}"
-#      echo "  Command   : kubectl $*"
-#      echo ""
-#      printf "  Type context name to confirm (%s): " "$ctx"
-#      read -r _confirm
-#
-#      if [ "$_confirm" != "$ctx" ]; then
-#        echo ""
-#        echo "  ✓ Aborted — no changes made."
-#        echo ""
-#        return 1
-#      fi
-#      echo ""
-#    fi
-#  fi
-#
-#  command kubecolor "$@"
-#}
-
-# Helm destructive verbs. Exported because the shell snapshot used by external
-# tooling captures functions but not plain variables. Matched against the
-# subcommand alone, so no anchors here.
-# export _HELM_DANGEROUS="install|upgrade|uninstall|rollback|delete"
-# export _HELM_READONLY="diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion"
-
-#helm() {
-#  # An unset pattern would leave grep testing an empty regex, which matches
-#  # everything, so never rely on the values above being in scope.
-#  : "${_PROD_PATTERN:=prod|prd|production}"
-#  : "${_HELM_DANGEROUS:=install|upgrade|uninstall|rollback|delete}"
-#  : "${_HELM_READONLY:=diff|template|lint|show|get|list|ls|history|status|search|repo|version|env|plugin|dependency|dep|package|pull|inspect|completion}"
-#
-#  # Decide on the first argument that names a subcommand, whichever list it
-#  # lands in. Taking the first non-flag token instead lets
-#  # "helm --namespace x upgrade" through, because "x" is neither a flag nor a
-#  # verb. Checking read-only first is what keeps "helm diff upgrade" quiet.
-#  local a _verdict="safe"
-#  for a in "$@"; do
-#    [[ $a == -* ]] && continue
-#    if echo "$a" | grep -qxE "$_HELM_READONLY"; then _verdict="safe"; break; fi
-#    if echo "$a" | grep -qxE "$_HELM_DANGEROUS"; then _verdict="danger"; break; fi
-#  done
-#  local ctx="${KUBIE_CTX:-$(command kubectl config current-context 2>/dev/null)}"
-#
-#  if echo "$ctx" | grep -qiE "$_PROD_PATTERN"; then
-#    if [ "$_verdict" = danger ]; then
-#      echo ""
-#      echo "  ╔══════════════════════════════════════╗"
-#      echo "  ║   PRODUCTION HELM: $ctx"
-#      echo "  ╚══════════════════════════════════════╝"
-#      echo ""
-#      echo "  Command : helm $*"
-#      echo ""
-#      printf "  Type context name to confirm (%s): " "$ctx"
-#      read -r _confirm
-#
-#      if [ "$_confirm" != "$ctx" ]; then
-#        echo "  ✓ Aborted."
-#        return 1
-#      fi
-#    fi
-#  fi
-#
-#  command helm "$@"
-#}
-
 eval "$(cd /home/naeem/ri-work/git-repos/platform/iac/ && /home/naeem/.local/bin/mise activate zsh)"
+
+### Openrouter Configs
+# export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
+# export ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY"
+# export ANTHROPIC_API_KEY="" # Important: Must be explicitly empty
+# export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1 # Optional: enables the gateway model picker
+
+# Openrouter Claude model
+#
+# export ANTHROPIC_DEFAULT_OPUS_MODEL="deepseek/deepseek-v4.1-flash"
+# export ANTHROPIC_DEFAULT_HAIKU_MODEL="deepseek/deepseek-v4.1-flash"
+
 compdef kubecolor=kubectl
