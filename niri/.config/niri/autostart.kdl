@@ -30,3 +30,9 @@ spawn-at-startup "arch-update" "--tray"
 spawn-at-startup "/usr/lib/kdeconnectd"
 spawn-at-startup "/usr/bin/kdeconnect-indicator"
 spawn-at-startup "noctalia"
+
+// Noctalia's Auto theme mode flips Gruvbox light/dark at sunrise and sunset.
+// theme-sync.sh carries the switch into tmux, k9s, kubecolor and fzf, which have
+// no Noctalia template: on every re-render via theme-sync.path, and once now.
+// The watcher starts first so a render during login is never missed.
+spawn-at-startup "sh" "-c" "systemctl --user start theme-sync.path; bash $HOME/.config/niri/theme-sync.sh --now"

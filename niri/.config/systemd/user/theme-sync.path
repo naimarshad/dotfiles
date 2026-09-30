@@ -1,0 +1,8 @@
+# Started (not enabled) from autostart.kdl, so enabling never writes .wants
+# symlinks into this repo through a stow-folded ~/.config/systemd.
+[Unit]
+Description=Watch Noctalia's Ghostty render for theme mode changes
+
+[Path]
+PathChanged=%h/.config/ghostty/themes/noctalia
+Unit=theme-sync.service

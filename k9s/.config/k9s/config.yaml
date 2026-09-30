@@ -13,8 +13,9 @@ k9s:
     reactive: false
     noIcons: false
     defaultsToFullScreen: false
-    skin: gruvbox-light
-    # skin: gruvbox-dark
+    # gitignored symlink to gruvbox-light.yaml or gruvbox-dark.yaml, flipped by
+    # niri/.config/niri/theme-sync.sh to follow Noctalia's theme mode.
+    skin: gruvbox-auto
   skipLatestRevCheck: false
   disablePodCounting: false
   shellPod:

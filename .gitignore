@@ -14,3 +14,10 @@ noctalia/settings.toml
 # when stow folds ~/.config/tmux into a symlink on a fresh checkout.
 tmux/.config/tmux/plugins/
 tmux/.config/tmux/themes/
+
+# Light/dark symlinks maintained by niri/.config/niri/theme-sync.sh. They land
+# inside the package when stow folds the directory into a symlink.
+tmux/.config/tmux/palette.conf
+k9s/.config/k9s/skins/gruvbox-auto.yaml
+zsh/.kube/color.yaml
+fzf/.config/fzf/colors

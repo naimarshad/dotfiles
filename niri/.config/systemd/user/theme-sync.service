@@ -1,0 +1,6 @@
+[Unit]
+Description=Match tmux, k9s, kubecolor and fzf to Noctalia's light/dark render
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash %h/.config/niri/theme-sync.sh
