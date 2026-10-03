@@ -30,7 +30,7 @@ font-variation-italic = wght=450
 font-variation-italic = ital=1
 font-variation-bold-italic = wght=700
 font-variation-bold-italic = ital=1
-font-size = 13
+font-size = 16
 font-feature = +calt
 font-feature = +liga
 # 2 = slashed zero; try 3 or 4 if you prefer dotted/cut-out
