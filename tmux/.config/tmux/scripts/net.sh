@@ -8,10 +8,27 @@
 # because it waits on a scan, so signal strength comes from /proc/net/wireless
 # (link quality out of 70) instead.
 
-active=$(nmcli -t -f TYPE,NAME,DEVICE connection show --active 2>/dev/null)
+if [ "$(uname)" = Darwin ]; then
+	# No nmcli or /proc/net/wireless here. Use the default route's interface
+	# and its hardware port name. No SSID or signal strength on this branch.
+	wifi=""
+	wired=""
+	dev=$(route -n get default 2>/dev/null | awk '/interface:/ { print $2; exit }')
+	port=$(networksetup -listallhardwareports 2>/dev/null |
+		awk -v d="$dev" '/^Hardware Port:/ { p = substr($0, 16) } $1 == "Device:" && $2 == d { print p; exit }')
+	if [ -z "$dev" ]; then
+		:
+	elif [ "$port" = "Wi-Fi" ]; then
+		wifi="802-11-wireless:$port:$dev"
+	else
+		wired="802-3-ethernet:${port:-$dev}:$dev"
+	fi
+else
+	active=$(nmcli -t -f TYPE,NAME,DEVICE connection show --active 2>/dev/null)
 
-wifi=$(printf '%s\n' "$active" | grep -m1 '^802-11-wireless:')
-wired=$(printf '%s\n' "$active" | grep -m1 '^802-3-ethernet:')
+	wifi=$(printf '%s\n' "$active" | grep -m1 '^802-11-wireless:')
+	wired=$(printf '%s\n' "$active" | grep -m1 '^802-3-ethernet:')
+fi
 
 # Link quality for an interface, as a percentage.
 signal_pct() {
@@ -23,7 +40,7 @@ case "$1" in
 icon)
 	if [ -n "$wifi" ]; then
 		pct=$(signal_pct "${wifi##*:}")
-		[ -n "$pct" ] || pct=0
+		[ -n "$pct" ] || { [ "$(uname)" = Darwin ] && pct=100 || pct=0; }
 		if [ "$pct" -ge 75 ]; then
 			printf '󰤨 '
 		elif [ "$pct" -ge 50 ]; then

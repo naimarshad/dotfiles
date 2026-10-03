@@ -5,11 +5,21 @@
 #   battery.sh icon
 #   battery.sh text
 
-bat=/sys/class/power_supply/BAT0
-[ -d "$bat" ] || exit 0
-
-read -r cap <"$bat/capacity" 2>/dev/null || exit 0
-read -r state <"$bat/status" 2>/dev/null || state=Unknown
+if [ "$(uname)" = Darwin ]; then
+	line=$(pmset -g batt | grep InternalBattery) || exit 0
+	cap=$(printf '%s' "$line" | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+	[ -n "$cap" ] || exit 0
+	case "$line" in
+	*"; charging"* | *"finishing charge"*) state=Charging ;;
+	*"; charged"*) state=Full ;;
+	*) state=Discharging ;;
+	esac
+else
+	bat=/sys/class/power_supply/BAT0
+	[ -d "$bat" ] || exit 0
+	read -r cap <"$bat/capacity" 2>/dev/null || exit 0
+	read -r state <"$bat/status" 2>/dev/null || state=Unknown
+fi
 
 case "$1" in
 icon)
