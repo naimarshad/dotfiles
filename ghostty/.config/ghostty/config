@@ -8,7 +8,7 @@ window-padding-balance = true
 background-opacity = 0.95
 background-opacity-cells = true
 background-blur-radius = 60
-theme = noctalia
+theme = Gruvbox Light
 
 # Font
 # Upstream Monaspace variable fonts (ttf-monaspace-variable). Nerd Font icons
