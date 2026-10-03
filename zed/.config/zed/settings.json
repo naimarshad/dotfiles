@@ -6,16 +6,15 @@
 // Comments are full-line only, so `grep -v '^\s*//' settings.json | jq .`
 // validates the file.
 {
-  // Theme: Noctalia generates ~/.config/zed/themes/noctalia.json from the
-  // desktop palette (community template "zed"). That file is not stowed,
-  // the same as the ghostty and tmux noctalia themes.
+  // Theme: Gruvbox ships with Zed (Light, Light Hard, Light Soft and the Dark
+  // trio). Swap "light" below to pick a variant. There is no Noctalia on macOS.
   "agent_ui_font_family": "Monaspace Neon",
   "agent_buffer_font_family": "Monaspace Neon",
   "markdown_preview_code_font_family": "Monaspace Neon",
   "theme": {
-    "mode": "dark",
-    "light": "Noctalia Light",
-    "dark": "Noctalia Dark"
+    "mode": "light",
+    "light": "Gruvbox Light",
+    "dark": "Gruvbox Dark"
   },
   // Italic comments in both themes. Zed can't switch family per style,
   // so this is Neon's italic; Radon cursive only shows up in Ghostty.
@@ -30,7 +29,47 @@
         }
       }
     },
-    "Noctalia Light": {
+    "Gruvbox Light": {
+      "syntax": {
+        "comment": {
+          "font_style": "italic"
+        },
+        "comment.doc": {
+          "font_style": "italic"
+        }
+      }
+    },
+    "Gruvbox Light Hard": {
+      "syntax": {
+        "comment": {
+          "font_style": "italic"
+        },
+        "comment.doc": {
+          "font_style": "italic"
+        }
+      }
+    },
+    "Gruvbox Light Soft": {
+      "syntax": {
+        "comment": {
+          "font_style": "italic"
+        },
+        "comment.doc": {
+          "font_style": "italic"
+        }
+      }
+    },
+    "Gruvbox Dark": {
+      "syntax": {
+        "comment": {
+          "font_style": "italic"
+        },
+        "comment.doc": {
+          "font_style": "italic"
+        }
+      }
+    },
+    "Gruvbox Dark Soft": {
       "syntax": {
         "comment": {
           "font_style": "italic"
