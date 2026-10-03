@@ -51,6 +51,7 @@ export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
 eval "$(omp completions zsh)"
 
+ZSH_TMUX_AUTOCONNECT=false
 source $ZSH/oh-my-zsh.sh
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -97,9 +98,7 @@ alias changes="gh search prs --author naeem-tipu --state open --review changes_r
 alias kubectl="kubecolor"
 alias k0s-dev='export KUBECONFIG=/home/naeem/.kube/k0s-dev.config'
 alias k0s-prod='export KUBECONFIG=/home/naeem/.kube/k0s-prod.config'
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
-fi
+alias claude-auto='echo "claude: autonomous mode ON" >&2; CLAUDE_AUTONOMOUS=1 command claude --permission-mode auto'
 
 ### Fuzzy search configurations ###
 export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
@@ -141,3 +140,5 @@ compdef kubecolor=kubectl
 # eval "$(suv init zsh)"
 
 eval "$(mcfly init zsh)"
+[ -f ~/.config/typesafe.env ] && . ~/.config/typesafe.env
+alias jev='python3 ~/Obsidian/Claude/jev/jev.py'
