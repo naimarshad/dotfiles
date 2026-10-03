@@ -10,5 +10,5 @@ vim.g.ai_cmp = false
 -- Ask for confirmation instead of erroring on unsaved changes / :q etc.
 vim.opt.confirm = true
 
--- Light theme, to match the Noctalia light palette (see lua/matugen.lua).
+-- Light theme, to match Gruvbox Light (see lua/gruvbox_light.lua).
 vim.opt.background = "light"

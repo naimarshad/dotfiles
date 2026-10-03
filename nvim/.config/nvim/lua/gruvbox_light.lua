@@ -1,0 +1,27 @@
+-- Base16 Gruvbox Light (medium) palette for the macOS machine, applied with
+-- base16-nvim. Stands in for lua/matugen.lua, which is the Noctalia-generated
+-- palette and has no generator running here.
+local M = {}
+
+function M.setup()
+  require('base16-colorscheme').setup({
+    base00 = '#fbf1c7',
+    base01 = '#ebdbb2',
+    base02 = '#d5c4a1',
+    base03 = '#bdae93',
+    base04 = '#665c54',
+    base05 = '#3c3836',
+    base06 = '#282828',
+    base07 = '#1d2021',
+    base08 = '#9d0006',
+    base09 = '#af3a03',
+    base0A = '#b57614',
+    base0B = '#79740e',
+    base0C = '#427b58',
+    base0D = '#076678',
+    base0E = '#8f3f71',
+    base0F = '#d65d0e',
+  })
+end
+
+return M
