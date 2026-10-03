@@ -9,20 +9,19 @@ CASE_SENSITIVE="true"
 COMPLETION_WAITING_DOTS="true"
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/scripts:$HOME/bin:/usr/local/bin:/home/naeem/.local/bin:/home/naeem/go/bin:$PATH
+export PATH=$HOME/scripts:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:$PATH
 export PATH="$HOME/.krew/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
-export VAGRANT_DEFAULT_PROVIDER=libvirt
 export PATH="$HOME/.local/bin:$PATH"
 # export BAT_THEME=GitHub
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/naeem/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 export TERM="xterm-256color"
 export HISTSIZE="-1"
 export KUBECTL_KYAML=true
-export SOPS_AGE_KEY_FILE="/home/naeem/.config/sops/age/keys.txt"
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -32,8 +31,8 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 plugins=(alias-finder aliases git docker docker-compose colorize kubectl vscode common-aliases command-not-found fzf \
-  zsh-autosuggestions 1password ansible archlinux you-should-use zsh-bat cp gh dotenv git-auto-fetch \
-  git-commit git-lfs history helm opentofu ssh ssh-agent sudo systemd tmux virtualenv eza kind minikube)
+  zsh-autosuggestions 1password ansible you-should-use zsh-bat cp gh dotenv git-auto-fetch \
+  git-commit git-lfs history helm opentofu ssh ssh-agent sudo tmux virtualenv eza kind minikube)
 
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
 zstyle ':omz:plugins:alias-finder' exact yes # disabled by default
@@ -49,7 +48,7 @@ autoload -Uz compinit && compinit -i
 
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
-eval "$(omp completions zsh)"
+(( $+commands[omp] )) && eval "$(omp completions zsh)"
 
 source $ZSH/oh-my-zsh.sh
 # User configuration
@@ -57,8 +56,6 @@ source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
-export EDITOR='/usr/bin/nvim'
-export VISUAL='/usr/bin/nvim'
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -73,7 +70,7 @@ alias kk="kubecolor klock"
 alias kgir="kubectl get ingressroutes"
 alias kvs="kubectl view-secret"
 alias dim="docker images"
-alias pro="cd /home/naeem/projects/"
+alias pro="cd $HOME/projects/"
 alias vim="nvim"
 alias fvim='nvim $(fzf --preview="bat --color=always {}")'
 alias kcx='kubectl-ctx'
@@ -95,11 +92,8 @@ alias review="gh search prs --review-requested naeem-tipu --state open --review 
 alias merge="gh search prs --author naeem-tipu --state open --review approved"
 alias changes="gh search prs --author naeem-tipu --state open --review changes_requested"
 alias kubectl="kubecolor"
-alias k0s-dev='export KUBECONFIG=/home/naeem/.kube/k0s-dev.config'
-alias k0s-prod='export KUBECONFIG=/home/naeem/.kube/k0s-prod.config'
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
-fi
+alias k0s-dev='export KUBECONFIG=$HOME/.kube/k0s-dev.config'
+alias k0s-prod='export KUBECONFIG=$HOME/.kube/k0s-prod.config'
 
 ### Fuzzy search configurations ###
 export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
@@ -125,10 +119,10 @@ bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 #export CLAUDE_CODE_SUBAGENT_MODEL="anthropic/claude-opus-4.6"
 
 # opencode
-export PATH=/home/naeem/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH
 
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[[ -r /opt/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && source /opt/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+[[ -r /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #source /usr/share/zsh/site-functions/zsh-syntax-highlighting.zsh
 
 
