@@ -1,7 +1,7 @@
 k9s:
   liveViewAutoRefresh: false
   gpuVendors: {}
-  screenDumpDir: /home/naeem/.local/state/k9s/screen-dumps
+  screenDumpDir: /Users/naeem/.local/state/k9s/screen-dumps
   refreshRate: 2
   apiServerTimeout: 2m0s
   maxConnRetry: 5
@@ -9,7 +9,7 @@ k9s:
   noExitOnCtrlC: false
   portForwardAddress: localhost
   ui:
-    skin: gruvbox-dark-hard
+    skin: gruvbox-light
     enableMouse: false
     headless: false
     logoless: false
