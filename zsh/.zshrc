@@ -98,6 +98,9 @@ alias k0s-prod='export KUBECONFIG=$HOME/.kube/k0s-prod.config'
 ### Fuzzy search configurations ###
 export FZF_DEFAULT_OPTS=" --height 60% --layout=reverse --border --multi"
 
+# k9s defaults to ~/Library/Application Support/k9s on macOS; use the stowed config.
+export K9S_CONFIG_DIR="$HOME/.config/k9s"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
