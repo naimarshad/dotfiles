@@ -6,9 +6,6 @@
 // Comments are full-line only, so `grep -v '^\s*//' settings.json | jq .`
 // validates the file.
 {
-  // Theme: Noctalia generates ~/.config/zed/themes/noctalia.json from the
-  // desktop palette (community template "zed"). That file is not stowed,
-  // the same as the ghostty and tmux noctalia themes.
   "agent_ui_font_size": 18.0,
   "markdown_preview": {
     "font_size": 18.0
@@ -36,7 +33,7 @@
         }
       }
     },
-    "Noctalia Light": {
+    "Gruvbox Light Hard": {
       "syntax": {
         "comment": {
           "font_style": "italic"
@@ -47,10 +44,6 @@
       }
     }
   },
-  // File icons drawn in the Noctalia palette. They come from the dev
-  // extension in zed-noctalia-icons/ at the repo root, which has to be
-  // installed once per machine: Extensions -> Install Dev Extension.
-  // Until then Zed falls back to its own icon theme.
   "icon_theme": "Material Icon Theme",
   "ui_font_size": 18.0,
   // Same face and OpenType features as ghostty/.config/ghostty/config.
@@ -62,7 +55,9 @@
   // Weight 500 is the Medium face. Nerd Font icons via the mono symbols
   // fallback, the same pairing as ghostty/.config/ghostty/config.
   "buffer_font_family": "Monaspace Neon",
-  "buffer_font_fallbacks": ["Symbols Nerd Font Mono"],
+  "buffer_font_fallbacks": [
+    "Symbols Nerd Font Mono"
+  ],
   "buffer_font_weight": 500,
   "buffer_font_features": {
     "calt": true,
@@ -77,7 +72,9 @@
   },
   "terminal": {
     "font_family": "Monaspace Neon",
-    "font_fallbacks": ["Symbols Nerd Font Mono"],
+    "font_fallbacks": [
+      "Symbols Nerd Font Mono"
+    ],
     "font_weight": 500,
     "font_features": {
       "calt": true,
@@ -203,7 +200,8 @@
     "tflint": true,
     "markdownlint": true,
     "github-actions": true,
-    "tombi": true
+    "tombi": true,
+    "material-icon-theme": true
   },
   // LazyVim's autoformat = true.
   "format_on_save": "on",
