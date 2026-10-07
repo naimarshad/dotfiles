@@ -20,7 +20,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
 export TERM="xterm-256color"
-export HISTSIZE="-1"
+export HISTSIZE=100000
+export SAVEHIST=100000
 export KUBECTL_KYAML=true
 export SOPS_AGE_KEY_FILE="/home/naeem/.config/sops/age/keys.txt"
 
@@ -133,12 +134,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 compdef kubecolor=kubectl
 
+. "$HOME/.atuin/bin/env"
+eval "$(atuin init zsh --disable-up-arrow)"
+bindkey '^[[114;6u' atuin-search
 
-# . "$HOME/.atuin/bin/env"
-# eval "$(atuin init zsh)"
-
-# eval "$(suv init zsh)"
-
-eval "$(mcfly init zsh)"
 [ -f ~/.config/typesafe.env ] && . ~/.config/typesafe.env
 alias jev='python3 ~/Obsidian/Claude/jev/jev.py'
