@@ -1,0 +1,14 @@
+   {
+     "permissions": {
+       "ask": [
+         "Bash(stow *)",
+         "Bash(niri msg action *)",
+         "Bash(noctalia msg *)",
+         "Bash(gsettings set *)",
+         "Bash(systemctl *)",
+         "Bash(sudo *)",
+         "Bash(pacman *)",
+         "Bash(paru *)"
+       ]
+     }
+   }
