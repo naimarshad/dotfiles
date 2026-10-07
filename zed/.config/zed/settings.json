@@ -9,13 +9,19 @@
   // Theme: Noctalia generates ~/.config/zed/themes/noctalia.json from the
   // desktop palette (community template "zed"). That file is not stowed,
   // the same as the ghostty and tmux noctalia themes.
+  "agent_ui_font_size": 18.0,
+  "markdown_preview": {
+    "font_size": 18.0
+  },
+  "agent_buffer_font_size": 16.0,
+  "ui_font_family": "Monaspace Argon",
   "agent_ui_font_family": "Monaspace Neon",
   "agent_buffer_font_family": "Monaspace Neon",
   "markdown_preview_code_font_family": "Monaspace Neon",
   "theme": {
     "mode": "dark",
-    "light": "Noctalia Light",
-    "dark": "Noctalia Dark"
+    "light": "Gruvbox Light Hard",
+    "dark": "Gruvbox Dark Hard"
   },
   // Italic comments in both themes. Zed can't switch family per style,
   // so this is Neon's italic; Radon cursive only shows up in Ghostty.
@@ -45,11 +51,11 @@
   // extension in zed-noctalia-icons/ at the repo root, which has to be
   // installed once per machine: Extensions -> Install Dev Extension.
   // Until then Zed falls back to its own icon theme.
-  "icon_theme": "Noctalia Icons",
-  "ui_font_size": 16,
+  "icon_theme": "Material Icon Theme",
+  "ui_font_size": 18.0,
   // Same face and OpenType features as ghostty/.config/ghostty/config.
   // The UI keeps Zed's bundled sans font.
-  "buffer_font_size": 16,
+  "buffer_font_size": 16.0,
   // Upstream Monaspace, the static build (otf-monaspace) rather than the
   // variable one Ghostty uses: Zed picks a face by weight and style and never
   // sets variable axes, so the variable file would give upright text only.
@@ -144,6 +150,7 @@
   "agent_servers": {
     "claude-acp": {
       "default_config_options": {
+        "effort": "default",
         "mode": "acceptEdits"
       },
       "type": "registry"
