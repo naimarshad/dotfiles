@@ -22,4 +22,5 @@ environment {
     XDG_SESSION_TYPE                    "wayland"
     ELECTRON_OZONE_PLATFORM_HINT        "wayland"
     _JAVA_AWT_WM_NONREPARENTING         "1"
+    GH_HOST                             "github.2rioffice.com"
 }
