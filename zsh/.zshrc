@@ -18,7 +18,8 @@ export VAGRANT_DEFAULT_PROVIDER=libvirt
 # Path to your oh-my-zsh installation.
 export ZSH=/home/naeem/.oh-my-zsh
 export TERM="xterm-256color"
-export HISTSIZE="-1"
+export HISTSIZE=100000
+export SAVEHIST=100000
 export KUBECTL_KYAML=true
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -88,7 +89,8 @@ alias wifirouter='ssh wifirouter'
 alias mm='ssh mattermost'
 alias jellyfinstation='ssh jellyfinstation'
 alias jellyfinpc='ssh jellyfinpc'
-alias pvewol='wol 64:00:6a:8a:db:d5'
+alias wol-pvelab='wol 64:00:6a:8a:db:d5'
+alias wol-selfhost='wol e8:6a:64:7b:ee:3e'
 alias pro='cd ~/projects/'
 alias rnotes='cd ~/Obsidian/ri-runbooks/'
 alias pnotes='cd ~/Obsidian/personal-runbooks/'
@@ -158,6 +160,7 @@ bindkey '^]' kube-toggle  # ctrl-] to toggle kubecontext in powerlevel10k prompt
 eval "$(cd /home/naeem/ri-work/git-repos/platform/iac/ && /home/naeem/.local/bin/mise activate zsh)"
 
 ### Openrouter Configs
+# export OPENROUTER_API_KEY=""
 # export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
 # export ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY"
 # export ANTHROPIC_API_KEY="" # Important: Must be explicitly empty
@@ -169,3 +172,7 @@ eval "$(cd /home/naeem/ri-work/git-repos/platform/iac/ && /home/naeem/.local/bin
 # export ANTHROPIC_DEFAULT_HAIKU_MODEL="deepseek/deepseek-v4.1-flash"
 
 compdef kubecolor=kubectl
+
+. "$HOME/.atuin/bin/env"
+eval "$(atuin init zsh --disable-up-arrow)"
+bindkey '^[[114;6u' atuin-search
