@@ -28,7 +28,7 @@ fi
 echo $$ >"$LOCK_FILE"
 trap "rm -f $LOCK_FILE" EXIT
 
-TOPICS=("space" "technology" "nasa" "nature" "city" "universe" "people")
+TOPICS=("space" "nasa" "nature" "city" "universe" "linux")
 
 log "wallpaper.sh started (PID $$)"
 
