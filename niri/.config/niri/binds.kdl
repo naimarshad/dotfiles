@@ -18,6 +18,8 @@ binds {
 
     // --- Essential ---
     Mod+Return            { spawn "ghostty"; }
+    // Floating tmux scratch terminal: press again while focused to close it (session persists)
+    Mod+Shift+Return      { spawn "bash" "-c" "$HOME/.config/niri/toggle-float-term.sh"; }
     Mod+E                 { spawn "nautilus"; }
     Mod+Q cooldown-ms=500 { close-window; }
     Mod+Shift+R           { spawn "niri" "msg" "action" "reload-config"; }

@@ -9,7 +9,7 @@
 //
 // Requires niri v26.04+. Check with: niri --version
 window-rule {
-    geometry-corner-radius 10
+    geometry-corner-radius 2
     clip-to-geometry true
     opacity 1.00
     background-effect {
@@ -27,7 +27,7 @@ window-rule {
 // Explicitly lock both focus states to identical opacity
 window-rule {
     match is-active=true
-    opacity 1.00
+    opacity 0.95
 }
 window-rule {
     match is-active=false
@@ -36,8 +36,10 @@ window-rule {
 
 // Floating + workspace assignments
 window-rule {
-    match app-id="^virt-manager$"
-    open-on-workspace "files"
+    match app-id=r#"^com\.naeem\.float$"#
+    open-floating true
+    default-column-width { fixed 1000; }
+    default-window-height { fixed 600; }
 }
 window-rule {
     match app-id=r#"^org\.gnome\.FileRoller$"#
@@ -79,18 +81,18 @@ window-rule {
 // Workspace assignments
 window-rule {
     match app-id="md.obsidian.Obsidian$"
-    open-on-workspace "work2"
+    open-on-workspace "comm"
     default-column-width { proportion 0.5; }
 }
 window-rule {
     match app-id=r#"^zen.*"#
-    open-on-workspace "work"
-    default-column-width { proportion 0.4; }
+    open-on-workspace "comm"
+    default-column-width { proportion 0.6; }
 }
 window-rule {
     match app-id="com.anthropic.Claude$"
-    open-on-workspace "work"
-    default-column-width { proportion 0.4; }
+    open-on-workspace "comm"
+    default-column-width { proportion 0.6; }
 }
 window-rule {
     match app-id="^code(-url-handler)?$"
@@ -100,16 +102,20 @@ window-rule {
 window-rule {
     match app-id="^firefox$"
     open-on-workspace "personal"
-    default-column-width { proportion 0.5; }
+    default-column-width { proportion 0.6; }
 }
 window-rule {
     match app-id="^slack$"
-    open-on-workspace "work2"
-    default-column-width { proportion 0.5; }
+    open-on-workspace "comm"
+    default-column-width { proportion 0.4; }
 }
 window-rule {
     match app-id=r#"^org\.mozilla\.Thunderbird$"#
     open-on-workspace "laptop"
     default-column-width { proportion 1.0; }
 }
-
+window-rule {
+    match app-id="^dev.zed.Zed"
+    open-on-workspace "work"
+    default-column-width { proportion 1.0; }
+}
