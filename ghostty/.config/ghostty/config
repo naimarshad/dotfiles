@@ -55,7 +55,7 @@ cursor-style-blink = false
 mouse-hide-while-typing = true
 mouse-scroll-multiplier = 2
 
-scrollback-limit = 10000000
+scrollback-limit = 100000000
 resize-overlay = never
 shell-integration-features = no-cursor,sudo,no-title
 
@@ -91,6 +91,7 @@ keybind = alt+s>h=goto_split:left
 keybind = alt+s>l=goto_split:right
 keybind = alt+s>z=toggle_split_zoom
 keybind = alt+s>e=equalize_splits
+keybind = ctrl+shift+r=text:\x1b[82;6u
 
 
 shell-integration = none
